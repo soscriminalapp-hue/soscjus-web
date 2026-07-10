@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: #000000;
+  color: #f2f2f2;
+}
+
+/* Scrollbar discreta no tema escuro */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ─────────────────────────────────────────────
+   IMPRESSÃO / PDF
+   A folha do documento (.folha-a4) é o único elemento
+   que sai no papel. Todo o resto (menu, formulário,
+   botões) é escondido no @media print. Isso gera um PDF
+   limpo direto do "Imprimir → Salvar como PDF" do navegador.
+   ───────────────────────────────────────────── */
+.folha-a4 {
+  background: #ffffff;
+  color: #111111;
+  width: 210mm;
+  min-height: 297mm;
+  padding: 22mm 20mm;
+  margin: 0 auto;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 12pt;
+  line-height: 1.5;
+}
+
+.folha-a4 h1 {
+  text-align: center;
+  font-size: 16pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 20pt;
+}
+
+.folha-a4 p {
+  text-align: justify;
+  margin-bottom: 10pt;
+  white-space: pre-wrap;
+}
+
+@media print {
+  /* Esconde tudo que não for a folha */
+  body * {
+    visibility: hidden;
+  }
+  .folha-a4,
+  .folha-a4 * {
+    visibility: visible;
+  }
+  .folha-a4 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0;
+    box-shadow: none;
+    width: 100%;
+    min-height: auto;
+  }
+  @page {
+    size: A4;
+    margin: 0;
+  }
+}
