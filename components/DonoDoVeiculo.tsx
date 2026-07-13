@@ -20,7 +20,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { sosc, ApiError } from '@/lib/api';
-import { PRECOS } from '@/lib/creditos';
+import { PRECOS, type Feature } from '@/lib/creditos';
 import Diamante from './Diamante';
 import Icon from './Icon';
 import Gastar from './Gastar';
@@ -35,7 +35,7 @@ interface Props {
 
 export default function DonoDoVeiculo({ nome, cpf, saldo }: Props) {
   const router = useRouter();
-  const [confirmar, setConfirmar] = useState<string | null>(null);
+  const [confirmar, setConfirmar] = useState<Feature | null>(null);
   const [ocupado, setOcupado] = useState(false);
   const [erro, setErro] = useState('');
 
