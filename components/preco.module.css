@@ -1,0 +1,28 @@
+.preco {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .88rem;
+  color: var(--t3);
+}
+.preco b {
+  font-family: var(--mono);
+  font-weight: 700;
+  color: var(--miami);
+}
+.preco small { font-size: .78rem; color: var(--t3); }
+.preco svg { flex-shrink: 0; opacity: .9; }
+
+/* não dá pra pagar — apaga, mas não alarma */
+.naoDa { opacity: .45; }
+.naoDa b { color: var(--t3); }
+
+/* 🟢 grátis */
+.gratis {
+  display: inline-flex;
+  align-items: center;
+  font-size: .84rem;
+  font-weight: 700;
+  color: var(--lime);
+  letter-spacing: .02em;
+}

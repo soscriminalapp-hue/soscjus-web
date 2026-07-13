@@ -1,0 +1,184 @@
+/* ══════════════════════════════════════════════════════════════
+   SOSC JUS — Estação do Advogado
+   Desktop-first. Escala grande (17px base) — advogado usa óculos.
+
+   COR FUNCIONAL: a cor diz o que a coisa é.
+     ouro     → jurídico       verde  → dinheiro
+     vermelho → risco          azul   → tecnologia
+     roxo     → inteligência   cinza  → neutro
+
+   ASSINATURA DA MARCA (só em detalhes, nunca em bloco):
+     verde-limão · miami blue · rosa choque
+   ══════════════════════════════════════════════════════════════ */
+
+:root {
+  --g900:#0a0b0d; --g850:#0f1114; --g800:#15181c; --g750:#1c2026; --g700:#242830;
+  --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.07);
+
+  /* assinatura */
+  --lime:#b6ff00;  --lime-dim:rgba(182,255,0,.12);
+  --miami:#00c2e8; --miami-dim:rgba(0,194,232,.12);
+  --pink:#ff2d95;  --pink-dim:rgba(255,45,149,.12);
+
+  /* funcional */
+  --gold:#d8a631;  --gold-lit:#f0cb6e;  --gold-dim:rgba(216,166,49,.13);
+  --money:#2fbf71; --money-lit:#5ee295; --money-dim:rgba(47,191,113,.12);
+  --risk:#c8202f;  --risk-lit:#ff5566;  --risk-dim:rgba(200,32,47,.13);
+  --tech:#3b82f6;  --tech-lit:#7aa9ff;  --tech-dim:rgba(59,130,246,.13);
+  --mind:#8b5cf6;  --mind-lit:#b494fb;  --mind-dim:rgba(139,92,246,.13);
+  --neu:#78828e;   --neu-lit:#a4aab2;   --neu-dim:rgba(120,130,142,.12);
+
+  --paper:#f2ede4; --text:#eceae5; --t2:#a4aab2; --t3:#6b727b;
+  --r:6px;
+  --sans:"Inter Tight",system-ui,-apple-system,sans-serif;
+  --serif:"Fraunces",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { font-size:17px; }
+body {
+  background:var(--g900); color:var(--text);
+  font-family:var(--sans); font-size:1rem; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+button,input,select,textarea { font:inherit; color:inherit; background:none; border:none; outline:none; }
+button { cursor:pointer; }
+a { color:inherit; text-decoration:none; }
+:focus-visible { outline:3px solid var(--gold); outline-offset:3px; }
+::selection { background:var(--gold); color:#000; }
+
+::-webkit-scrollbar { width:12px; height:12px; }
+::-webkit-scrollbar-track { background:var(--g900); }
+::-webkit-scrollbar-thumb { background:var(--g700); border-radius:12px; border:3px solid var(--g900); }
+::-webkit-scrollbar-thumb:hover { background:#31363f; }
+
+/* atmosfera */
+body::before {
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(1000px 560px at 10% -10%, rgba(216,166,49,.05), transparent 60%),
+    radial-gradient(700px 420px at 97% 3%, rgba(0,194,232,.035), transparent 58%),
+    radial-gradient(560px 380px at 48% 106%, rgba(255,45,149,.022), transparent 60%);
+}
+/* ASSINATURA: o fio tricolor no topo — a marca em 2px */
+body::after {
+  content:""; position:fixed; top:0; left:0; right:0; height:2px; z-index:100;
+  background:linear-gradient(90deg,
+    var(--lime) 0%, var(--lime) 22%,
+    var(--miami) 22%, var(--miami) 62%,
+    var(--pink) 62%, var(--pink) 100%);
+  opacity:.85;
+}
+
+/* ═══ BOTÕES ═══ */
+.btn {
+  display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  padding:13px 22px; border-radius:var(--r);
+  font-size:.94rem; font-weight:700; transition:.15s; white-space:nowrap;
+}
+.btn svg { width:19px; height:19px; stroke:currentColor; fill:none; stroke-width:2.1; }
+.btn:disabled { opacity:.4; cursor:not-allowed; transform:none !important; }
+.btn.sm { padding:9px 15px; font-size:.82rem; }
+.btn.sm svg { width:16px; height:16px; }
+.btn.full { width:100%; }
+
+.b-gold  { background:var(--gold);  color:#151206; }
+.b-gold:hover:not(:disabled)  { background:var(--gold-lit); box-shadow:0 0 26px rgba(216,166,49,.32); transform:translateY(-1px); }
+.b-money { background:var(--money); color:#04220f; }
+.b-money:hover:not(:disabled) { background:var(--money-lit); box-shadow:0 0 26px rgba(47,191,113,.3); transform:translateY(-1px); }
+.b-risk  { background:var(--risk);  color:#fff; }
+.b-risk:hover:not(:disabled)  { background:var(--risk-lit); box-shadow:0 0 26px rgba(200,32,47,.3); transform:translateY(-1px); }
+.b-tech  { background:var(--tech);  color:#fff; }
+.b-tech:hover:not(:disabled)  { background:#5b96ff; box-shadow:0 0 26px rgba(59,130,246,.3); transform:translateY(-1px); }
+.b-mind  { background:var(--mind);  color:#fff; }
+.b-mind:hover:not(:disabled)  { background:#a179f8; box-shadow:0 0 26px rgba(139,92,246,.3); transform:translateY(-1px); }
+.b-ghost { border:1.5px solid var(--line2); color:var(--t2); background:var(--g850); }
+.b-ghost:hover:not(:disabled) { border-color:var(--line); color:var(--text); background:var(--g800); }
+
+/* ═══ CAMPOS ═══ */
+.fld { display:block; margin-bottom:16px; }
+.fld > span {
+  display:block; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--t3); font-weight:700; margin-bottom:8px;
+}
+.fld input, .fld select, .fld textarea {
+  width:100%; padding:14px 16px;
+  border:1.5px solid var(--line2); border-radius:var(--r);
+  background:var(--g800); font-size:1rem; transition:.15s;
+}
+.fld input:focus, .fld select:focus, .fld textarea:focus {
+  border-color:var(--gold); background:var(--g750);
+}
+.fld input::placeholder, .fld textarea::placeholder { color:var(--t3); }
+.fld input.mono { font-family:var(--mono); letter-spacing:.04em; }
+.fld textarea { resize:vertical; min-height:90px; }
+.f2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+
+/* ═══ CARDS ═══ */
+.card {
+  background:var(--g850); border:1.5px solid var(--line2);
+  border-radius:12px; overflow:hidden; margin-bottom:20px;
+}
+.card-h {
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+  padding:18px 22px; border-bottom:1px solid var(--line2);
+}
+.card-h h2 { font-family:var(--serif); font-size:1.2rem; font-weight:600; color:var(--paper); }
+.card-b { padding:22px; }
+.card-b.flush { padding:0; }
+
+/* ═══ AVISOS ═══ */
+.nota {
+  display:flex; gap:14px; align-items:flex-start;
+  margin-top:22px; padding:18px 20px;
+  border:1.5px solid var(--line); border-left:4px solid var(--gold);
+  border-radius:10px; background:rgba(216,166,49,.05);
+}
+.nota svg { width:20px; height:20px; stroke:var(--gold); fill:none; stroke-width:1.9; flex-shrink:0; margin-top:2px; }
+.nota p { font-size:.96rem; color:var(--t2); line-height:1.6; }
+.nota b { color:var(--gold-lit); font-weight:600; }
+.nota.risk  { border-color:rgba(200,32,47,.3); border-left-color:var(--risk); background:rgba(200,32,47,.05); }
+.nota.risk svg { stroke:var(--risk-lit); } .nota.risk b { color:var(--risk-lit); }
+.nota.tech  { border-color:rgba(59,130,246,.3); border-left-color:var(--tech); background:rgba(59,130,246,.05); }
+.nota.tech svg { stroke:var(--tech-lit); } .nota.tech b { color:var(--tech-lit); }
+.nota.money { border-color:rgba(47,191,113,.3); border-left-color:var(--money); background:rgba(47,191,113,.05); }
+.nota.money svg { stroke:var(--money-lit); } .nota.money b { color:var(--money-lit); }
+.nota.lime  { border-color:rgba(182,255,0,.25); border-left-color:var(--lime); background:rgba(182,255,0,.04); }
+.nota.lime svg { stroke:var(--lime); } .nota.lime b { color:var(--lime); }
+
+/* ═══ SPINNER ═══ */
+.spin {
+  width:17px; height:17px; border:2px solid rgba(255,255,255,.2);
+  border-top-color:currentColor; border-radius:50%;
+  animation:sp .6s linear infinite; flex-shrink:0;
+}
+@keyframes sp { to { transform:rotate(360deg); } }
+
+/* ═══ ESTADOS ═══ */
+.est {
+  display:inline-flex; align-items:center; gap:7px;
+  font-size:.82rem; font-weight:600; padding:7px 13px; border-radius:20px;
+}
+.est svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2.4; }
+.est.ok    { background:var(--money-dim); color:var(--money-lit); }
+.est.warn  { background:var(--gold-dim);  color:var(--gold-lit); }
+.est.stop  { background:var(--risk-dim);  color:var(--risk-lit); }
+.est.free  { background:var(--g700);      color:var(--t2); }
+.est.live  { background:var(--lime-dim);  color:var(--lime); }
+.est.live i {
+  width:7px; height:7px; border-radius:50%; background:var(--lime);
+  box-shadow:0 0 10px var(--lime); animation:blip 2.2s infinite;
+}
+@keyframes blip { 0%,100% { opacity:1; } 50% { opacity:.28; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation:none !important; transition:none !important; }
+}
+
+@media print {
+  body::before, body::after { display:none; }
+  .no-print { display:none !important; }
+}

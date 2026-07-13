@@ -1,0 +1,198 @@
+.grade {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* ─── lista ─── */
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--line2);
+  border: 1.5px solid var(--line2);
+  border-radius: 12px;
+  overflow: hidden;
+  position: sticky;
+  top: 90px;
+}
+.item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 17px 18px;
+  background: var(--g850);
+  text-align: left;
+  transition: .14s;
+  position: relative;
+}
+.item:hover { background: var(--g800); }
+.itemOn::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+}
+.jur.itemOn      { background: var(--gold-dim); }
+.jur.itemOn::before   { background: var(--gold); }
+.risco.itemOn    { background: var(--risk-dim); }
+.risco.itemOn::before { background: var(--risk); }
+.tech.itemOn     { background: var(--tech-dim); }
+.tech.itemOn::before  { background: var(--tech); }
+
+.ic {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  border: 1.5px solid var(--line2);
+  background: var(--g800);
+  color: var(--t2);
+  transition: .14s;
+}
+.jur.itemOn   .ic { border-color: rgba(216, 166, 49, .35); background: var(--gold-dim);  color: var(--gold); }
+.risco.itemOn .ic { border-color: rgba(200, 32, 47, .35);  background: var(--risk-dim);  color: var(--risk-lit); }
+.tech.itemOn  .ic { border-color: rgba(59, 130, 246, .35); background: var(--tech-dim);  color: var(--tech-lit); }
+
+.rot { flex: 1; min-width: 0; }
+.rot strong {
+  display: block;
+  font-size: .96rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.rot small {
+  display: block;
+  font-family: var(--mono);
+  font-size: .76rem;
+  margin-top: 3px;
+}
+.ok   { color: var(--money-lit); }
+.warn { color: var(--gold); }
+.stop { color: var(--risk-lit); }
+.free { color: var(--t3); }
+
+/* ─── formulário ─── */
+.tit {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--paper);
+  margin-bottom: 10px;
+}
+.explica {
+  font-size: 1rem;
+  color: var(--t2);
+  line-height: 1.65;
+  margin-bottom: 22px;
+  max-width: 58ch;
+}
+
+.foto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 9px;
+  padding: 26px 20px;
+  border: 2px dashed var(--line);
+  border-radius: 12px;
+  background: var(--g800);
+  cursor: pointer;
+  transition: .16s;
+  margin-bottom: 18px;
+  color: var(--gold);
+}
+.foto:hover { border-color: var(--gold); background: var(--g750); }
+.foto input { display: none; }
+.foto b {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  word-break: break-word;
+}
+.foto small {
+  display: block;
+  font-size: .86rem;
+  color: var(--t3);
+  line-height: 1.5;
+  max-width: 40ch;
+}
+.fotoCheia {
+  border-style: solid;
+  border-color: rgba(47, 191, 113, .45);
+  background: var(--money-dim);
+  color: var(--money-lit);
+}
+
+.erro {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  border: 1.5px solid rgba(200, 32, 47, .35);
+  border-radius: var(--r);
+  background: rgba(200, 32, 47, .08);
+  font-size: .92rem;
+  color: var(--risk-lit);
+  line-height: 1.55;
+}
+.erro svg { flex-shrink: 0; margin-top: 2px; }
+
+.res {
+  margin-top: 22px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--g800);
+  overflow: hidden;
+}
+.resH {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 15px 18px;
+  border-bottom: 1px solid var(--line2);
+  color: var(--gold);
+}
+.resH strong {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--paper);
+}
+.res pre {
+  padding: 18px;
+  font-family: var(--mono);
+  font-size: .82rem;
+  line-height: 1.65;
+  color: var(--t2);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.seguro {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line2);
+  font-size: .84rem;
+  color: var(--t3);
+  line-height: 1.5;
+}
+.seguro svg { flex-shrink: 0; }
+
+@media (max-width: 1000px) {
+  .grade { grid-template-columns: 1fr; }
+  .lista { position: static; }
+}

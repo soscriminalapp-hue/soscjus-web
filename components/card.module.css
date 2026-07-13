@@ -1,0 +1,153 @@
+.card {
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+  border: 1.5px solid var(--line2);
+  border-radius: 14px;
+  background: var(--g850);
+  padding: 26px 26px 22px;
+  transition: .18s cubic-bezier(.3, .9, .4, 1);
+  display: flex;
+  flex-direction: column;
+  min-height: 236px;
+  width: 100%;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, .45);
+}
+
+/* ── A COR DIZ O QUE A COISA É ── */
+.jur      { background: linear-gradient(155deg, rgba(216, 166, 49, .05), transparent 55%), var(--g850); }
+.dinheiro { background: linear-gradient(155deg, rgba(47, 191, 113, .05), transparent 55%), var(--g850); }
+.risco    { background: linear-gradient(155deg, rgba(200, 32, 47, .05), transparent 55%), var(--g850); }
+.tech     { background: linear-gradient(155deg, rgba(59, 130, 246, .055), transparent 55%), var(--g850); }
+.mente    { background: linear-gradient(155deg, rgba(139, 92, 246, .055), transparent 55%), var(--g850); }
+.neutro   { background: var(--g850); }
+
+.jur:hover      { border-color: rgba(216, 166, 49, .45); }
+.dinheiro:hover { border-color: rgba(47, 191, 113, .45); }
+.risco:hover    { border-color: rgba(200, 32, 47, .45); }
+.tech:hover     { border-color: rgba(59, 130, 246, .45); }
+.mente:hover    { border-color: rgba(139, 92, 246, .45); }
+.neutro:hover   { border-color: rgba(120, 130, 142, .45); }
+
+.topo { display: flex; align-items: center; gap: 15px; margin-bottom: 16px; }
+.ic {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  border: 1.5px solid var(--line2);
+  background: var(--g800);
+  transition: .18s;
+}
+.card:hover .ic { transform: scale(1.06); }
+
+.jur      .ic { border-color: rgba(216, 166, 49, .3); background: var(--gold-dim);  color: var(--gold); }
+.dinheiro .ic { border-color: rgba(47, 191, 113, .3); background: var(--money-dim); color: var(--money); }
+.risco    .ic { border-color: rgba(200, 32, 47, .3);  background: var(--risk-dim);  color: var(--risk-lit); }
+.tech     .ic { border-color: rgba(59, 130, 246, .3); background: var(--tech-dim);  color: var(--tech-lit); }
+.mente    .ic { border-color: rgba(139, 92, 246, .3); background: var(--mind-dim);  color: var(--mind-lit); }
+.neutro   .ic { border-color: var(--line2);           background: var(--g800);      color: var(--neu-lit); }
+
+.tit { flex: 1; min-width: 0; }
+.tit strong {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1.42rem;
+  font-weight: 600;
+  color: var(--paper);
+  letter-spacing: -.015em;
+  line-height: 1.2;
+}
+
+.txt {
+  font-size: 1.02rem;
+  color: var(--t2);
+  line-height: 1.6;
+  flex: 1;
+  margin-bottom: 20px;
+}
+.txt b { font-weight: 600; }
+
+.pe { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+.btn {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: var(--r);
+  font-size: .92rem;
+  font-weight: 700;
+  transition: .15s;
+}
+.jur      .btn { background: var(--gold);  color: #151206; }
+.dinheiro .btn { background: var(--money); color: #04220f; }
+.risco    .btn { background: var(--risk);  color: #fff; }
+.tech     .btn { background: var(--tech);  color: #fff; }
+.mente    .btn { background: var(--mind);  color: #fff; }
+.neutro   .btn { background: var(--g700);  color: var(--text); border: 1.5px solid var(--line); }
+.card:hover .btn { transform: translateX(2px); }
+.jur:hover      .btn { box-shadow: 0 0 22px rgba(216, 166, 49, .3); }
+.dinheiro:hover .btn { box-shadow: 0 0 22px rgba(47, 191, 113, .3); }
+.risco:hover    .btn { box-shadow: 0 0 22px rgba(200, 32, 47, .3); }
+.tech:hover     .btn { box-shadow: 0 0 22px rgba(59, 130, 246, .3); }
+.mente:hover    .btn { box-shadow: 0 0 22px rgba(139, 92, 246, .3); }
+
+/* ── selo: número, nunca conteúdo ── */
+.selo {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 11px;
+  display: grid;
+  place-items: center;
+  border-radius: 17px;
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  background: var(--risk);
+  color: #fff;
+  box-shadow: 0 0 22px rgba(200, 32, 47, .5);
+}
+.selo.tech  { background: var(--tech);  color: #fff;     box-shadow: 0 0 22px rgba(59, 130, 246, .45); }
+.selo.money { background: var(--money); color: #04220f;  box-shadow: 0 0 22px rgba(47, 191, 113, .4); }
+.selo.calmo { background: var(--g700);  color: var(--t2); box-shadow: none; }
+
+/* ── card grande ── */
+.grande { grid-column: span 2; }
+.grande .tit strong { font-size: 1.75rem; }
+.grande .txt { font-size: 1.1rem; }
+.grande .ic { width: 64px; height: 64px; }
+/* ASSINATURA: o fio tricolor que cresce no hover */
+.grande::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 88px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--lime), var(--miami) 55%, var(--pink));
+  opacity: .75;
+  transition: .25s;
+}
+.grande:hover::after { width: 100%; opacity: 1; }
+
+@media (max-width: 1140px) {
+  .grande { grid-column: span 2; }
+}
+@media (max-width: 760px) {
+  .card { padding: 22px 20px 20px; min-height: 0; }
+  .grande { grid-column: span 1; }
+  .btn { margin-left: 0; width: 100%; padding: 14px; }
+  .pe { flex-direction: column; align-items: stretch; }
+  .pe :global(.est) { justify-content: center; }
+}

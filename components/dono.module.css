@@ -1,0 +1,112 @@
+.dono {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  margin-top: 18px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: linear-gradient(150deg, rgba(0, 194, 232, .06), transparent 60%), var(--g800);
+  flex-wrap: wrap;
+}
+
+.ic {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  border: 1.5px solid rgba(0, 194, 232, .28);
+  background: var(--miami-dim);
+  color: var(--miami);
+}
+
+.info { flex: 1; min-width: 160px; }
+.eb {
+  display: block;
+  font-size: .64rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--t3);
+  font-weight: 700;
+}
+.info strong {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 4px;
+}
+.cpf {
+  display: block;
+  font-family: var(--mono);
+  font-size: .84rem;
+  color: var(--t3);
+  margin-top: 2px;
+}
+
+.acao {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: var(--r);
+  border: 1.5px solid rgba(0, 194, 232, .35);
+  background: var(--g850);
+  font-size: .92rem;
+  font-weight: 700;
+  color: var(--miami);
+  transition: .15s;
+  flex-shrink: 0;
+}
+.acao:hover:not(:disabled) {
+  background: var(--miami-dim);
+  border-color: var(--miami);
+  transform: translateX(2px);
+}
+.acao:disabled { opacity: .5; cursor: not-allowed; }
+
+.preco {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding-right: 10px;
+  border-right: 1px solid var(--line2);
+}
+.preco b {
+  font-family: var(--mono);
+  font-size: .92rem;
+  font-weight: 700;
+  color: var(--miami);
+}
+
+.nota {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: .8rem;
+  color: var(--t3);
+  line-height: 1.5;
+}
+.nota svg { flex-shrink: 0; }
+
+.erro {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(200, 32, 47, .3);
+  background: rgba(200, 32, 47, .07);
+  font-size: .88rem;
+  color: var(--risk-lit);
+}
+.erro svg { flex-shrink: 0; }
+
+@media (max-width: 640px) {
+  .dono { flex-direction: column; align-items: stretch; }
+  .acao { justify-content: center; }
+}

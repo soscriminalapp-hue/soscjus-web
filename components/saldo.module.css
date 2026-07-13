@@ -1,0 +1,58 @@
+.saldo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 15px;
+  border-radius: 30px;
+  border: 1.5px solid var(--line2);
+  background: var(--g850);
+  transition: .16s;
+}
+.saldo:hover { border-color: rgba(0, 194, 232, .4); background: var(--g800); }
+.saldo b {
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -.01em;
+}
+.saldo span { font-size: .8rem; color: var(--t3); font-weight: 600; }
+
+.ok:hover b { color: var(--miami); }
+
+/* ficando baixo — o diamante brilha */
+.baixo { border-color: rgba(0, 194, 232, .32); background: var(--miami-dim); }
+.baixo b { color: var(--miami); }
+.baixo svg { filter: drop-shadow(0 0 7px rgba(0, 194, 232, .7)); }
+
+/* ZEROU — agora sim é problema, e vermelho é honesto */
+.zerado { border-color: rgba(200, 32, 47, .4); background: var(--risk-dim); }
+.zerado b { color: var(--risk-lit); }
+.zerado span { color: var(--risk-lit); opacity: .8; }
+.zerado svg { filter: grayscale(1) brightness(1.6); opacity: .55; }
+
+/* O DONO — ∞ */
+.infinito {
+  border-color: rgba(216, 166, 49, .4);
+  background: linear-gradient(135deg, var(--gold-dim), var(--miami-dim));
+}
+.infinito svg { filter: drop-shadow(0 0 10px rgba(0, 194, 232, .8)); }
+.inf {
+  font-size: 1.4rem !important;
+  color: var(--gold-lit) !important;
+  line-height: 1;
+}
+
+/* os 50 */
+.selo {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: .6rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  padding: 3px 7px;
+  border-radius: 20px;
+  background: var(--gold-dim);
+  color: var(--gold-lit);
+  margin-left: 2px;
+}
