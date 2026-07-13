@@ -1,183 +1,227 @@
 'use client';
 
 /**
- * Tela de login — o portão da estação.
+ * LOGIN — a primeira impressão.
  *
- * Mesmo e-mail e senha do aplicativo. Aceita também o número SOSC ADV.
- * O token nunca chega ao navegador: o handler /api/auth/login sela num
- * cookie httpOnly.
+ * ═══════════════════════════════════════════════════════════════════════════
+ *  ⚠️ O MESMO LOGIN DO APLICATIVO.
+ *
+ *  Não é conta nova. Não é cadastro. É a MESMA conta — o mesmo e-mail e
+ *  senha que ele já usa no celular. Isso precisa estar ÓBVIO na tela, senão
+ *  ele acha que precisa se cadastrar de novo e desiste.
+ *
+ *  E o cadastro NÃO acontece aqui: quem cria conta é o app (Apple exige o
+ *  IAP dela para a assinatura). A estação só autentica.
+ * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { Suspense, useState, type FormEvent } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { api, ApiError } from '@/lib/api';
 import s from './login.module.css';
 
-// useSearchParams() exige limite de Suspense no App Router (senão o build quebra
-// no prerender de /login). Envolvemos o formulário no default export.
-function LoginForm() {
+export default function Login() {
   const router = useRouter();
-  const params = useSearchParams();
-  const voltar = params.get('voltar') || '/inicio';
-
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [vendo, setVendo] = useState(false);
   const [erro, setErro] = useState('');
   const [ocupado, setOcupado] = useState(false);
 
-  async function entrar(e: FormEvent) {
+  async function entrar(e: React.FormEvent) {
     e.preventDefault();
     if (ocupado) return;
-    setOcupado(true);
+
     setErro('');
+    setOcupado(true);
     try {
-      await api('/api/auth/login', {
+      const r = await fetch('/api/auth/login', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email.trim(), password: senha }),
       });
-      router.replace(voltar);
+
+      if (!r.ok) {
+        const b = await r.json().catch(() => ({}));
+        // ⚠️ A mensagem tem que ser ÚTIL. "Erro 401" não ajuda ninguém.
+        setErro(
+          r.status === 401
+            ? 'E-mail ou senha não conferem. É a mesma senha do aplicativo.'
+            : r.status === 403
+              ? 'Esta conta é de cliente. A Estação é exclusiva para advogados.'
+              : (b.message ?? 'Não foi possível entrar. Tente de novo.'),
+        );
+        return;
+      }
+
+      router.push('/inicio');
       router.refresh();
-    } catch (err) {
-      setErro(err instanceof ApiError ? err.message : 'Não foi possível entrar. Tente de novo.');
+    } catch {
+      setErro('Sem conexão com o servidor. Confira sua internet.');
+    } finally {
       setOcupado(false);
     }
   }
 
   return (
     <main className={s.tela}>
-      {/* ─── lado esquerdo: a tese ─── */}
-      <section className={s.vitrine}>
+      {/* ─── ESQUERDA: a marca, o argumento ─── */}
+      <aside className={s.lado}>
         <div className={s.marca}>
-          <Image src="/sosc_jus_logo.png" alt="SOSC JUS" width={56} height={74} priority />
+          <Image src="/sosc_jus_logo.png" alt="" width={54} height={54} priority />
           <div>
             <strong>
               SOSC <em>JUS</em>
             </strong>
-            <span>Estação do Advogado</span>
+            <span>ESTAÇÃO DO ADVOGADO</span>
           </div>
         </div>
 
-        <div className={s.tese}>
-          <span className={s.eb}>O escritório no computador</span>
+        <div className={s.arg}>
           <h1>
-            Seus processos.
+            O escritório inteiro,
             <br />
-            Seus prazos.
-            <br />
-            <em>Sua estação.</em>
+            <em>na tela grande.</em>
           </h1>
           <p>
-            Tudo que você já usa no aplicativo, agora em tela grande — onde o trabalho
-            de verdade acontece.
+            Seus processos, seus prazos, seus clientes — e os casos que chegam
+            pelo Plantão. Tudo que está no aplicativo, com o espaço que só o
+            computador tem.
           </p>
 
-          <ul className={s.pontos}>
+          <ul className={s.lista}>
             <li>
-              <i className={s.dLime} />
-              Mesma conta do aplicativo — nada para assinar de novo
+              <b>284 processos</b> numa tabela, não numa lista infinita
             </li>
             <li>
-              <i className={s.dMiami} />
-              Peças do FinaisJus e criativos do JurisCreator aqui dentro
+              <b>Prazos e audiências</b> em um lugar só
             </li>
             <li>
-              <i className={s.dPink} />
-              Contrato, procuração e cobrança sem trocar de tela
+              <b>Plantão Adv.</b> — o cliente novo chega aqui
+            </li>
+            <li>
+              <b>FinaisJus Pro</b> — o vídeo da audiência vira peça
             </li>
           </ul>
         </div>
 
-        <div className={s.rodape}>
-          <i />
-          <span>Conexão protegida · TLS 1.3</span>
+        <p className={s.rodape}>
+          SOS Criminal Tecnologia LTDA · CNPJ 66.476.445/0001-50
+        </p>
+      </aside>
+
+      {/* ─── DIREITA: o formulário ─── */}
+      <section className={s.form}>
+        <div className={s.caixa}>
+          <header className={s.topo}>
+            <h2>Entrar</h2>
+            {/* ⚠️ ISTO PRECISA ESTAR ÓBVIO — senão ele tenta se cadastrar */}
+            <p>
+              Use o <b>mesmo e-mail e senha</b> do aplicativo. É a mesma conta.
+            </p>
+          </header>
+
+          <form onSubmit={entrar} noValidate>
+            <label className="fld">
+              <span>E-mail</span>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="voce@escritorio.com.br"
+                autoComplete="email"
+                autoFocus
+                required
+                disabled={ocupado}
+              />
+            </label>
+
+            <label className="fld">
+              <span>Senha</span>
+              <div className={s.senha}>
+                <input
+                  type={vendo ? 'text' : 'password'}
+                  value={senha}
+                  onChange={(e) => setSenha(e.target.value)}
+                  placeholder="A mesma do aplicativo"
+                  autoComplete="current-password"
+                  required
+                  disabled={ocupado}
+                />
+                <button
+                  type="button"
+                  onClick={() => setVendo((v) => !v)}
+                  aria-label={vendo ? 'Ocultar senha' : 'Mostrar senha'}
+                  tabIndex={-1}
+                >
+                  {vendo ? (
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
+                      <line x1="1" y1="1" x2="23" y2="23" />
+                    </svg>
+                  ) : (
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </label>
+
+            {erro ? (
+              <div className={s.erro} role="alert">
+                <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <span>{erro}</span>
+              </div>
+            ) : null}
+
+            <button
+              type="submit"
+              className="btn b-gold full lg"
+              disabled={ocupado || !email.trim() || !senha}
+            >
+              {ocupado ? (
+                <>
+                  <span className="spin" />
+                  Entrando…
+                </>
+              ) : (
+                'Entrar na Estação'
+              )}
+            </button>
+          </form>
+
+          {/* ⚠️ O cadastro é NO APP. A Apple exige o IAP dela pra assinatura. */}
+          <footer className={s.semConta}>
+            <p>
+              <b>Ainda não tem conta?</b> O cadastro e a assinatura são feitos no
+              aplicativo — depois é só entrar aqui com o mesmo login.
+            </p>
+            <div className={s.lojas}>
+              <a
+                href="https://apps.apple.com/br/app/sosc-jus/id6770715490"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                App Store
+              </a>
+              <span>·</span>
+              <a
+                href="https://play.google.com/store/apps/details?id=br.com.soscriminal.app"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Google Play
+              </a>
+            </div>
+          </footer>
         </div>
       </section>
-
-      {/* ─── lado direito: o formulário ─── */}
-      <section className={s.painel}>
-        <form onSubmit={entrar} className={s.form} noValidate>
-          <div className={s.marcaMobile}>
-            <Image src="/sosc_jus_logo.png" alt="SOSC JUS" width={44} height={58} />
-            <strong>
-              SOSC <em>JUS</em>
-            </strong>
-          </div>
-
-          <span className={s.eb}>Acesso profissional</span>
-          <h2>Entrar na estação</h2>
-          <p className={s.sub}>Use o mesmo e-mail e senha do aplicativo SOSC JUS.</p>
-
-          <label className="fld">
-            <span>E-mail ou número SOSC ADV</span>
-            <input
-              type="text"
-              inputMode="email"
-              autoComplete="username"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="voce@escritorio.com.br"
-              disabled={ocupado}
-              autoFocus
-            />
-          </label>
-
-          <label className="fld">
-            <span>Senha</span>
-            <input
-              type="password"
-              autoComplete="current-password"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-              placeholder="••••••••"
-              disabled={ocupado}
-            />
-          </label>
-
-          {erro ? (
-            <div className={s.erro} role="alert">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 3 2 20h20z" />
-                <path d="M12 9v5M12 17h.01" />
-              </svg>
-              <span>{erro}</span>
-            </div>
-          ) : null}
-
-          <button
-            type="submit"
-            className="btn b-gold full"
-            disabled={ocupado || !email.trim() || !senha}
-          >
-            {ocupado ? (
-              <>
-                <span className="spin" style={{ borderTopColor: '#151206' }} />
-                Entrando…
-              </>
-            ) : (
-              <>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                  <rect x="4" y="10" width="16" height="11" rx="2" />
-                  <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-                </svg>
-                Entrar
-              </>
-            )}
-          </button>
-
-          <small className={s.aviso}>
-            Exclusivo para advogados com inscrição verificada. O cliente usa o aplicativo.
-          </small>
-        </form>
-      </section>
     </main>
-  );
-}
-
-export default function Login() {
-  return (
-    <Suspense fallback={null}>
-      <LoginForm />
-    </Suspense>
   );
 }

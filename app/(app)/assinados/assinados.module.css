@@ -1,0 +1,34 @@
+.topo { margin-bottom: 20px; }
+.topo h1 {
+  font-family: var(--serif); font-size: 1.9rem; font-weight: 600;
+  color: var(--paper); letter-spacing: -.02em; margin-bottom: 6px;
+}
+.topo p { font-size: .98rem; color: var(--t2); max-width: 62ch; line-height: 1.6; }
+
+.lista { display: grid; gap: 10px; }
+.doc {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 18px; transition: .15s;
+}
+.doc:hover { border-color: var(--line); background: var(--g800); }
+
+.ic {
+  width: 42px; height: 42px; flex-shrink: 0;
+  display: grid; place-items: center;
+  border-radius: 11px;
+  border: 1.5px solid rgba(47, 191, 113, .3);
+  background: var(--money-dim);
+  color: var(--money-lit);
+}
+.di { flex: 1; min-width: 0; }
+.di strong { display: block; font-size: 1rem; font-weight: 700; color: var(--text); }
+.di small { display: block; font-size: .86rem; color: var(--t3); margin-top: 2px; }
+.di em { display: block; font-style: normal; font-size: .76rem; color: var(--money-lit); margin-top: 3px; }
+
+.vazio { padding: 56px 26px; text-align: center; color: var(--t3); }
+.vazio p { margin: 16px 0 8px; font-size: 1.08rem; color: var(--t2); font-weight: 600; }
+.vazio small {
+  display: block; font-size: .9rem; color: var(--t3);
+  line-height: 1.6; max-width: 44ch; margin: 0 auto 22px;
+}
+.vazio b { color: var(--gold); font-weight: 600; }

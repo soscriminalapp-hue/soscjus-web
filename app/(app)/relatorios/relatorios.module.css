@@ -1,0 +1,54 @@
+.topo {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 20px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.topo h1 {
+  font-family: var(--serif); font-size: 1.9rem; font-weight: 600;
+  color: var(--paper); letter-spacing: -.02em; margin-bottom: 6px;
+}
+.topo p { font-size: .98rem; color: var(--t2); max-width: 62ch; line-height: 1.6; }
+.n {
+  padding: 9px 16px; border-radius: 20px;
+  background: var(--risk-dim);
+  border: 1.5px solid rgba(200, 32, 47, .35);
+  color: var(--risk-lit);
+  font-size: .88rem;
+  animation: blip 2.4s infinite;
+}
+.n b { font-weight: 800; }
+
+.lista { display: grid; gap: 10px; }
+.rel { display: flex; align-items: center; gap: 14px; padding: 16px 18px; transition: .15s; }
+.rel:hover { border-color: var(--line); background: var(--g800); }
+.pend { border-color: rgba(216, 166, 49, .32); background: rgba(216, 166, 49, .04); }
+
+.ic {
+  width: 42px; height: 42px; flex-shrink: 0;
+  display: grid; place-items: center; border-radius: 11px;
+  border: 1.5px solid var(--line2); background: var(--g800); color: var(--t3);
+}
+.icPend { border-color: rgba(216, 166, 49, .4); background: var(--gold-dim); color: var(--gold); }
+
+.ri { flex: 1; min-width: 0; }
+.ri strong { display: block; font-size: 1rem; font-weight: 700; color: var(--text); }
+.ri small { display: block; font-size: .82rem; color: var(--t3); margin-top: 2px; }
+.ri em { display: block; font-style: normal; font-size: .76rem; color: var(--t3); margin-top: 3px; }
+
+.selo {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 14px; border-radius: 20px;
+  background: var(--gold); color: #151206;
+  font-size: .82rem; font-weight: 700;
+}
+.selo i {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #151206; animation: blip 1.6s infinite;
+}
+.ok {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: .82rem; font-weight: 700; color: var(--money-lit);
+}
+
+.vazio { padding: 56px 26px; text-align: center; color: var(--t3); }
+.vazio p { margin: 16px 0 8px; font-size: 1.08rem; color: var(--t2); font-weight: 600; }
+.vazio small { display: block; font-size: .9rem; line-height: 1.6; max-width: 46ch; margin: 0 auto 22px; }

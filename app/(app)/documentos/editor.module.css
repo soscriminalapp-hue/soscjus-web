@@ -1,0 +1,155 @@
+.topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.abas {
+  display: flex;
+  gap: 6px;
+  padding: 5px;
+  border: 1.5px solid var(--line2);
+  border-radius: var(--r2);
+  background: var(--g850);
+}
+.aba {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--r);
+  color: var(--t3);
+  font-size: .92rem;
+  font-weight: 600;
+  transition: .15s;
+}
+.aba:hover { color: var(--text); background: var(--g800); }
+.on { background: var(--gold-dim); color: var(--gold); font-weight: 700; }
+
+.erro, .ok {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  margin-bottom: 14px;
+  border-radius: var(--r);
+  font-size: .9rem;
+}
+.erro { border: 1.5px solid rgba(200, 32, 47, .3); background: var(--risk-dim); color: var(--risk-lit); }
+.ok { border: 1.5px solid rgba(47, 191, 113, .3); background: var(--money-dim); color: var(--money-lit); }
+
+.duas {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 18px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+.titulo {
+  width: 100%;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: var(--serif);
+  font-size: 1.16rem;
+  font-weight: 600;
+  color: var(--paper);
+}
+.titulo:focus { color: var(--gold); }
+
+/* 🖊️ A BARRA — nativo do navegador */
+.barra {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--line2);
+  background: var(--g800);
+  flex-wrap: wrap;
+}
+.barra button {
+  display: grid;
+  place-items: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border-radius: 7px;
+  color: var(--t2);
+  font-size: .88rem;
+  font-weight: 600;
+  transition: .13s;
+}
+.barra button:hover { background: var(--g700); color: var(--text); }
+.sep { width: 1px; height: 20px; background: var(--line2); margin: 0 5px; }
+
+/* ⚠️ contentEditable — o navegador JÁ SABE editar */
+.area {
+  min-height: 620px;
+  padding: 40px 46px;
+  background: #fdfcfa;      /* papel — não tela */
+  color: #16150f;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1rem;
+  line-height: 1.75;
+  outline: none;
+  overflow-y: auto;
+  max-height: 74vh;
+}
+.area:focus { box-shadow: inset 0 0 0 2px rgba(216, 166, 49, .3); }
+.area h1 {
+  font-size: 1.24rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin: 0 0 26px;
+  font-weight: 700;
+}
+.area h2 { font-size: 1.04rem; margin: 22px 0 9px; font-weight: 700; }
+.area p { margin: 0 0 13px; text-align: justify; text-indent: 1.2cm; }
+.area ol, .area ul { margin: 0 0 13px 1.4cm; }
+.area li { margin-bottom: 6px; text-align: justify; }
+/* as variáveis se destacam — ele VÊ o que vai virar dado */
+.area { --v: rgba(216, 166, 49, .18); }
+.area :global(b) { font-weight: 700; }
+
+/* o local e a assinatura */
+.area :global(.local-data) { text-align: right !important; text-indent: 0 !important; margin-top: 34px; }
+.area :global(.assina) { margin-top: 46px; text-align: center; }
+.area :global(.assina hr) { width: 62%; border: none; border-top: 1px solid #16150f; margin: 0 auto 6px; }
+.area :global(.assina p) { text-indent: 0; text-align: center; margin: 0; font-size: .92rem; }
+
+.lado { display: grid; gap: 14px; position: sticky; top: calc(var(--topbar) + 20px); }
+.lado h2 { display: flex; align-items: center; gap: 8px; }
+
+.vTxt { font-size: .84rem; color: var(--t3); line-height: 1.55; margin-bottom: 12px; }
+.vars { display: flex; gap: 6px; flex-wrap: wrap; }
+.vars button {
+  padding: 6px 11px;
+  border-radius: 7px;
+  border: 1.5px solid rgba(216, 166, 49, .3);
+  background: var(--gold-dim);
+  color: var(--gold);
+  font-family: var(--mono);
+  font-size: .74rem;
+  font-weight: 600;
+  transition: .13s;
+}
+.vars button:hover { background: var(--gold); color: #151206; }
+
+/* 💻 o que só o computador faz */
+.nativo { border-color: rgba(0, 194, 232, .25); }
+.nativo .btn { margin-bottom: 9px; justify-content: flex-start; }
+.nativo .btn:last-of-type { margin-bottom: 0; }
+.nTxt { font-size: .8rem; color: var(--t3); line-height: 1.55; margin-top: 12px; }
+.nTxt b { color: var(--miami); font-weight: 600; }
+
+.salvar { display: grid; grid-template-columns: 1fr 1.4fr; gap: 9px; }
+
+@media (max-width: 1180px) {
+  .duas { grid-template-columns: 1fr; }
+  .lado { position: static; }
+  .area { padding: 26px 22px; min-height: 460px; }
+}

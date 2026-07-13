@@ -1,58 +1,41 @@
 .saldo {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 9px 15px;
-  border-radius: 30px;
-  border: 1.5px solid var(--line2);
-  background: var(--g850);
-  transition: .16s;
+  gap: 7px;
+  padding: 9px 14px;
+  border-radius: var(--r);
+  border: 1.5px solid rgba(0, 194, 232, .3);
+  background: var(--miami-dim);
+  transition: .15s;
 }
-.saldo:hover { border-color: rgba(0, 194, 232, .4); background: var(--g800); }
-.saldo b {
-  font-family: var(--mono);
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: -.01em;
-}
-.saldo span { font-size: .8rem; color: var(--t3); font-weight: 600; }
+.saldo:hover { border-color: var(--miami); background: rgba(0, 194, 232, .16); }
 
-.ok:hover b { color: var(--miami); }
+.saldo b { font-size: 1rem; font-weight: 700; color: var(--miami); }
+.saldo em { font-style: normal; font-size: .8rem; color: var(--t3); }
 
-/* ficando baixo — o diamante brilha */
-.baixo { border-color: rgba(0, 194, 232, .32); background: var(--miami-dim); }
-.baixo b { color: var(--miami); }
-.baixo svg { filter: drop-shadow(0 0 7px rgba(0, 194, 232, .7)); }
+.simbolo { font-size: 1.3rem !important; line-height: 1; color: var(--gold) !important; }
+.inf { border-color: rgba(216, 166, 49, .35); background: var(--gold-dim); }
+.inf:hover { border-color: var(--gold); }
 
-/* ZEROU — agora sim é problema, e vermelho é honesto */
+/* baixo: dourado, não vermelho — ele ainda TEM saldo */
+.baixo { border-color: rgba(216, 166, 49, .35); background: var(--gold-dim); }
+.baixo b { color: var(--gold); }
+
+/* ⚠️ vermelho SÓ quando zerou de verdade */
 .zerado { border-color: rgba(200, 32, 47, .4); background: var(--risk-dim); }
-.zerado b { color: var(--risk-lit); }
-.zerado span { color: var(--risk-lit); opacity: .8; }
-.zerado svg { filter: grayscale(1) brightness(1.6); opacity: .55; }
+.zerado b, .zerado em { color: var(--risk-lit); }
 
-/* O DONO — ∞ */
-.infinito {
-  border-color: rgba(216, 166, 49, .4);
-  background: linear-gradient(135deg, var(--gold-dim), var(--miami-dim));
-}
-.infinito svg { filter: drop-shadow(0 0 10px rgba(0, 194, 232, .8)); }
-/* ⚠️ O ∞ é SVG. O caractere renderiza como "oo" na fonte mono. */
-.inf {
-  color: var(--gold-lit);
-  flex-shrink: 0;
-}
-
-/* os 50 */
 .selo {
-  font-family: var(--mono);
-  font-style: normal;
-  font-size: .6rem;
-  font-weight: 700;
-  letter-spacing: .12em;
-  padding: 3px 7px;
+  font-size: .58rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  padding: 2px 6px;
   border-radius: 20px;
-  background: var(--gold-dim);
-  color: var(--gold-lit);
-  margin-left: 2px;
+  background: var(--gold);
+  color: #151206;
+}
+
+@media (max-width: 640px) {
+  .saldo em { display: none; }
+  .saldo { padding: 9px 11px; }
 }

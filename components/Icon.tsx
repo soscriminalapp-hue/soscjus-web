@@ -1,76 +1,88 @@
 /**
- * Icon.tsx — ícones em SVG, sem dependência externa.
- * Traço de 1.7 para combinar com a tipografia serif.
+ * Icon.tsx — um só arquivo, todos os ícones.
+ *
+ * Traço, não preenchimento. 1.75 de espessura — o peso de um dashboard
+ * sério, não de um app de banco infantil.
  */
 
-import type { SVGProps } from 'react';
-
 export type Nome =
-  | 'inicio' | 'processo' | 'agenda' | 'radar' | 'clientes' | 'doc' | 'assinado'
-  | 'dinheiro' | 'pix' | 'busca' | 'alerta' | 'carro' | 'print' | 'balanca'
-  | 'ia' | 'relatorio' | 'oab' | 'logo' | 'plano' | 'sair' | 'menu' | 'sino'
-  | 'chev' | 'mais' | 'x' | 'ok' | 'sync' | 'olho' | 'baixar' | 'subir'
-  | 'lock' | 'pin' | 'wa' | 'relogio' | 'atividade' | 'convite' | 'chat'
-  | 'apple' | 'play' | 'externo' | 'copiar' | 'celular' | 'escudo'
-  | 'monitor' | 'sos' | 'prerrogativa' | 'grade' | 'download';
+  // navegação
+  | 'inicio' | 'processo' | 'agenda' | 'radar' | 'clientes' | 'convite'
+  | 'doc' | 'assinado' | 'dinheiro' | 'busca' | 'balanca' | 'ia'
+  | 'relatorio' | 'oab' | 'logo' | 'pix' | 'plano' | 'carro' | 'print'
+  // ação
+  | 'mais' | 'x' | 'ok' | 'chev' | 'chevBaixo' | 'sync' | 'baixar' | 'subir'
+  | 'anexo' | 'link' | 'lixo' | 'editar' | 'filtro' | 'externo' | 'copiar'
+  // estado
+  | 'sino' | 'alerta' | 'lock' | 'relogio' | 'atividade' | 'olho'
+  | 'sair' | 'menu' | 'celular' | 'monitor' | 'sos' | 'chat' | 'escudo'
+  | 'wa' | 'pin' | 'segredo';
 
-const P: Record<Nome, JSX.Element> = {
-  inicio: <><path d="M3 11.5 12 4l9 7.5M5.5 10.5V20h13v-9.5M9 20v-6h6v6"/></>,
-  processo: <><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18M10 12v2h4v-2"/></>,
-  agenda: <><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></>,
-  radar: <><circle cx="12" cy="12" r="2"/><path d="M12 12 19 5"/><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="10.5"/></>,
-  clientes: <><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></>,
-  doc: <><path d="M6 2h8l4 4v16H6z"/><path d="M14 2v5h5M9 12h6M9 16h6"/></>,
-  assinado: <><path d="m3 17 3-3 3 3M6 14V4"/><path d="M11 18h10M13 6l3 3 5-5"/></>,
-  dinheiro: <><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 12h.01M18 12h.01"/></>,
-  pix: <><path d="m12 3 4.5 4.5L12 12 7.5 7.5z"/><path d="m12 12 4.5 4.5L12 21l-4.5-4.5z"/><path d="M3 12h4M17 12h4"/></>,
-  busca: <><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></>,
-  alerta: <><path d="M12 3 2 20h20z"/><path d="M12 9v5M12 17h.01"/></>,
-  carro: <><path d="M5 17h14M3 17v-4l2-6h14l2 6v4"/><circle cx="7.5" cy="17" r="1.8"/><circle cx="16.5" cy="17" r="1.8"/></>,
-  print: <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></>,
-  balanca: <><path d="M12 3v18M5 21h14M6 7l-3 7h6zM18 7l-3 7h6zM4 7h16"/></>,
-  ia: <><path d="m12 3 1.3 3.7L17 8l-3.7 1.3L12 13l-1.3-3.7L7 8l3.7-1.3zM19 14l.8 2.2L22 17l-2.2.8L19 20l-.8-2.2L16 17l2.2-.8zM5 13l.8 2.2L8 16l-2.2.8L5 19l-.8-2.2L2 16l2.2-.8z"/></>,
-  relatorio: <><path d="M5 3h9l5 5v13H5z"/><path d="M14 3v5h5"/><path d="m9 15 2 2 4-4"/></>,
-  oab: <><circle cx="12" cy="8" r="5"/><path d="M8.5 12.5 7 22l5-2.5L17 22l-1.5-9.5"/></>,
-  logo: <><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.8"/><path d="m4 17 5-5 4 4 3-3 4 4"/></>,
-  plano: <><path d="M3 7h15a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 9V6a2 2 0 0 1 2-2h11M16 14h4"/></>,
-  sair: <><path d="M15 17v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2M10 12h11M18 9l3 3-3 3"/></>,
-  menu: <><path d="M4 7h16M4 12h16M4 17h16"/></>,
-  sino: <><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></>,
-  chev: <><path d="m9 18 6-6-6-6"/></>,
-  mais: <><path d="M12 5v14M5 12h14"/></>,
-  x: <><path d="M18 6 6 18M6 6l12 12"/></>,
-  ok: <><path d="m4 12 5 5L20 6"/></>,
-  sync: <><path d="M20 12a8 8 0 1 1-2.5-5.8M20 4v5h-5"/></>,
-  olho: <><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></>,
-  baixar: <><path d="M12 4v11M7 11l5 5 5-5M4 20h16"/></>,
-  subir: <><path d="M12 19V8M7 12l5-5 5 5M4 4h16"/></>,
-  lock: <><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></>,
-  pin: <><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></>,
-  wa: <><path d="M3 21l1.8-5.2A8.5 8.5 0 1 1 8.5 19.6z"/><path d="M8.4 9.3c.3 2.6 3.7 6 6.3 6.3l1.3-1.5-2-1.2-1 .9c-1-.5-2.1-1.6-2.6-2.6l.9-1-1.2-2z"/></>,
-  relogio: <><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></>,
-  atividade: <><path d="M3 12h4l3 8 4-16 3 8h4"/></>,
-  convite: <><path d="M15 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></>,
-  chat: <><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></>,
-  apple: <><path d="M16.4 12.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.8-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.8 1.3 10.3.9 1.3 1.9 2.7 3.3 2.6 1.3-.1 1.8-.9 3.4-.9s2 .9 3.4.8c1.4 0 2.3-1.3 3.2-2.6.6-.9 1-1.9 1.3-2.9-2.9-1.1-2.8-4-2.8-4z"/><path d="M14.3 4.6c.7-.9 1.2-2.1 1.1-3.3-1 0-2.3.7-3 1.6-.7.8-1.3 2-1.1 3.2 1.1.1 2.3-.6 3-1.5z"/></>,
-  play: <><path d="M4 3.5v17a1 1 0 0 0 1.5.9l13-8.5a1 1 0 0 0 0-1.7l-13-8.5A1 1 0 0 0 4 3.5z"/></>,
-  externo: <><path d="M14 4h6v6M20 4 10 14M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></>,
-  copiar: <><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></>,
-  celular: <><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18h4"/></>,
-  monitor: <><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></>,
-  sos: <><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></>,
-  prerrogativa: <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12h6M12 9v6"/></>,
-  grade: <><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></>,
-  download: <><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></>,
-  escudo: <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></>,
+const P: Record<Nome, React.ReactNode> = {
+  inicio: <><path d="M3 10.2 12 3l9 7.2" /><path d="M5 9.5V20h14V9.5" /><path d="M9.5 20v-6h5v6" /></>,
+  processo: <><rect x="3" y="7" width="18" height="14" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><path d="M3 13h18" /></>,
+  agenda: <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 11h18" /></>,
+  radar: <><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" /><circle cx="12" cy="12" r="1" /></>,
+  clientes: <><circle cx="9" cy="8" r="3.2" /><path d="M2.5 20a6.5 6.5 0 0 1 13 0" /><path d="M17 5.5a3 3 0 0 1 0 5.5" /><path d="M18.5 20a5.5 5.5 0 0 0-3-4.9" /></>,
+  convite: <><circle cx="9" cy="8" r="3.2" /><path d="M2.5 20a6.5 6.5 0 0 1 13 0" /><path d="M18 8v6M15 11h6" /></>,
+  doc: <><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5" /><path d="M9 13h6M9 17h4" /></>,
+  assinado: <><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5" /><path d="m9 15 2 2 4-4" /></>,
+  dinheiro: <><rect x="2" y="6" width="20" height="12" rx="2" /><circle cx="12" cy="12" r="2.6" /><path d="M6 12h.01M18 12h.01" /></>,
+  busca: <><circle cx="10.5" cy="10.5" r="6.5" /><path d="m20 20-4.5-4.5" /></>,
+  balanca: <><path d="M12 3v18M7 21h10" /><path d="M12 6 5 8l-2.5 6h9L9 8" /><path d="m12 6 7 2 2.5 6h-9L15 8" /></>,
+  ia: <><path d="m12 3 1.9 5.3L19 10l-5.1 1.7L12 17l-1.9-5.3L5 10l5.1-1.7z" /><path d="M18 17.5 18.7 19.5 20.7 20.2 18.7 20.9 18 23 17.3 20.9 15.3 20.2 17.3 19.5z" /></>,
+  relatorio: <><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5" /><path d="M8.5 16v-3M12 16v-5M15.5 16v-2" /></>,
+  oab: <><rect x="3" y="4" width="18" height="16" rx="2" /><circle cx="9" cy="10" r="2.2" /><path d="M5.5 16.5a4 4 0 0 1 7 0" /><path d="M15 9h4M15 13h4" /></>,
+  logo: <><rect x="3" y="4" width="18" height="16" rx="2" /><circle cx="8.5" cy="9.5" r="1.8" /><path d="m4 17 4.5-4.5 3.5 3.5 3-3L20 17" /></>,
+  pix: <><path d="M12 3 3 12l9 9 9-9z" /><path d="M8 12h8M12 8v8" /></>,
+  plano: <><path d="m12 2 2.9 6.3 6.6.9-4.8 4.6 1.2 6.7L12 17.3 6.1 20.5l1.2-6.7L2.5 9.2l6.6-.9z" /></>,
+  carro: <><path d="M5 17h14M5 17a2 2 0 1 1-2-2m2 2v-2m14 2a2 2 0 1 0 2-2m-2 2v-2" /><path d="M3 15v-3l2-5h14l2 5v3" /><path d="M7 12h10" /></>,
+  print: <><rect x="3" y="4" width="18" height="14" rx="2" /><path d="m6 14 4-4 3 3 2-2 3 3" /><circle cx="9" cy="8.5" r="1.2" /></>,
+  segredo: <><rect x="4" y="10" width="16" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /><circle cx="12" cy="15.5" r="1.4" /></>,
+
+  mais: <><path d="M12 5v14M5 12h14" /></>,
+  x: <><path d="M18 6 6 18M6 6l12 12" /></>,
+  ok: <><path d="m4 12.5 5 5L20 6.5" /></>,
+  chev: <><path d="m9 5 7 7-7 7" /></>,
+  chevBaixo: <><path d="m5 9 7 7 7-7" /></>,
+  sync: <><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16" /><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8" /><path d="M21 3v5h-5M3 21v-5h5" /></>,
+  baixar: <><path d="M12 3v12M7 11l5 5 5-5M4 20h16" /></>,
+  subir: <><path d="M12 21V9M7 13l5-5 5 5M4 4h16" /></>,
+  anexo: <><path d="M21 11.5 12.5 20a5 5 0 0 1-7-7l8.5-8.5a3.5 3.5 0 0 1 5 5L10.5 18a2 2 0 0 1-3-3l8-8" /></>,
+  link: <><path d="M9 15 15 9" /><path d="M11 6.5 13 4.5a4 4 0 0 1 6 6l-2 2" /><path d="M13 17.5 11 19.5a4 4 0 0 1-6-6l2-2" /></>,
+  lixo: <><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /><path d="M6 7v13a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7" /><path d="M10 11v6M14 11v6" /></>,
+  editar: <><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" /></>,
+  filtro: <><path d="M3 5h18l-7 8v6l-4 2v-8z" /></>,
+  externo: <><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M21 14v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6" /></>,
+  copiar: <><rect x="9" y="9" width="12" height="12" rx="2" /><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" /></>,
+
+  sino: <><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.7 21a2 2 0 0 1-3.4 0" /></>,
+  alerta: <><circle cx="12" cy="12" r="9" /><path d="M12 7.5v5M12 16h.01" /></>,
+  lock: <><rect x="4" y="10" width="16" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /></>,
+  relogio: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.5 2" /></>,
+  atividade: <><path d="M3 12h4l3 8 4-16 3 8h4" /></>,
+  olho: <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></>,
+  sair: <><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="m16 17 5-5-5-5" /><path d="M21 12H9" /></>,
+  menu: <><path d="M3 6h18M3 12h18M3 18h18" /></>,
+  celular: <><rect x="6" y="2" width="12" height="20" rx="2.5" /><path d="M10 18h4" /></>,
+  monitor: <><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8M12 17v4" /></>,
+  sos: <><circle cx="12" cy="12" r="9" /><path d="M12 7.5v5M12 16h.01" /></>,
+  chat: <><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-4.2-1L3 20l1.2-4.5A8.4 8.4 0 0 1 3 11.5a8.5 8.5 0 0 1 9-8.4 8.4 8.4 0 0 1 9 8.4z" /></>,
+  escudo: <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="m9 12 2 2 4-4" /></>,
+  wa: <><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-4.2-1L3 20l1.2-4.5A8.4 8.4 0 0 1 3 11.5a8.5 8.5 0 0 1 9-8.4 8.4 8.4 0 0 1 9 8.4z" /><path d="M8.5 9.5c0 3 2 5 5 5.5" /></>,
+  pin: <><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z" /><circle cx="12" cy="10" r="2.5" /></>,
 };
 
-interface Props extends Omit<SVGProps<SVGSVGElement>, 'name'> {
+export default function Icon({
+  n,
+  s = 20,
+  strokeWidth = 1.75,
+  ...rest
+}: {
   n: Nome;
   s?: number;
-}
-
-export default function Icon({ n, s = 20, ...rest }: Props) {
+  strokeWidth?: number;
+} & React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -78,7 +90,7 @@ export default function Icon({ n, s = 20, ...rest }: Props) {
       height={s}
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.7}
+      strokeWidth={strokeWidth}
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden

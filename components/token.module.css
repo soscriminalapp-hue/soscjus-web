@@ -1,0 +1,52 @@
+.wrap { display: inline-flex; flex-direction: column; gap: 1px; }
+.linha { display: inline-flex; align-items: center; gap: 5px; }
+
+/* 🎨 DEFAULT: fundo escuro → Miami Blue */
+.linha b {
+  font-weight: 700;
+  color: var(--miami);
+  font-size: .92rem;
+}
+.linha em {
+  font-style: normal;
+  font-size: .8rem;
+  color: var(--t3);
+}
+.wrap small { font-size: .72rem; color: var(--t3); }
+
+/* 🎨 FUNDO CLARO (verde-limão, dourado) → PRETO.
+   Azul ciano sobre verde é a pior combinação de contraste que existe:
+   as duas cores têm luminância parecida, o número "vibra" e some. */
+.claro .linha b { color: #0a0a0c; }
+.claro .linha em { color: rgba(10, 10, 12, .62); }
+.claro small { color: rgba(10, 10, 12, .55); }
+
+.mini .linha b { font-size: .8rem; }
+.mini .linha em { font-size: .7rem; }
+.mini small { font-size: .66rem; }
+
+.off { opacity: .42; }
+.off .linha b { color: var(--t3); }
+
+.gratis { font-size: .86rem; font-weight: 700; color: var(--lime); }
+.gratisMini { font-size: .76rem; }
+
+/* ⚠️ A conta — o que SOBRA */
+.conta {
+  border: 1.5px solid var(--line2);
+  border-radius: var(--r2);
+  background: var(--g800);
+  padding: 3px 16px;
+}
+.cl {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 0;
+}
+.cl span { font-size: .88rem; color: var(--t3); }
+.cl b { font-size: 1rem; font-weight: 700; color: var(--text); }
+.forte { color: var(--t2) !important; font-weight: 600; }
+.div { height: 1px; background: var(--line2); }
+.sobra { color: var(--miami) !important; font-size: 1.16rem !important; }
+.falta { color: var(--risk-lit) !important; font-size: 1.16rem !important; }

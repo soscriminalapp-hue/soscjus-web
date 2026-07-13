@@ -1,0 +1,123 @@
+.carteira {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  padding: 26px;
+  margin-bottom: 16px;
+  border-color: rgba(0, 194, 232, .28);
+  background: linear-gradient(150deg, rgba(0, 194, 232, .06), transparent 60%), var(--g850);
+  flex-wrap: wrap;
+}
+.inf { border-color: rgba(216, 166, 49, .35); background: linear-gradient(150deg, rgba(216, 166, 49, .08), transparent 60%), var(--g850); }
+.pedra { flex-shrink: 0; }
+
+.numero { flex-shrink: 0; }
+.eb { display: block; font-size: .64rem; letter-spacing: .18em; color: var(--miami); font-weight: 700; }
+.numero strong { display: block; font-size: 2.6rem; font-weight: 700; color: var(--paper); line-height: 1.1; }
+.simbolo { font-size: 3.4rem !important; color: var(--gold) !important; }
+.numero small { display: block; font-size: .84rem; color: var(--t3); }
+
+.quebra { flex: 1; min-width: 280px; display: grid; gap: 14px; }
+.parcela { display: grid; gap: 5px; }
+.pt { display: flex; justify-content: space-between; align-items: baseline; }
+.pt span { font-size: .84rem; color: var(--t2); }
+.pt b { font-size: 1.05rem; font-weight: 700; color: var(--gold); }
+.eterno { color: var(--miami) !important; }
+.barra { height: 7px; border-radius: 8px; background: var(--g700); overflow: hidden; }
+.barra i { display: block; height: 100%; border-radius: 8px; transition: width .4s; }
+.zera, .nunca { display: flex; align-items: center; gap: 5px; font-size: .74rem; }
+.zera { color: var(--gold); }
+.nunca { color: var(--miami); }
+.dono { flex: 1; min-width: 260px; font-size: .96rem; color: var(--t2); line-height: 1.6; }
+
+/* 📱 a compra é no celular */
+.comprar { margin: 16px 0 26px; border-color: rgba(0, 194, 232, .25); }
+.comprar .card-b { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.cIc {
+  width: 52px; height: 52px; flex-shrink: 0;
+  display: grid; place-items: center;
+  border-radius: var(--r2);
+  border: 1.5px solid rgba(0, 194, 232, .3);
+  background: var(--miami-dim);
+  color: var(--miami);
+}
+.comprar h2 { font-family: var(--serif); font-size: 1.2rem; font-weight: 600; color: var(--paper); margin-bottom: 5px; }
+.comprar > .card-b > div { flex: 1; min-width: 280px; }
+.comprar p { font-size: .92rem; color: var(--t2); line-height: 1.6; }
+.comprar b { color: var(--text); font-weight: 600; }
+.lojas { display: flex; gap: 9px; flex-shrink: 0; }
+
+.h2 {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--paper);
+  margin: 26px 0 5px;
+}
+.sub { font-size: .94rem; color: var(--t2); margin-bottom: 14px; line-height: 1.55; }
+.sub b { color: var(--text); font-weight: 600; }
+
+/* 🟢 grátis */
+.gratis { overflow: hidden; }
+.gi {
+  display: flex;
+  gap: 12px;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--line2);
+}
+.gi:last-child { border-bottom: none; }
+.gi > svg { color: var(--lime); flex-shrink: 0; margin-top: 2px; }
+.gi > div { flex: 1; }
+.gt { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.gt strong { font-size: .96rem; font-weight: 700; color: var(--text); }
+.gi small { display: block; font-size: .86rem; color: var(--t3); margin-top: 2px; line-height: 1.5; }
+.era { display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.era s { font-size: .82rem; color: var(--t3); }
+.era em { font-style: normal; font-size: .86rem; font-weight: 800; color: var(--lime); }
+
+/* 🇧🇷 a legenda */
+.legBr {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 13px 16px;
+  margin-bottom: 13px;
+  border-radius: var(--r);
+  border: 1px solid rgba(216, 166, 49, .25);
+  background: var(--gold-dim);
+}
+.legBr span { font-size: 1rem; }
+.legBr p { font-size: .88rem; color: var(--t2); line-height: 1.55; }
+.legBr b { color: var(--gold); font-weight: 700; }
+
+/* a tabela */
+.tabela { overflow: hidden; }
+.ti {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--line2);
+}
+.ti:last-child { border-bottom: none; }
+.fora { opacity: .42; }
+
+.tn { flex: 1; min-width: 0; }
+.tt { display: flex; align-items: center; gap: 7px; }
+.br { font-size: .92rem; }
+.tt strong { font-size: .96rem; font-weight: 700; color: var(--text); }
+.tn small { display: block; font-size: .86rem; color: var(--t3); margin-top: 3px; line-height: 1.5; }
+.rel { display: block; font-style: normal; font-size: .76rem; font-weight: 700; color: var(--lime); margin-top: 4px; }
+
+.tp { text-align: right; flex-shrink: 0; }
+.tv { display: inline-flex; align-items: center; gap: 5px; }
+.tv b { font-size: 1rem; font-weight: 700; color: var(--miami); }
+.tv em { font-style: normal; font-size: .78rem; color: var(--t3); }
+.tp small { display: block; font-size: .72rem; color: var(--t3); margin-top: 2px; }
+
+@media (max-width: 860px) {
+  .carteira { gap: 18px; }
+  .numero strong { font-size: 2.1rem; }
+  .lojas { width: 100%; }
+  .lojas a { flex: 1; }
+}

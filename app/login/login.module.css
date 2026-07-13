@@ -1,141 +1,109 @@
+/* ═══ LOGIN — duas colunas: o argumento e o formulário ═══ */
+
 .tela {
+  min-height: 100dvh;
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  min-height: 100vh;
+  grid-template-columns: 1.05fr 1fr;
 }
 
-/* ─── vitrine ─── */
-.vitrine {
-  position: relative;
+/* ─── ESQUERDA: a marca ─── */
+.lado {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* B272 — padding fluido: dá mais respiro ao título em telas mais estreitas
-     ou com escala do Windows (125/150%), evitando que ele quebre palavra a palavra. */
-  padding: clamp(36px, 4vh, 48px) clamp(32px, 3.5vw, 56px);
-  background:
-    radial-gradient(900px 520px at 15% 0%, rgba(216, 166, 49, .08), transparent 62%),
-    radial-gradient(700px 460px at 85% 100%, rgba(0, 194, 232, .05), transparent 60%),
-    var(--g850);
+  padding: 44px;
   border-right: 1px solid var(--line2);
+  background:
+    radial-gradient(900px 500px at 15% 0%, rgba(216, 166, 49, .09), transparent 62%),
+    radial-gradient(700px 500px at 85% 100%, rgba(0, 194, 232, .06), transparent 60%),
+    var(--g900);
+  position: relative;
   overflow: hidden;
 }
-.vitrine::before {
+/* a linha de cima — a assinatura visual da marca */
+.lado::before {
   content: '';
   position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, .014) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, .014) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: radial-gradient(ellipse 80% 70% at 30% 30%, #000 10%, transparent 70%);
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--lime), var(--miami) 50%, var(--gold));
 }
 
-.marca {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-.marca img { filter: drop-shadow(0 3px 16px rgba(216, 166, 49, .32)); }
+.marca { display: flex; align-items: center; gap: 14px; }
 .marca strong {
   display: block;
   font-family: var(--serif);
-  font-size: 1.55rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: .06em;
   color: var(--paper);
-  line-height: 1.05;
+  line-height: 1.1;
 }
-.marca strong em { font-style: normal; color: var(--gold); }
+.marca em { font-style: normal; color: var(--gold); }
 .marca span {
   display: block;
-  font-size: .68rem;
-  letter-spacing: .22em;
-  text-transform: uppercase;
+  font-size: .64rem;
+  letter-spacing: .28em;
   color: var(--t3);
-  font-weight: 700;
-  margin-top: 5px;
+  font-weight: 600;
+  margin-top: 3px;
 }
 
-.tese { position: relative; max-width: 40ch; }
-.eb {
-  display: block;
-  font-size: .72rem;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--gold);
-  font-weight: 700;
-  margin-bottom: 14px;
-}
-.tese h1 {
+.arg { max-width: 480px; }
+.arg h1 {
   font-family: var(--serif);
-  /* B272 — tipografia fluida: encolhe quando falta espaço, em vez de quebrar
-     cada palavra numa linha. Nunca passa de 3.1rem em telas largas. */
-  font-size: clamp(2.2rem, 2.8vw, 3.1rem);
+  font-size: 3.1rem;
   font-weight: 600;
-  line-height: 1.1;
+  line-height: 1.08;
   letter-spacing: -.025em;
   color: var(--paper);
   margin-bottom: 20px;
-  text-wrap: balance;
 }
-.tese h1 em { font-style: italic; color: var(--gold); }
-.tese > p {
-  font-size: clamp(1rem, 1.1vw, 1.06rem);
+.arg h1 em { font-style: normal; color: var(--gold); }
+.arg p {
+  font-size: 1.04rem;
   color: var(--t2);
-  line-height: 1.65;
-  margin-bottom: 34px;
-  max-width: 36ch;
+  line-height: 1.68;
+  margin-bottom: 30px;
 }
 
-.pontos { list-style: none; display: grid; gap: 15px; }
-.pontos li {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  font-size: .96rem;
-  color: var(--t2);
-}
-.pontos i {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.dLime  { background: var(--lime);  box-shadow: 0 0 12px var(--lime); }
-.dMiami { background: var(--miami); box-shadow: 0 0 12px var(--miami); }
-.dPink  { background: var(--pink);  box-shadow: 0 0 12px var(--pink); }
-
-.rodape {
+.lista { list-style: none; display: grid; gap: 13px; }
+.lista li {
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: .8rem;
-  color: var(--t3);
+  padding-left: 26px;
+  font-size: .95rem;
+  color: var(--t2);
+  line-height: 1.5;
 }
-.rodape i {
+.lista li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--lime);
-  box-shadow: 0 0 10px var(--lime);
-  animation: pulso 2.4s infinite;
+  background: var(--gold);
+  box-shadow: 0 0 10px rgba(216, 166, 49, .55);
 }
-@keyframes pulso { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+.lista b { color: var(--text); font-weight: 700; }
 
-/* ─── painel ─── */
-.painel {
+.rodape { font-size: .76rem; color: var(--t3); }
+
+/* ─── DIREITA: o formulário ─── */
+.form {
   display: grid;
   place-items: center;
-  padding: 40px 32px;
+  padding: 44px;
+  background: var(--g900);
 }
-.form { width: 100%; max-width: 400px; }
 
-.marcaMobile { display: none; }
+.caixa { width: 100%; max-width: 400px; }
 
-.form h2 {
+.topo { margin-bottom: 30px; }
+.topo h2 {
   font-family: var(--serif);
   font-size: 2rem;
   font-weight: 600;
@@ -143,59 +111,78 @@
   letter-spacing: -.02em;
   margin-bottom: 8px;
 }
-.sub {
+/* ⚠️ ESTA FRASE EVITA QUE ELE TENTE SE CADASTRAR DE NOVO */
+.topo p {
   font-size: .96rem;
   color: var(--t2);
-  margin-bottom: 30px;
-  line-height: 1.55;
+  line-height: 1.6;
 }
+.topo b { color: var(--gold); font-weight: 700; }
+
+/* o olho da senha */
+.senha { position: relative; }
+.senha input { padding-right: 46px; }
+.senha button {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  color: var(--t3);
+  transition: .14s;
+}
+.senha button:hover { color: var(--text); background: var(--g700); }
 
 .erro {
   display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 14px 16px;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 13px 15px;
   margin-bottom: 18px;
-  border: 1.5px solid rgba(200, 32, 47, .35);
   border-radius: var(--r);
-  background: rgba(200, 32, 47, .08);
-  font-size: .92rem;
+  border: 1.5px solid rgba(200, 32, 47, .32);
+  background: var(--risk-dim);
+  font-size: .9rem;
   color: var(--risk-lit);
+  line-height: 1.5;
 }
-.erro svg {
-  width: 18px;
-  height: 18px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 1.9;
-  flex-shrink: 0;
-}
+.erro svg { flex-shrink: 0; margin-top: 2px; }
 
-.aviso {
-  display: block;
-  margin-top: 22px;
-  font-size: .82rem;
+.semConta {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line2);
+}
+.semConta p {
+  font-size: .88rem;
   color: var(--t3);
-  text-align: center;
-  line-height: 1.55;
+  line-height: 1.6;
+  margin-bottom: 10px;
 }
+.semConta b { color: var(--t2); font-weight: 700; }
 
-/* ─── responsivo ─── */
-@media (max-width: 1000px) {
+.lojas {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: .88rem;
+}
+.lojas a {
+  color: var(--miami);
+  font-weight: 600;
+  transition: .14s;
+}
+.lojas a:hover { color: var(--miami-lit); text-decoration: underline; }
+.lojas span { color: var(--t3); }
+
+/* ─── RESPONSIVO: no celular, só o formulário ─── */
+@media (max-width: 940px) {
   .tela { grid-template-columns: 1fr; }
-  .vitrine { display: none; }
-  .marcaMobile {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    margin-bottom: 34px;
-    justify-content: center;
-  }
-  .marcaMobile strong {
-    font-family: var(--serif);
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--paper);
-  }
-  .marcaMobile strong em { font-style: normal; color: var(--gold); }
+  .lado { display: none; }
+  .form { padding: 28px 20px; }
+  .caixa { max-width: 100%; }
 }

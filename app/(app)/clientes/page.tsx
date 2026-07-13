@@ -1,5 +1,5 @@
+import Link from 'next/link';
 import { buscarSosc } from '@/lib/proxy';
-import Cabecalho from '@/components/Cabecalho';
 import Icon from '@/components/Icon';
 import s from './clientes.module.css';
 
@@ -8,74 +8,78 @@ export const dynamic = 'force-dynamic';
 interface Cliente {
   id: string;
   fullName?: string;
-  user?: { fullName?: string };
-  status?: string;
-  planTier?: string;
-  _count?: { processos?: number };
+  email?: string;
+  phone?: string;
+  cpf?: string;
   processosCount?: number;
-}
-
-function iniciais(n: string) {
-  return n.split(/\s+/).filter(Boolean).slice(0, 2).map((p) => p[0]).join('').toUpperCase();
+  createdAt?: string;
 }
 
 export default async function Clientes() {
-  const r = await buscarSosc<{ clients?: Cliente[] } | Cliente[]>('/clients');
-  const lista: Cliente[] = Array.isArray(r.data)
-    ? r.data
-    : ((r.data as { clients?: Cliente[] })?.clients ?? []);
+  const r = await buscarSosc<{ clients?: Cliente[] }>('/clients');
+  const lista = r.data?.clients ?? [];
 
   return (
     <>
-      <Cabecalho
-        eyebrow="Carteira conectada"
-        titulo="Clientes"
-        texto="Todo mundo que se vinculou a você pelo aplicativo. Cada um traz seus processos, contratos e conversas."
-        acoes={
-          <button className="btn b-gold">
-            <Icon n="convite" s={19} strokeWidth={2.1} />
-            Convidar cliente
-          </button>
-        }
-      />
-
-      <div className="card">
-        <div className="card-b flush">
-          {lista.length === 0 ? (
-            <div className={s.vazio}>
-              <Icon n="clientes" s={40} />
-              <strong>Nenhum cliente vinculado ainda</strong>
-              <p>
-                Clique em &quot;Convidar cliente&quot;. Ele recebe o convite, baixa o
-                aplicativo, e a partir do aceite vocês compartilham processos,
-                documentos e a conversa.
-              </p>
-            </div>
-          ) : (
-            lista.map((c, i) => {
-              const nome = c.fullName ?? c.user?.fullName ?? 'Cliente';
-              const pendente = /^pending/i.test(String(c.status ?? ''));
-              const n = c.processosCount ?? c._count?.processos ?? 0;
-              return (
-                <div key={c.id ?? i} className={s.linha}>
-                  <div className={`${s.av} ${s['a' + ((i % 4) + 1)]}`}>
-                    {iniciais(nome)}
-                  </div>
-                  <div className={s.info}>
-                    <strong>{nome}</strong>
-                    <span className={pendente ? s.pend : ''}>
-                      {pendente
-                        ? 'Convite ainda não aceito'
-                        : `${n} ${n === 1 ? 'processo' : 'processos'} · ${c.planTier ?? 'ESSENCIAL'}`}
-                    </span>
-                  </div>
-                  <Icon n="chev" s={18} className={s.seta} />
-                </div>
-              );
-            })
-          )}
+      <header className={s.topo}>
+        <div>
+          <h1>Meus Clientes</h1>
+          <p>
+            Quem já está com você no SOSC JUS. Clique para ver os processos, o
+            contrato e as cobranças.
+          </p>
         </div>
-      </div>
+        <Link href="/clientes/convidar" className="btn b-lime">
+          <Icon n="convite" s={17} />
+          Convidar cliente
+        </Link>
+      </header>
+
+      {lista.length === 0 ? (
+        <div className={`card ${s.vazio}`}>
+          <Icon n="clientes" s={38} />
+          <p>Nenhum cliente ainda.</p>
+          <small>
+            Quando você convida um cliente e ele entra, o SOSC JUS busca{' '}
+            <b>todos os processos dele</b> — inclusive os que você não sabia que
+            existiam.
+          </small>
+          <Link href="/clientes/convidar" className="btn b-lime">
+            <Icon n="convite" s={17} />
+            Convidar o primeiro
+          </Link>
+        </div>
+      ) : (
+        <div className={s.grade}>
+          {lista.map((c) => (
+            <Link key={c.id} href={`/clientes/${c.id}`} className={`card ${s.cli}`}>
+              <span className={s.avatar}>
+                {(c.fullName ?? '?')
+                  .split(' ')
+                  .filter(Boolean)
+                  .slice(0, 2)
+                  .map((p) => p[0])
+                  .join('')
+                  .toUpperCase()}
+              </span>
+
+              <div className={s.info}>
+                <strong>{c.fullName ?? 'Cliente'}</strong>
+                <small>{c.email ?? c.phone ?? '—'}</small>
+              </div>
+
+              {typeof c.processosCount === 'number' ? (
+                <span className={s.n}>
+                  <b className="num">{c.processosCount}</b>
+                  <em>processos</em>
+                </span>
+              ) : null}
+
+              <Icon n="chev" s={17} className={s.seta} />
+            </Link>
+          ))}
+        </div>
+      )}
     </>
   );
 }

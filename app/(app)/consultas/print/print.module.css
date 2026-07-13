@@ -1,0 +1,111 @@
+.topo {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.ic {
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r2);
+  border: 1.5px solid rgba(182, 255, 0, .35);
+  background: var(--lime-dim);
+  color: var(--lime);
+}
+.topo > div { flex: 1; min-width: 260px; }
+.topo h1 {
+  font-family: var(--serif);
+  font-size: 1.85rem;
+  font-weight: 600;
+  color: var(--paper);
+  margin-bottom: 6px;
+}
+.topo p { font-size: 1rem; color: var(--t2); line-height: 1.6; max-width: 62ch; }
+
+.duas {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 18px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+/* ⬆️ arrasta e solta — o computador permite */
+.zona {
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  min-height: 220px;
+  padding: 26px;
+  border: 2px dashed var(--line2);
+  border-radius: var(--r2);
+  background: var(--g800);
+  color: var(--t3);
+  cursor: pointer;
+  transition: .16s;
+  position: relative;
+  overflow: hidden;
+}
+.zona:hover { border-color: var(--lime); background: var(--g700); color: var(--t2); }
+.on { border-color: var(--lime); background: var(--lime-dim); }
+.temArq { padding: 0; border-style: solid; min-height: auto; }
+
+.zona strong { font-size: 1rem; font-weight: 700; color: var(--text); }
+.zona small { font-size: .84rem; color: var(--t3); }
+
+.previa { width: 100%; display: block; max-height: 340px; object-fit: contain; }
+.trocar {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 20px;
+  background: rgba(10, 11, 13, .85);
+  backdrop-filter: blur(6px);
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.erro {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 15px;
+  margin-bottom: 14px;
+  border-radius: var(--r);
+  border: 1.5px solid rgba(200, 32, 47, .3);
+  background: var(--risk-dim);
+  font-size: .9rem;
+  color: var(--risk-lit);
+}
+
+.recebe h2 { display: flex; align-items: center; gap: 8px; }
+.recebe ul { list-style: none; display: grid; gap: 15px; }
+.recebe li { display: grid; gap: 3px; }
+.recebe strong { font-size: .9rem; font-weight: 700; color: var(--lime); }
+.recebe span { font-size: .86rem; color: var(--t2); line-height: 1.55; }
+
+.res { margin-top: 18px; }
+.res h2 { display: flex; align-items: center; gap: 8px; }
+.json {
+  font-family: var(--mono);
+  font-size: .8rem;
+  color: var(--t2);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+@media (max-width: 1080px) {
+  .duas { grid-template-columns: 1fr; }
+}

@@ -1,38 +1,61 @@
 /**
- * /api/sosc/**  →  api.soscriminalapp.com.br/api/v1/**
+ * /api/sosc/* — a ponte para o backend SOSC.
  *
- * Catch-all: qualquer endpoint do backend SOSC passa por aqui.
- * Exemplos:
- *   GET  /api/sosc/processos/meus-processos
- *   POST /api/sosc/processos/consulta
- *   GET  /api/sosc/clients
- *   POST /api/sosc/honorarios/charges
+ * ═══════════════════════════════════════════════════════════════════════════
+ *  ⚠️ O NAVEGADOR NUNCA FALA DIRETO COM api.soscriminalapp.com.br
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ *  NAVEGADOR          ESTAÇÃO (servidor)         BACKEND SOSC
+ *      │                     │                        │
+ *      │─ /api/sosc/... ────►│                        │
+ *      │                     │─ + Bearer ────────────►│
+ *      │                     │◄─ resposta ────────────│
+ *      │◄─ resposta ─────────│                        │
+ *
+ *  Vantagens:
+ *   · o token vive num cookie httpOnly — XSS não lê
+ *   · zero CORS pra configurar no Fastify
+ *   · o backend não precisa saber que a estação existe
  */
 
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { repassar } from '@/lib/proxy';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-/** Uploads e consultas longas (Escavador) precisam de folga. */
-export const maxDuration = 120;
 
-function alvo(ctx: { params: { path: string[] } }): string {
-  return '/' + (ctx.params.path ?? []).map(encodeURIComponent).join('/');
+/** ⚠️ Upload de vídeo (FinaisJus) leva tempo. 10 min. */
+const LONGO = 10 * 60_000;
+
+function alvo(ctx: { params: { path: string[] } }) {
+  return '/' + ctx.params.path.join('/');
+}
+
+function tempo(p: string) {
+  return p.includes('/pecas') || p.includes('/upload') || p.includes('/anexos')
+    ? LONGO
+    : 60_000;
 }
 
 export async function GET(req: NextRequest, ctx: { params: { path: string[] } }) {
-  return repassar(req, alvo(ctx), { timeoutMs: 90_000 });
+  const p = alvo(ctx);
+  return repassar(req, p, { timeoutMs: tempo(p) });
 }
+
 export async function POST(req: NextRequest, ctx: { params: { path: string[] } }) {
-  return repassar(req, alvo(ctx), { timeoutMs: 110_000 });
+  const p = alvo(ctx);
+  return repassar(req, p, { timeoutMs: tempo(p) });
 }
+
 export async function PUT(req: NextRequest, ctx: { params: { path: string[] } }) {
-  return repassar(req, alvo(ctx), { timeoutMs: 90_000 });
+  const p = alvo(ctx);
+  return repassar(req, p, { timeoutMs: tempo(p) });
 }
+
 export async function PATCH(req: NextRequest, ctx: { params: { path: string[] } }) {
-  return repassar(req, alvo(ctx), { timeoutMs: 90_000 });
+  return repassar(req, alvo(ctx));
 }
+
 export async function DELETE(req: NextRequest, ctx: { params: { path: string[] } }) {
-  return repassar(req, alvo(ctx), { timeoutMs: 60_000 });
+  return repassar(req, alvo(ctx));
 }

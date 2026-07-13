@@ -1,98 +1,104 @@
-import Cabecalho from '@/components/Cabecalho';
+import Link from 'next/link';
+import { buscarSosc } from '@/lib/proxy';
 import Icon from '@/components/Icon';
+import s from './assinados.module.css';
 
 export const dynamic = 'force-dynamic';
 
 /**
- * Já Assinados
+ * ✍️ JÁ ASSINADOS — os documentos que o cliente assinou.
  *
- * ─── PARA O JULIANO ───────────────────────────────────────────
- * Esta tela consome, via proxy (/api/sosc/** ou /api/finaisjus/**):
- *
- *   GET /documents/assinados/:clientId · GET /documents/assinados/:clientId/:id/pdf
- *
- * O padrão de todas as telas é o mesmo:
- *   1. Server Component busca com buscarSosc()  → veja /processos
- *   2. Ações do usuário usam sosc.post/patch    → veja /consultas
- *   3. Erro 402 abre <Compra/>                  → veja /consultas
- * ──────────────────────────────────────────────────────────────
+ * ⚠️ A assinatura acontece NO CELULAR (selfie + biometria). Aqui ele
+ *    CONSULTA, BAIXA e IMPRIME — que é o que o computador faz melhor.
  */
 
-const ROTAS = 'GET /documents/assinados/:clientId · GET /documents/assinados/:clientId/:id/pdf';
+interface Cliente { id: string; fullName?: string }
+interface Doc {
+  id: string;
+  kind?: string;
+  title?: string;
+  signedAt?: string;
+  clientName?: string;
+}
 
-export default function Pagina() {
+export default async function Assinados() {
+  const cl = await buscarSosc<{ clients?: Cliente[] }>('/clients');
+  const clientes = cl.data?.clients ?? [];
+
+  // busca os assinados de cada cliente
+  const todos: Array<Doc & { clientId: string }> = [];
+  await Promise.all(
+    clientes.map(async (c) => {
+      const r = await buscarSosc<{ documents?: Doc[]; assinados?: Doc[] }>(
+        `/documents/assinados/${c.id}`,
+      );
+      const ds = r.data?.documents ?? r.data?.assinados ?? [];
+      for (const d of ds) {
+        todos.push({ ...d, clientId: c.id, clientName: d.clientName ?? c.fullName });
+      }
+    }),
+  );
+
+  todos.sort(
+    (a, b) => new Date(b.signedAt ?? 0).getTime() - new Date(a.signedAt ?? 0).getTime(),
+  );
+
   return (
     <>
-      <Cabecalho
-        eyebrow="Em integração"
-        titulo="Já"
-        destaque="Assinados"
-        tom="money"
-        texto="Tudo que o cliente já assinou, com a data, a selfie e a firma. É a sua prova de que foi ele."
-      />
-
-      <div className="card">
-        <div className={'card-b'} style={CAIXA}>
-          <div style={{ color: 'var(--money)', marginBottom: 20 }}>
-            <Icon n="assinado" s={44} />
-          </div>
-          <h2 style={TITULO}>Tela pronta — falta plugar</h2>
-          <p style={TEXTO_ST}>
-            O desenho, o roteamento e o proxy já estão de pé. O que falta é ligar nos
-            endpoints do backend — que já existem.
+      <header className={s.topo}>
+        <div>
+          <h1>Já Assinados</h1>
+          <p>
+            Os documentos que seus clientes assinaram — com selfie, biometria e
+            carimbo de tempo. Baixe o PDF ou imprima.
           </p>
-          <code style={CODIGO}>{ROTAS}</code>
         </div>
-      </div>
+      </header>
 
-      <div className="nota">
-        <Icon n="lock" s={20} />
-        <p>
-          <b>Como plugar.</b> Copie o padrão de{' '}
-          <code style={INLINE}>app/(app)/processos/page.tsx</code> (leitura no servidor)
-          e de <code style={INLINE}>app/(app)/consultas/page.tsx</code> (ação do usuário
-          + tratamento do 402 → QR de compra). O cliente já está pronto em{' '}
-          <code style={INLINE}>lib/api.ts</code>.
-        </p>
-      </div>
+      {todos.length === 0 ? (
+        <div className={`card ${s.vazio}`}>
+          <Icon n="assinado" s={38} />
+          <p>Nenhum documento assinado ainda.</p>
+          <small>
+            Monte o contrato ou a procuração em <b>Contrato e Procuração</b> e mande
+            para o cliente assinar no aplicativo.
+          </small>
+          <Link href="/documentos" className="btn b-gold">
+            <Icon n="doc" s={17} />
+            Ir para os documentos
+          </Link>
+        </div>
+      ) : (
+        <div className={s.lista}>
+          {todos.map((d) => (
+            <article key={d.id} className={`card ${s.doc}`}>
+              <span className={s.ic}>
+                <Icon n="assinado" s={20} />
+              </span>
+
+              <div className={s.di}>
+                <strong>{d.title ?? d.kind ?? 'Documento'}</strong>
+                <small>{d.clientName ?? '—'}</small>
+                {d.signedAt ? (
+                  <em className="num">
+                    assinado em {new Date(d.signedAt).toLocaleDateString('pt-BR')}
+                  </em>
+                ) : null}
+              </div>
+
+              <a
+                href={`/api/sosc/documents/assinados/${d.clientId}/${d.id}/pdf`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn b-ghost sm"
+              >
+                <Icon n="baixar" s={15} />
+                PDF
+              </a>
+            </article>
+          ))}
+        </div>
+      )}
     </>
   );
 }
-
-const CAIXA: React.CSSProperties = {
-  padding: 60,
-  textAlign: 'center',
-  maxWidth: '56ch',
-  margin: '0 auto',
-};
-const TITULO: React.CSSProperties = {
-  fontFamily: 'var(--serif)',
-  fontSize: '1.5rem',
-  fontWeight: 600,
-  color: 'var(--paper)',
-  marginBottom: 12,
-};
-const TEXTO_ST: React.CSSProperties = {
-  fontSize: '1rem',
-  color: 'var(--t2)',
-  lineHeight: 1.7,
-};
-const CODIGO: React.CSSProperties = {
-  display: 'block',
-  marginTop: 22,
-  padding: '14px 16px',
-  borderRadius: 8,
-  background: 'var(--g800)',
-  border: '1px solid var(--line2)',
-  fontFamily: 'var(--mono)',
-  fontSize: '.82rem',
-  color: 'var(--t3)',
-  textAlign: 'left',
-  lineHeight: 1.7,
-  wordBreak: 'break-all',
-};
-const INLINE: React.CSSProperties = {
-  fontFamily: 'var(--mono)',
-  fontSize: '.86em',
-  color: 'var(--gold-lit)',
-};

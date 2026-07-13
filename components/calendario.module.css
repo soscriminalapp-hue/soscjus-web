@@ -1,0 +1,198 @@
+.wrap {
+  border: 1.5px solid var(--line2);
+  border-radius: var(--r2);
+  background: var(--g850);
+  overflow: hidden;
+}
+
+.topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line2);
+  flex-wrap: wrap;
+}
+.nav { display: flex; align-items: center; gap: 12px; }
+.nav button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1.5px solid var(--line2);
+  color: var(--t3);
+  transition: .14s;
+}
+.nav button:hover { border-color: var(--gold); color: var(--gold); }
+.nav h2 {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--paper);
+  min-width: 190px;
+  text-align: center;
+}
+.nav em { font-style: normal; color: var(--t3); }
+
+.resumo { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.rPrazo, .rAud {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .84rem;
+  color: var(--t2);
+}
+.rPrazo i, .rAud i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.rPrazo i { background: var(--risk); }
+.rAud i { background: var(--miami); }
+
+/* ─── A GRADE ─── */
+.grade {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+.cabDia {
+  padding: 10px;
+  text-align: center;
+  font-size: .68rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--t3);
+  font-weight: 700;
+  border-bottom: 1px solid var(--line2);
+  background: var(--g800);
+}
+
+.cel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  min-height: 92px;
+  padding: 8px 10px;
+  border-right: 1px solid var(--line2);
+  border-bottom: 1px solid var(--line2);
+  text-align: left;
+  transition: .13s;
+}
+.cel:nth-child(7n) { border-right: none; }
+.cel:hover { background: var(--g800); }
+.fora { opacity: .3; }
+
+.cel b { font-size: .9rem; font-weight: 600; color: var(--text); }
+
+/* hoje */
+.hoje { background: rgba(216, 166, 49, .06); }
+.hoje b {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: #151206;
+  font-weight: 800;
+}
+
+.sel { background: var(--g700) !important; box-shadow: inset 0 0 0 2px var(--gold); }
+.comPrazo { background: rgba(216, 166, 49, .04); }
+.vencido { background: rgba(200, 32, 47, .07); }
+
+.pontos { display: flex; align-items: center; gap: 3px; flex-wrap: wrap; }
+.pontos i { width: 7px; height: 7px; border-radius: 50%; display: block; }
+.pPrazo { background: var(--risk); }
+.pAud { background: var(--miami); }
+.pontos em {
+  font-style: normal;
+  font-size: .64rem;
+  color: var(--t3);
+  margin-left: 2px;
+}
+
+/* ─── O DIA ABERTO ─── */
+.dia { border-top: 1.5px solid var(--line2); background: var(--g800); }
+.dia header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 20px;
+  border-bottom: 1px solid var(--line2);
+}
+.dia h3 {
+  font-family: var(--serif);
+  font-size: 1.06rem;
+  font-weight: 600;
+  color: var(--paper);
+}
+.dia header button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  color: var(--t3);
+}
+.dia header button:hover { background: var(--g700); color: var(--text); }
+
+.itens { display: grid; }
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 20px;
+  border-bottom: 1px solid var(--line2);
+  transition: .13s;
+}
+.item:last-child { border-bottom: none; }
+.item:hover { background: var(--g700); }
+
+.iIc {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  border: 1.5px solid var(--line2);
+}
+.iPrazo .iIc { border-color: rgba(200, 32, 47, .35); background: var(--risk-dim); color: var(--risk-lit); }
+.iAud .iIc { border-color: rgba(0, 194, 232, .35); background: var(--miami-dim); color: var(--miami); }
+
+.item div { flex: 1; min-width: 0; }
+.item strong { display: block; font-size: .92rem; font-weight: 600; color: var(--text); }
+.item small {
+  display: block;
+  font-size: .8rem;
+  color: var(--t3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.item em {
+  font-style: normal;
+  font-size: .84rem;
+  font-weight: 600;
+  color: var(--t2);
+  flex-shrink: 0;
+}
+.venceu { color: var(--risk-lit) !important; }
+
+@media (max-width: 760px) {
+  .cel { min-height: 66px; padding: 6px; }
+  .nav h2 { min-width: 140px; font-size: 1.06rem; }
+}
+
+/* 🖨️ IMPRESSÃO — a pauta do mês */
+@media print {
+  .wrap { border: 1px solid #000; background: #fff; }
+  .cel, .cabDia { border-color: #999; }
+  .cel b, .item strong, .nav h2 { color: #000; }
+  .nav button, .resumo button, .dia header button { display: none; }
+}

@@ -1,152 +1,205 @@
-# 2_WEBSITE
-## Estação do Advogado (Next.js 14) · v4.0.1
+# SOSC JUS — Estação do Advogado
+## v4.2.0 · reconstruída do zero
 
 ---
 
-## 🎯 A ESTAÇÃO NÃO É O APP NA TELA GRANDE
+# O que mudou
 
-> **"Advogado que não tem cliente, adianta ter ferramenta?"**
+**A estação foi reescrita.** Não é remendo em cima de remendo — é uma
+construção nova, aproveitando só o que estava testado e correto (o proxy, a
+sessão, a tabela de preços, as classes processuais).
 
-**Não.** Por isso a home foi refeita em **3 eixos, nesta ordem:**
+## 🎯 O menu — agora ele FUNCIONA
 
-```
-1️⃣  PROSPECÇÃO          📡 Plantão · 👤 Convidar
-                        "eu ganho cliente"
+**O pecado capital de todo dashboard ruim: o item ativo não grita.**
 
-2️⃣  GESTÃO DO PROCESSO  🔴 Prazos · 📅 Audiências · ⚖️ Movimentações
-                        "eu não perco prazo"
+Antes estava tudo cinza — ele clicava e não sabia onde estava.
 
-3️⃣  GESTÃO DO CLIENTE   👥 Clientes · 💰 Honorários
-                        "eu recebo"
-```
+Agora:
+- **barra colorida** à esquerda + **fundo aceso** + **ícone e texto em cor**
+- **cada área tem A SUA cor** (processos ouro, prazos vermelho, plantão lima,
+  honorários verde, tokens azul, IA roxo)
+- **o logo leva pro Início**
+- **os 19 itens abrem uma tela real** — não existe "em breve"
 
-### ⚠️ Prazo e Audiência são **cards separados**
-
-**Motores diferentes:** um conta dias, o outro marca compromisso.
-**Nunca misture.**
-
-### ⚠️ O Plantão é o **primeiro** card
-
-Não é a 3ª aba. Se está desligado, o card **grita**:
-
-> *"Você está invisível. Ninguém te encontra."*
-
-**E NUNCA custa crédito:**
-1. **Efeito de rede** — se ele achar que desconta, desliga. O mural esvazia.
-   O usuário não acha advogado. **O produto morre.**
-2. **Provimento 205** — cobrar por caso recebido é **cobrança por lead**. Vedado.
-
-### ⚠️ Convidar Cliente é **prospecção disfarçada**
-
-> *"Quando ele entrar, o SOSC JUS busca **todos os processos dele** — inclusive
-> os que **você não sabia que existiam**. Até os **arquivados**: você pode
-> pedir a baixa definitiva."*
-
-O advogado convida quem **já é cliente** num processo.
-O cliente entra, a 1ª busca é grátis, e aparecem **10 processos**.
-
-**Ele só sabia de 1.** Os outros 9 são **oportunidade**.
-
-**Um único caso novo paga anos de assinatura.**
-
-### ⚠️ As três fontes de processo
+## 📋 A ordem do menu é a ordem do dia dele
 
 ```
-1️⃣  MINHA OAB              → onde EU atuo        (Meus Processos)
-2️⃣  MEU CLIENTE            → todos os DELE       (Ficha do Cliente)
-3️⃣  CONSULTA (pente-fino)  → o que EU busquei    (Consultas)
+INÍCIO
+
+PROCESSOS          ← o que aperta HOJE
+  Meus Processos
+  Prazos e Audiências
+
+PLANTÃO            ← a CONEXÃO com o usuário. O cliente NOVO.
+
+CLIENTES           ← tudo sobre a PESSOA
+  Meus Clientes
+  Convidar Cliente
+  Consulta Processual    ← as 3 consultas moram aqui:
+  Consulta de Mandado       são sobre PESSOA, não sobre processo
+  Consulta Cadastral
+  Contrato e Procuração
+  Já Assinados
+  Cobrar Honorários
+
+FERRAMENTAS        ← as avulsas
+  Consultar Veículo
+  Analisar Print
+  FinaisJus Pro
+  JurisCreator
+  Relatórios
+
+ESCRITÓRIO
+  Meus Tokens
+  OAB, Logo e PIX
 ```
-
-**Todas desaguam no mesmo lugar:** ele **vincula** o que interessa.
-
-| | |
-|---|---|
-| **Vincular** | o processo entra na lista · **grátis** |
-| **Acompanhar** | ele é **avisado** quando mexe · **💎 20/mês** |
-
-**São coisas diferentes.** Pode ter 50 vinculados e acompanhar só 3.
-
-### ⚠️ Os nomes são **idênticos ao app**
-
-| ❌ Errado | ✅ Certo |
-|---|---|
-| "Buscar Processos" | **"Consulta Processual SOSC"** |
-
-*"Buscar Processos"* dá a impressão de buscar **nos processos dele**.
-É o **pente-fino**: até **200 processos** de uma pessoa, no Brasil inteiro.
-
-**As descrições, os "O que você recebe" e a 🇧🇷 também vieram do app.**
 
 ---
+
+# 💻 O QUE SÓ O COMPUTADOR FAZ
+
+**É isto que justifica a estação existir.** Tudo nativo do navegador — **zero
+biblioteca externa**.
+
+| Recurso | Onde |
+|---|---|
+| **📊 Exportar Excel** | Meus Processos (os 284, já filtrados) · Honorários · Prazos |
+| **📅 Exportar .ics** | Prazos e Audiências → cai no **Google Calendar / Outlook**, com **alarme** (prazo: 1 dia antes · audiência: 2h antes) |
+| **🖨️ Imprimir** | Contrato · Procuração · Pauta do mês · Lista de processos · Recibo |
+| **📋 Copiar formatado** | Contrato → **cola no Word já pronto**, com negrito e parágrafo |
+| **📝 Baixar .doc** | Contrato e Procuração — o Word abre sem reclamar |
+| **⬆️ Arrastar e soltar** | PDF do processo · **vídeo de 3 GB** (FinaisJus) · print · logo |
+| **🖊️ Editor rico** | O contrato editável na tela — negrito, itálico, listas |
+| **📅 Calendário do mês** | O mês inteiro numa tela — **não cabe no celular** |
+
+---
+
+# ⚖️ As telas
+
+## Detalhe do processo — **em DUAS COLUNAS**
+
+**É o motivo da estação existir.**
+
+```
+┌─────────────────────────┬──────────────────────┐
+│  A CAPA                 │  ACOMPANHAR   10.000 │
+│  classe, vara, partes   │  RELATÓRIO     3.000 │
+│                         │                      │
+│  AS MOVIMENTAÇÕES       │  📎 ANEXAR:          │
+│  (a linha do tempo      │   · peça      GRÁTIS │
+│   inteira)              │   · conexo    10.000 │
+│                         │                      │
+│  [só atos decisórios]   │  ⚖️ FinaisJus        │
+└─────────────────────────┴──────────────────────┘
+```
+
+No celular ele vê **uma coisa por vez** — e perde o fio. Aqui ele lê a
+movimentação e clica em "gerar relatório" **sem trocar de tela**.
+
+## 🔒 Segredo de justiça
+
+Em **Meus Processos** → **"Cadastrar processo"**.
+
+Ele digita o CNJ (tem os autos, sabe o número). O Escavador varre **naquele
+momento** e traz **tudo que conseguir**. Em segredo de justiça, vem o que for
+publicado no **Diário Oficial** — o inteiro teor ele lê no PJe com o token da
+OAB dele.
+
+**10.000 tokens.** Se ele foi buscar o número, **aquele processo importa**.
+
+## ✋ Criar prazo e audiência na mão — **GRÁTIS**
+
+O advogado raiz tem método próprio. Se o sistema **impõe** o jeito dele fazer,
+ele volta pro Word.
+
+Ninguém foi ao tribunal buscar nada — **cobrar por digitar seria roubo**.
+
+## 📡 Plantão — a conexão com o usuário
+
+Do outro lado, no app, é o **"Buscar Advogado"**. A mesma ponte.
+
+**5 a 10 pessoas por dia.** (O SOS acontece ~1×/mês — o Plantão é o **volume**.)
+
+⚠️ **Nunca desconta token.** Cobrar por lead é vedado pelo **Provimento 205 da
+OAB** — e se ele achasse que custa, DESLIGAVA. O mural esvaziava. O produto
+morria.
+
+---
+
+# 🪙 Os tokens
+
+**1 token = R$ 0,001.**
+
+| | tokens |
+|---|---|
+| Relatório · JurisCreator · Meu CPF | **3.000** |
+| As consultas · acompanhar · sincronizar · conexo | **10.000** |
+| Pente-Fino do Veículo | **20.000** |
+| FinaisJus Pro | **80.000** |
+
+**🎨 A cor do número:**
+- fundo **escuro** (card, tabela, saldo) → **Miami Blue**
+- fundo **claro** (verde-limão, dourado) → **preto**
+
+*(azul ciano sobre verde-limão é ilegível — as duas cores têm luminância
+parecida e o número "vibra")*
+
+---
+
+# 📱 O que é melhor no celular — e a estação **DIZ**
+
+| | Por quê |
+|---|---|
+| **JurisCreator** | É ferramenta de **Instagram**. No celular: gera → compartilha. Três toques. Aqui: gera → baixa → manda pro telefone → abre o Insta → sobe. **A estação LINKA** para `juriscreator.soscriminal.com.br` — não reimplementa (a rota `/gerar` nem existe no backend). |
+| **Analisar Print** | O print **está** no celular. Aqui ele teria que mandar pro computador primeiro. **Mas não bloqueamos** — avisamos. |
+
+**Bloquear seria arrogância. Avisar é respeito.**
+
+---
+
+# 📦 Subir
 
 ```bash
-cp .env.example .env.local
-openssl rand -base64 48        # → SESSION_SECRET
-
-npm ci
+npm install
 npm run build
-pm2 start npm --name soscjus-estacao -- start
+pm2 restart soscjus-estacao
 ```
 
----
+## O `.env.local`
 
-## ⚠️ Depende do backend B268
-
-A estação lê **`GET /api/v1/creditos/saldo`**.
-
-**Suba o backend (`1_APLICATIVO`) primeiro.** Sem essa rota, o saldo aparece 0.
-
----
-
-## ⚠️ `lib/creditos.ts` é ESPELHO
-
-Ele **tem que bater** com `backend/src/lib/entitlements.ts`.
-
-Se divergirem, o card mostra um preço e o backend cobra outro — **e o advogado
-descobre que foi enganado**.
-
-**Fonte da verdade: o BACKEND.** A web só espelha para mostrar antes do clique.
-
----
-
-## O token não vai pro navegador
-
-```
-NAVEGADOR          NEXT (servidor)          BACKEND SOSC
-    │                    │                        │
-    │─ /api/auth/login ─►│                        │
-    │                    │─ /api/v1/auth/login ──►│
-    │                    │◄─ { accessToken } ─────│
-    │◄─ cookie httpOnly ─│  (cifrado AES-256)     │
-    │                    │                        │
-    │─ /api/sosc/... ───►│─ + Bearer ────────────►│
+```bash
+SOSC_BACKEND_URL=https://api.soscriminalapp.com.br
+SESSION_SECRET=<32+ caracteres aleatórios>
+SESSION_COOKIE=soscjus_estacao
+NEXT_PUBLIC_SITE_URL=https://web.soscjus.com.br
+JURISCREATOR_URL=https://juriscreator.soscriminal.com.br
+FINAISJUS_URL=https://finaisjus.soscriminal.com.br
 ```
 
-**Consequência:** não precisa mexer no CORS do Fastify.
+## ⚠️ CORS — não precisa
 
----
+**O navegador nunca fala direto com o backend.**
 
-## Nginx
-
-```nginx
-location / {
-  proxy_pass http://127.0.0.1:3000;
-  proxy_http_version 1.1;
-  proxy_set_header Host $host;
-  proxy_set_header X-Real-IP $remote_addr;
-  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-  proxy_set_header X-Forwarded-Proto $scheme;
-
-  # ⚠️ o vídeo da audiência passa por aqui
-  client_max_body_size    4G;
-  proxy_read_timeout      300s;
-  proxy_request_buffering off;
-}
+```
+NAVEGADOR → ESTAÇÃO (servidor) → BACKEND SOSC
 ```
 
-Sem `proxy_request_buffering off`, o Nginx grava o vídeo de 3 GB em disco
-antes de repassar.
+O token vive num **cookie httpOnly cifrado** (AES-256-GCM). Se um XSS rodar na
+página, ele **não consegue ler o token** — porque JS não enxerga httpOnly.
+
+E o backend não precisa saber que a estação existe.
 
 ---
 
-Ver `CHECKLIST_JULIANO.md` para o teste de aceite.
+# ✅ Validado
+
+- **0 erros** de TypeScript
+- **32 rotas** — todas existem no backend (verificadas uma a uma)
+- **19 itens de menu** — todos abrem tela real
+- **21 telas** construídas
+
+---
+
+**SOS Criminal Tecnologia LTDA** · CNPJ 66.476.445/0001-50
+Autor do código: Glauber Paiva

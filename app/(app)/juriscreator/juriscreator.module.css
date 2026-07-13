@@ -1,228 +1,114 @@
-.aviso {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 22px;
-  flex-wrap: wrap;
+.topo { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 18px; flex-wrap: wrap; }
+.ic {
+  width: 58px; height: 58px; flex-shrink: 0;
+  display: grid; place-items: center;
+  border-radius: var(--r2);
+  border: 1.5px solid rgba(139, 92, 246, .35);
+  background: var(--mind-dim);
+  color: var(--mind-lit);
 }
-.abrirApp {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  border-radius: var(--r);
+.topo > div { flex: 1; min-width: 250px; }
+.topo h1 { font-family: var(--serif); font-size: 1.85rem; font-weight: 600; color: var(--paper); margin-bottom: 6px; }
+.topo p { font-size: 1rem; color: var(--t2); line-height: 1.6; max-width: 58ch; }
+
+/* 📱 A VERDADE */
+.honesto { border-color: rgba(0, 194, 232, .28); margin-bottom: 18px; }
+.hTopo { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; }
+.hIc {
+  width: 54px; height: 54px; flex-shrink: 0;
+  display: grid; place-items: center;
+  border-radius: var(--r2);
   border: 1.5px solid rgba(0, 194, 232, .35);
   background: var(--miami-dim);
   color: var(--miami);
-  font-size: .88rem;
-  font-weight: 700;
-  transition: .14s;
-  flex-shrink: 0;
 }
-.abrirApp:hover { background: rgba(0, 194, 232, .18); }
+.honesto h2 { font-family: var(--serif); font-size: 1.3rem; font-weight: 600; color: var(--paper); margin-bottom: 4px; }
+.honesto p { font-size: .96rem; color: var(--t2); line-height: 1.55; }
+.honesto b { color: var(--text); font-weight: 700; }
 
-.grade {
-  display: grid;
-  grid-template-columns: 1fr 1.05fr;
-  gap: 22px;
-  margin-bottom: 30px;
-}
-
-.painel {
+.compara { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.bom, .ruim {
+  padding: 16px;
+  border-radius: var(--r2);
   border: 1.5px solid var(--line2);
-  border-radius: 16px;
-  background: var(--g850);
-  padding: 24px;
 }
-.dica {
-  display: block;
-  font-style: normal;
-  font-size: .82rem;
-  color: var(--t3);
-  margin-top: 6px;
-}
+.bom { border-color: rgba(182, 255, 0, .3); background: var(--lime-dim); }
+.ruim { background: var(--g800); }
 
-.bloco { margin-top: 20px; }
-.rotulo {
-  display: block;
-  font-size: .72rem;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: var(--t3);
-  font-weight: 700;
-  margin-bottom: 10px;
+.bom header, .ruim header {
+  display: flex; align-items: center; gap: 8px;
+  font-size: .78rem; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  margin-bottom: 12px;
 }
+.bom header { color: var(--lime); }
+.ruim header { color: var(--t3); }
 
-.opcoes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.opc {
-  padding: 13px;
-  border-radius: 11px;
-  border: 1.5px solid var(--line2);
-  background: var(--g800);
-  text-align: left;
-  transition: .15s;
-}
-.opc:hover { border-color: var(--line); }
-.opcOn {
-  border-color: rgba(139, 92, 246, .5);
-  background: var(--mind-dim);
-}
-.opc strong {
-  display: block;
-  font-size: .94rem;
-  font-weight: 700;
-  color: var(--text);
-}
-.opcOn strong { color: var(--mind-lit); }
-.opc small {
-  display: block;
-  font-size: .78rem;
-  color: var(--t3);
-  margin-top: 2px;
-}
+.bom ol, .ruim ol { margin-left: 18px; display: grid; gap: 5px; }
+.bom li, .ruim li { font-size: .88rem; line-height: 1.5; }
+.bom li { color: var(--t2); }
+.ruim li { color: var(--t3); }
+.bom b { color: var(--lime); font-weight: 700; }
 
-.modelos { display: grid; gap: 8px; }
-.mod {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1.5px solid var(--line2);
-  background: var(--g800);
-  text-align: left;
-  transition: .15s;
+.bom em, .ruim em {
+  display: block; font-style: normal;
+  font-size: .84rem; font-weight: 700;
+  margin-top: 12px; padding-top: 10px;
+  border-top: 1px solid var(--line2);
 }
-.mod:hover { border-color: var(--line); }
-.modOn { border-color: rgba(139, 92, 246, .5); background: var(--mind-dim); }
-.bolinha {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  border: 2px solid var(--line);
-  transition: .15s;
-}
-.modOn .bolinha {
-  border-color: var(--mind-lit);
-  background: var(--mind-lit);
-  box-shadow: inset 0 0 0 3px var(--g800);
-}
-.mod strong {
-  display: block;
-  font-size: .94rem;
-  font-weight: 600;
-  color: var(--text);
-}
-.mod small {
-  display: block;
-  font-size: .78rem;
-  color: var(--t3);
-  margin-top: 1px;
-}
+.bom em { color: var(--lime); }
+.ruim em { color: var(--t3); }
 
-.erro {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.hNota {
+  font-size: .9rem !important;
+  color: var(--t3) !important;
+  line-height: 1.6;
   margin-top: 18px;
-  padding: 13px 15px;
-  border-radius: 10px;
-  border: 1.5px solid rgba(200, 32, 47, .3);
-  background: rgba(200, 32, 47, .07);
-  font-size: .9rem;
-  color: var(--risk-lit);
+  padding-top: 16px;
+  border-top: 1px solid var(--line2);
 }
-.painel .btn { margin-top: 20px; }
-.btnPreco {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  margin-left: 10px;
-  padding-left: 11px;
-  border-left: 1px solid rgba(255, 255, 255, .22);
-  font-family: var(--mono);
-  font-weight: 800;
-}
+.hNota b { color: var(--miami) !important; }
 
-/* ─── a saída ─── */
-.saida {
-  border: 1.5px solid var(--line2);
-  border-radius: 16px;
-  background: var(--g850);
-  padding: 24px;
-  min-height: 420px;
-}
-.imagem {
-  width: 100%;
-  border-radius: 12px;
-  border: 1.5px solid var(--line2);
+/* os dois caminhos */
+.caminhos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
   margin-bottom: 18px;
 }
-.legenda {
-  border: 1.5px solid var(--line2);
+.caminho {
+  display: flex; align-items: center; gap: 14px;
+  padding: 18px; transition: .16s;
+}
+.caminho:hover { transform: translateY(-2px); }
+.web:hover { border-color: var(--mind); }
+.app { border-color: rgba(182, 255, 0, .3); }
+.app:hover { border-color: var(--lime); }
+
+.cIc {
+  width: 46px; height: 46px; flex-shrink: 0;
+  display: grid; place-items: center;
   border-radius: 12px;
+  border: 1.5px solid var(--line2);
   background: var(--g800);
-  padding: 16px;
-  margin-bottom: 14px;
 }
-.legenda header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-.legenda strong {
-  font-size: .78rem;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--t3);
-  font-weight: 700;
-}
-.legenda p {
-  font-size: .96rem;
-  color: var(--text);
-  line-height: 1.65;
-  white-space: pre-wrap;
-}
-.fonte {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: .84rem;
-  color: var(--t3);
-  margin-bottom: 16px;
-}
-.acoes { display: flex; gap: 10px; margin-bottom: 18px; }
+.cMind { border-color: rgba(139, 92, 246, .3); background: var(--mind-dim); color: var(--mind-lit); }
+.cLime { border-color: rgba(182, 255, 0, .3); background: var(--lime-dim); color: var(--lime); }
 
-.vazio {
-  height: 100%;
-  min-height: 380px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: var(--t3);
-  padding: 30px;
-}
-.vazio strong {
-  display: block;
-  font-family: var(--serif);
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--t2);
-  margin: 16px 0 8px;
-}
-.vazio p {
-  font-size: .92rem;
-  color: var(--t3);
-  line-height: 1.6;
-  max-width: 34ch;
-}
+.caminho div { flex: 1; min-width: 0; }
+.caminho strong { display: block; font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.caminho small { display: block; font-size: .84rem; color: var(--t3); line-height: 1.5; }
+.caminho small b { color: var(--lime); font-weight: 700; }
+.seta { color: var(--t3); flex-shrink: 0; }
 
-@media (max-width: 1100px) {
-  .grade { grid-template-columns: 1fr; }
+.oQue h2 { display: flex; align-items: center; gap: 8px; }
+.oQue ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.oQue li { display: grid; gap: 3px; }
+.oQue strong { font-size: .94rem; font-weight: 700; color: var(--mind-lit); }
+.oQue span { font-size: .88rem; color: var(--t2); line-height: 1.55; }
+
+@media (max-width: 900px) {
+  .compara { grid-template-columns: 1fr; }
+  .caminhos { grid-template-columns: 1fr; }
+  .oQue ul { grid-template-columns: 1fr; }
 }

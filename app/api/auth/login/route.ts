@@ -1,103 +1,96 @@
 /**
  * POST /api/auth/login
  *
- * Repassa para o backend SOSC (mesmo endpoint do app), valida que é advogado,
- * e sela o token num cookie httpOnly. O navegador nunca vê o JWT.
+ * ⚠️ O NAVEGADOR NUNCA VÊ O TOKEN DO BACKEND.
  *
- * Aceita e-mail OU o número SOSC ADV — o backend resolve os dois.
+ * Ele fala com a estação; a estação fala com o backend NO SERVIDOR e guarda
+ * o accessToken num cookie httpOnly cifrado (AES-256-GCM). Se um XSS rodar
+ * na página, ele não consegue ler o token — porque JS não enxerga httpOnly.
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { soscUrl } from '@/lib/env';
-import { selarSessao, gravarCookie, type Sessao } from '@/lib/session';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { selarSessao, gravarCookie } from '@/lib/session';
+import { env, soscUrl } from '@/lib/env';
 
 export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
-
-interface RespostaLogin {
-  accessToken?: string;
-  refreshToken?: string;
-  user?: {
-    id?: string;
-    fullName?: string;
-    email?: string;
-    role?: string;
-    lawyer?: { oabNumber?: string; oabUf?: string; plan?: string } | null;
-    effectivePlan?: string;
-  };
-  message?: string;
-}
 
 export async function POST(req: NextRequest) {
-  let email = '';
-  let password = '';
+  let body: { email?: string; password?: string };
   try {
-    const b = (await req.json()) as { email?: string; password?: string };
-    email = (b.email ?? '').trim();
-    password = b.password ?? '';
+    body = await req.json();
   } catch {
-    return NextResponse.json({ message: 'Requisição inválida.' }, { status: 400 });
+    return NextResponse.json({ message: 'Corpo inválido.' }, { status: 400 });
   }
 
-  if (!email || !password) {
-    return NextResponse.json(
-      { message: 'Informe o e-mail (ou seu número SOSC ADV) e a senha.' },
-      { status: 400 },
-    );
+  if (!body.email || !body.password) {
+    return NextResponse.json({ message: 'Informe e-mail e senha.' }, { status: 400 });
   }
 
   let r: Response;
   try {
     r = await fetch(soscUrl('/auth/login'), {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-      signal: AbortSignal.timeout(20_000),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: body.email, password: body.password }),
       cache: 'no-store',
     });
   } catch {
     return NextResponse.json(
-      { message: 'Não foi possível falar com o SOSC JUS. Tente de novo em instantes.' },
+      { message: 'O servidor SOSC não respondeu. Tente em instantes.' },
       { status: 502 },
     );
   }
 
-  const data = (await r.json().catch(() => ({}))) as RespostaLogin;
-
-  if (!r.ok || !data.accessToken) {
-    const msg =
-      r.status === 403
-        ? (data.message ?? 'Conta suspensa. Fale com o suporte.')
-        : (data.message ?? 'E-mail ou senha incorretos.');
-    return NextResponse.json({ message: msg }, { status: r.status === 403 ? 403 : 401 });
+  if (!r.ok) {
+    return NextResponse.json(
+      { message: r.status === 401 ? 'E-mail ou senha não conferem.' : 'Não foi possível entrar.' },
+      { status: r.status },
+    );
   }
 
-  const role = String(data.user?.role ?? '').toUpperCase();
-  if (role !== 'LAWYER' && role !== 'ADMIN') {
+  const d = (await r.json()) as {
+    accessToken?: string;
+    user?: {
+      id?: string;
+      fullName?: string;
+      email?: string;
+      lawyer?: { oabNumber?: string; oabUf?: string; plan?: string } | null;
+    };
+  };
+
+  if (!d.accessToken) {
+    return NextResponse.json({ message: 'Resposta inesperada do servidor.' }, { status: 502 });
+  }
+
+  /**
+   * ⚠️ A ESTAÇÃO É EXCLUSIVA DO ADVOGADO.
+   *
+   * Se um cliente logar aqui, ele vê um menu inteiro que não é dele
+   * (Plantão, honorários, FinaisJus). Melhor barrar na porta, com uma
+   * mensagem clara, do que deixar entrar e confundir.
+   */
+  if (!d.user?.lawyer) {
     return NextResponse.json(
-      { message: 'Esta estação é exclusiva para advogados. Use o aplicativo SOSC JUS.' },
+      { message: 'Esta conta é de cliente. A Estação é exclusiva para advogados.' },
       { status: 403 },
     );
   }
 
-  const lw = data.user?.lawyer;
-  const sessao: Sessao = {
-    token: data.accessToken,
-    refresh: data.refreshToken,
-    sub: String(data.user?.id ?? ''),
-    nome: data.user?.fullName ?? 'Advogado',
-    email: data.user?.email ?? email,
-    role: role as 'LAWYER' | 'ADMIN',
-    oab: lw?.oabNumber ? `OAB/${lw.oabUf ?? ''} ${lw.oabNumber}`.trim() : undefined,
-    plano: (lw?.plan ?? data.user?.effectivePlan ?? 'DEFESA').toUpperCase(),
-  };
+  const oab = d.user.lawyer.oabNumber
+    ? `${d.user.lawyer.oabUf ?? ''} ${d.user.lawyer.oabNumber}`.trim()
+    : null;
 
-  gravarCookie(await selarSessao(sessao));
-
-  return NextResponse.json({
-    nome: sessao.nome,
-    email: sessao.email,
-    oab: sessao.oab ?? null,
-    plano: sessao.plano,
+  const selo = await selarSessao({
+    token: d.accessToken,
+    sub: d.user.id ?? '',
+    nome: d.user.fullName ?? 'Advogado',
+    email: d.user.email ?? body.email,
+    role: 'LAWYER',
+    oab: oab ?? undefined,
+    plano: d.user.lawyer.plan ?? 'DEFESA',
   });
+  gravarCookie(selo);
+
+  return NextResponse.json({ ok: true });
 }

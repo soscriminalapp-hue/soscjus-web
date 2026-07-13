@@ -6,19 +6,15 @@ import Shell from '@/components/Shell';
 export const dynamic = 'force-dynamic';
 
 interface SaldoAPI {
-  saldo?: {
-    total?: number | null;
-    ilimitado?: boolean;
-    fundador?: boolean;
-  };
+  saldo?: { total?: number | null; ilimitado?: boolean; fundador?: boolean };
 }
 
 export default async function LayoutApp({ children }: { children: React.ReactNode }) {
   const s = await sessaoAtual();
   if (!s) redirect('/login');
 
-  // O saldo aparece no topo de TODA tela. Se o backend não responder, mostra 0
-  // — mas nunca quebra a navegação.
+  // O saldo aparece no topo de TODA tela. Se o backend não responder,
+  // mostra 0 — mas NUNCA quebra a navegação.
   const c = await buscarSosc<SaldoAPI>('/creditos/saldo');
 
   return (

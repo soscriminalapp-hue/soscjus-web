@@ -1,7 +1,0 @@
-.grade { display: grid; gap: 18px; margin-bottom: 34px; }
-.c2 { grid-template-columns: repeat(2, 1fr); }
-.c3 { grid-template-columns: repeat(3, 1fr); }
-
-@media (max-width: 1400px) { .c3 { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 1140px) { .c2, .c3 { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 860px)  { .c2, .c3 { grid-template-columns: 1fr; } }

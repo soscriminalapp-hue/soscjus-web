@@ -1,20 +1,17 @@
 'use client';
 
-/**
- * Saldo.tsx — o saldo no topo. Discreto, sempre presente.
- *
- * Não pisca. Não grita. Só muda de cor quando zera — aí sim é problema.
- *
- * ⚠️ NUNCA VERMELHO enquanto houver saldo. Vermelho, num número que
- *    representa dinheiro, o cérebro lê como "negativo" — mesmo com 500
- *    tokens na conta.
- */
-
 import Link from 'next/link';
 import Diamante from './Diamante';
-import { tomDoSaldo, fmt } from '@/lib/creditos';
+import { fmt } from '@/lib/creditos';
 import s from './saldo.module.css';
 
+/**
+ * 🪙 O SALDO — no topo de toda tela.
+ *
+ * ⚠️ NUNCA VERMELHO enquanto houver saldo. Vermelho, num número que
+ *    representa valor, o cérebro lê como "negativo" — mesmo com 60.000
+ *    tokens na conta. Vermelho SÓ quando zerou de verdade.
+ */
 export default function Saldo({
   total,
   ilimitado,
@@ -24,27 +21,23 @@ export default function Saldo({
   ilimitado?: boolean;
   fundador?: boolean;
 }) {
-  const tom = tomDoSaldo(total, ilimitado);
+  const zerado = !ilimitado && total <= 0;
+  const baixo = !ilimitado && total > 0 && total < 10_000;
 
   return (
-    <Link href="/plano" className={`${s.saldo} ${s[tom]}`} title="Meus tokens">
+    <Link
+      href="/tokens"
+      className={`${s.saldo} ${zerado ? s.zerado : baixo ? s.baixo : ''} ${ilimitado ? s.inf : ''}`}
+      title="Meus tokens"
+    >
       <Diamante s={17} />
       {ilimitado ? (
-        // ⚠️ SVG, não o caractere "∞" — a fonte mono renderiza como "oo"
-        <svg className={s.inf} viewBox="0 0 40 20" width="26" height="14" aria-label="ilimitado">
-          <path
-            d="M10 10c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6-6-2.7-6-6zm12 0c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6-6-2.7-6-6z"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2.6}
-          />
-        </svg>
+        <b className={s.simbolo}>∞</b>
       ) : (
-        <b>{fmt(total)}</b>
+        <b className="num">{fmt(total)}</b>
       )}
-      {/* ⚠️ A PALAVRA. Sem ela, ele lê R$. */}
-      <span>tokens</span>
-      {fundador ? <em className={s.selo}>FUNDADOR</em> : null}
+      <em>tokens</em>
+      {fundador ? <span className={s.selo}>FUNDADOR</span> : null}
     </Link>
   );
 }
