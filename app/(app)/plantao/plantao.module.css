@@ -225,3 +225,151 @@
   .verPerfil { grid-template-columns: 1fr; }
   .casos { grid-template-columns: 1fr; }
 }
+
+/* ═══ v2 — schema real (nome, OAB, bio, áreas por ID) ═══ */
+
+.skel {
+  height: 90px;
+  background: linear-gradient(90deg, var(--g850), var(--g800), var(--g850));
+  background-size: 200% 100%;
+  animation: sk 1.4s infinite;
+}
+@keyframes sk { to { background-position: -200% 0; } }
+
+.topoPagina {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.topoPagina h1 {
+  font-family: var(--serif);
+  font-size: 1.85rem;
+  font-weight: 600;
+  color: var(--paper);
+  margin-bottom: 6px;
+}
+.topoPagina p { font-size: .98rem; color: var(--t2); max-width: 58ch; line-height: 1.6; }
+.topoPagina b { color: var(--text); font-weight: 700; }
+
+.gratisGrande {
+  flex-shrink: 0;
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--lime);
+  padding: 7px 14px;
+  border-radius: 20px;
+  background: var(--lime-dim);
+  white-space: nowrap;
+}
+
+.erro, .avisoBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  margin-bottom: 16px;
+  border-radius: var(--r);
+  font-size: .9rem;
+}
+.erro { border: 1.5px solid rgba(200, 32, 47, .3); background: var(--risk-dim); color: var(--risk-lit); }
+.avisoBox { border: 1.5px solid rgba(216, 166, 49, .3); background: var(--gold-dim); color: var(--gold); }
+
+/* o switch da tela dedicada */
+.switchCard {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.switchTxt { flex: 1; min-width: 200px; }
+.switchTxt strong { display: block; font-size: 1.05rem; font-weight: 700; color: var(--text); }
+.switchTxt small { display: block; font-size: .82rem; color: var(--t3); margin-top: 2px; }
+.switchTxt p { font-size: .92rem; color: var(--t2); margin-top: 8px; }
+.naoValidada { color: var(--gold); font-style: normal; }
+.pendente { color: var(--gold) !important; }
+
+/* casos — schema real */
+.secaoCasos { margin-bottom: 24px; }
+.h2Casos {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--paper);
+  margin-bottom: 14px;
+}
+.pillCasos {
+  font-family: var(--mono);
+  font-size: .74rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: var(--lime);
+  color: #0a0a0c;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+.caso { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.urgente { border-color: rgba(226, 59, 59, .4); background: rgba(226, 59, 59, .04); }
+.caso header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.areaTag {
+  font-size: .78rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(0, 169, 224, .12);
+  color: #00A9E0;
+}
+.urgenteTag {
+  font-size: .68rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: rgba(226, 59, 59, .16);
+  color: #E23B3B;
+}
+.situacao { font-size: .94rem; font-weight: 600; color: var(--text); }
+.relato { font-size: .86rem; color: var(--t3); line-height: 1.5; }
+.caso footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 8px; border-top: 1px solid var(--line2); flex-wrap: wrap; }
+.meta { display: inline-flex; align-items: center; gap: 5px; font-size: .78rem; color: var(--t3); }
+.acoesCaso { display: flex; gap: 7px; }
+
+/* o formulário rico */
+.form { margin-bottom: 20px; }
+.linha2, .linha3 { display: grid; gap: 0 14px; margin-bottom: 0; }
+.linha3 { grid-template-columns: 1fr 90px 1.4fr; }
+
+.checks { display: flex; gap: 20px; flex-wrap: wrap; margin: 4px 0 18px; }
+.checks label { display: flex; align-items: center; gap: 8px; font-size: .9rem; color: var(--t2); cursor: pointer; }
+.checks input { width: 16px; height: 16px; accent-color: var(--lime); }
+
+.ramo { margin-bottom: 16px; }
+.ramo h3 { font-size: .82rem; font-weight: 700; color: var(--t3); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
+.areasGrid { display: flex; flex-wrap: wrap; gap: 7px; }
+.areaChip {
+  font-size: .84rem;
+  padding: 8px 13px;
+  border-radius: 20px;
+  border: 1.5px solid var(--line2);
+  background: var(--g800);
+  color: var(--t2);
+  transition: .14s;
+}
+.areaChip:hover { border-color: var(--line); }
+.areaOn { border-color: var(--lime); background: var(--lime-dim); color: var(--lime); font-weight: 700; }
+
+.notaOab { font-size: .8rem; color: var(--t3); text-align: center; margin-top: 10px; line-height: 1.5; }
+
+@media (max-width: 720px) {
+  .linha3 { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: 1fr; }
+}
