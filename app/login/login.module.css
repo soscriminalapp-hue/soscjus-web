@@ -10,7 +10,9 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 48px 56px;
+  /* B272 — padding fluido: dá mais respiro ao título em telas mais estreitas
+     ou com escala do Windows (125/150%), evitando que ele quebre palavra a palavra. */
+  padding: clamp(36px, 4vh, 48px) clamp(32px, 3.5vw, 56px);
   background:
     radial-gradient(900px 520px at 15% 0%, rgba(216, 166, 49, .08), transparent 62%),
     radial-gradient(700px 460px at 85% 100%, rgba(0, 194, 232, .05), transparent 60%),
@@ -56,7 +58,7 @@
   margin-top: 5px;
 }
 
-.tese { position: relative; max-width: 30ch; }
+.tese { position: relative; max-width: 40ch; }
 .eb {
   display: block;
   font-size: .72rem;
@@ -68,16 +70,19 @@
 }
 .tese h1 {
   font-family: var(--serif);
-  font-size: 3.1rem;
+  /* B272 — tipografia fluida: encolhe quando falta espaço, em vez de quebrar
+     cada palavra numa linha. Nunca passa de 3.1rem em telas largas. */
+  font-size: clamp(2.2rem, 2.8vw, 3.1rem);
   font-weight: 600;
-  line-height: 1.08;
+  line-height: 1.1;
   letter-spacing: -.025em;
   color: var(--paper);
   margin-bottom: 20px;
+  text-wrap: balance;
 }
 .tese h1 em { font-style: italic; color: var(--gold); }
 .tese > p {
-  font-size: 1.06rem;
+  font-size: clamp(1rem, 1.1vw, 1.06rem);
   color: var(--t2);
   line-height: 1.65;
   margin-bottom: 34px;
