@@ -6,7 +6,7 @@
  *  ⚠️ NEM TUDO É MELHOR NA ESTAÇÃO. E dizer isso GANHA a confiança dele.
  *
  *  Se ele tenta consultar veículo na estação, digita a placa errada e perde
- *  40 créditos — ele culpa o produto.
+ *  40.000 tokens — ele culpa o produto.
  *
  *  Se a estação AVISA "fotografe a placa no celular, o app lê sozinho",
  *  ele pensa: "esse pessoal sabe o que faz".

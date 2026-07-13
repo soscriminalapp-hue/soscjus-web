@@ -7,15 +7,19 @@
  *  FLUIDEZ NO BARATO. TRANSPARÊNCIA NO CARO.
  * ═══════════════════════════════════════════════════════════════════════
  *
- *  Até 20 créditos → clica e usa. ZERO pergunta.
- *  Acima de 20     → confirma.
+ *  Até 10.000 tokens → clica e usa. ZERO pergunta.
+ *  Acima de 10.000   → confirma.
  *
- *  Este modal NÃO revela o preço — ele já estava no card. Ele só impede
- *  que o advogado queime 160 créditos do FinaisJus sem querer.
+ *  Este modal NÃO revela o preço em R$ — ele já estava no card, e aqui
+ *  NUNCA aparece "equivale a R$ X". Ele só impede que o advogado queime
+ *  80.000 tokens do FinaisJus sem querer.
  *
  *  Se pedisse confirmação pra tudo, a navegação viraria um campo minado:
  *  todo clique um modal, todo modal um cancelamento. Ele pararia de
  *  explorar as ferramentas — e ferramenta não explorada não gera receita.
+ *
+ *  ⚠️ NUNCA mostre "equivale a R$ ...". É exatamente a associação que a
+ *     escala de tokens existe para quebrar.
  * ═══════════════════════════════════════════════════════════════════════
  */
 
@@ -81,11 +85,11 @@ export default function Gastar({
             <span>Você tem</span>
             <b>
               <Diamante s={15} />
-              {saldo.toLocaleString('pt-BR')}
+              {fmt(saldo)} tokens
             </b>
           </div>
           <div className={s.linha}>
-            <span>{f.recorrente ? 'Custa por mês' : 'Vai custar'}</span>
+            <span>{f.recorrente ? 'Usa por mês' : 'Isto usa'}</span>
             <b className={s.custo}>
               −{fmt(f.tokens)}
             </b>
@@ -95,25 +99,24 @@ export default function Gastar({
             <span>Fica com</span>
             <b className={da ? s.sobra : s.falta}>
               <Diamante s={15} />
-              {da ? depois.toLocaleString('pt-BR') : 0}
+              {da ? fmt(depois) : 0} tokens
             </b>
           </div>
         </div>
+
+        {f.recorrente && da ? (
+          <p className={s.legendaMensal}>Cobrado todo mês</p>
+        ) : null}
 
         {!da ? (
           <div className={s.semSaldo}>
             <Icon n="alerta" s={17} />
             <p>
-              Faltam <b>{Math.abs(depois)} créditos</b>. Recarregue e a ferramenta
+              Faltam <b>{fmt(Math.abs(depois))} tokens</b>. Recarregue e a ferramenta
               abre na hora.
             </p>
           </div>
-        ) : (
-          <p className={s.equiv}>
-            Equivale a R$ {}
-            {f.recorrente ? ' por mês' : ''}
-          </p>
-        )}
+        ) : null}
 
         <div className={s.acoes}>
           <button className="btn b-ghost" onClick={onCancelar}>
@@ -122,12 +125,12 @@ export default function Gastar({
           {da ? (
             <button className="btn b-tech" onClick={onConfirmar}>
               <Diamante s={17} />
-              Usar {fmt(f.tokens)} créditos
+              Usar {fmt(f.tokens)} tokens
             </button>
           ) : (
             <button className="btn b-tech" onClick={onRecarregar}>
               <Icon n="mais" s={18} strokeWidth={2.2} />
-              Comprar créditos
+              Comprar tokens
             </button>
           )}
         </div>

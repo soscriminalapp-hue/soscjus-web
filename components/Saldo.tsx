@@ -7,7 +7,7 @@
  *
  * ⚠️ NUNCA VERMELHO enquanto houver saldo. Vermelho, num número que
  *    representa dinheiro, o cérebro lê como "negativo" — mesmo com 500
- *    créditos na conta.
+ *    tokens na conta.
  */
 
 import Link from 'next/link';

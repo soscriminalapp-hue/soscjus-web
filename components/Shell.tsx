@@ -39,7 +39,7 @@ interface Item {
    * ⚠️ Dizer isso GANHA a confiança dele.
    *
    * Se ele tenta consultar veículo aqui, digita a placa errada e perde
-   * 40 créditos — ele culpa o produto.
+   * 40.000 tokens — ele culpa o produto.
    *
    * Se a estação AVISA "fotografe a placa no celular", ele pensa:
    * "esse pessoal sabe o que faz".
@@ -57,7 +57,7 @@ interface Grupo {
   ═══════════════════════════════════════════════════════════════════════════
    ✅ FUNCIONA DE VERDADE (7):
       Início · Meus Processos · Prazos e Audiências · Clientes ·
-      Fazer uma Consulta · FinaisJus Pro · Meus Créditos
+      Fazer uma Consulta · FinaisJus Pro · Meus Tokens
 
    🔧 A TELA ABRE, mas ainda NÃO está plugada no backend (7):
       Plantão · Contrato e Procuração · Já Assinados · Cobrar Honorários ·
@@ -116,7 +116,7 @@ const MENU: Grupo[] = [
       { href: '/escritorio', rotulo: 'Minha OAB', icone: 'oab', emBreve: true },
       { href: '/escritorio?t=logo', rotulo: 'Minha Logomarca', icone: 'logo', emBreve: true },
       { href: '/escritorio?t=pix', rotulo: 'Chave PIX', icone: 'pix', emBreve: true },
-      { href: '/plano', rotulo: 'Meus Créditos', icone: 'plano' },
+      { href: '/plano', rotulo: 'Meus Tokens', icone: 'plano' },
     ],
   },
 
@@ -135,7 +135,7 @@ const MENU: Grupo[] = [
   ═══════════════════════════════════════════════════════════════════════════
    ✅ FUNCIONA (7):
       Início · Meus Processos · Prazos e Audiências · Clientes ·
-      Convidar · Fazer uma Consulta · FinaisJus Pro · Meus Créditos
+      Convidar · Fazer uma Consulta · FinaisJus Pro · Meus Tokens
 
    🔧 A TELA ABRE, mas ainda não está plugada (7):
       Plantão · Contrato e Procuração · Já Assinados · Cobrar Honorários ·
@@ -157,8 +157,8 @@ export interface Advogado {
   email: string;
   oab: string | null;
   plano: string;
-  /** Saldo de créditos. Discreto, sempre no topo. */
-  creditos?: number;
+  /** Saldo de tokens. Discreto, sempre no topo. */
+  saldoTokens?: number;
   /** O dono → ∞ */
   ilimitado?: boolean;
   /** Um dos 50 → selo */
@@ -300,7 +300,7 @@ export default function Shell({
               <Sino />
 
               <Saldo
-                total={adv.creditos ?? 0}
+                total={adv.saldoTokens ?? 0}
                 ilimitado={adv.ilimitado}
                 fundador={adv.fundador}
               />

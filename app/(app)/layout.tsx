@@ -28,7 +28,7 @@ export default async function LayoutApp({ children }: { children: React.ReactNod
         email: s.email,
         oab: s.oab ?? null,
         plano: s.plano ?? 'DEFESA',
-        creditos: c.data?.saldo?.total ?? 0,
+        saldoTokens: c.data?.saldo?.total ?? 0,
         ilimitado: c.data?.saldo?.ilimitado ?? false,
         fundador: c.data?.saldo?.fundador ?? false,
       }}

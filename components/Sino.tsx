@@ -246,7 +246,7 @@ export default function Sino() {
           id: 'plantao',
           tipo: 'plantao',
           titulo: `${n} ${n === 1 ? 'pessoa procurando' : 'pessoas procurando'} advogado`,
-          texto: 'Grátis no seu plano. Não desconta crédito.',
+          texto: 'Grátis no seu plano. Não desconta token.',
           href: '/plantao',
           peso: PESO.plantao,
           pendente: true,

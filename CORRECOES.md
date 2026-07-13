@@ -1,3 +1,44 @@
+# SOSC JUS WEB — v4.1.1
+## Alinhada com a migração de TOKENS do aplicativo
+
+---
+
+# 🪙 CRÉDITOS → TOKENS (varredura completa da estação)
+
+> O aplicativo passou por uma migração completa de "créditos" para
+> "tokens" (escala nova: 1 token = R$ 0,001 — 3.000/10.000/20.000/80.000
+> em vez de 6/20/40/160). Esta rodada trouxe a **estação** para o mesmo
+> padrão, para as duas superfícies nunca divergirem na frente do advogado.
+
+## O que estava fora de alinhamento e foi corrigido
+
+| Onde | O que era | O que virou |
+|---|---|---|
+| **`components/Shell.tsx`** (menu) | rótulo **"Meus Créditos"** | **"Meus Tokens"** — o item de menu mais visível de todos |
+| **`components/Gastar.tsx`** (modal de confirmação) | "Vai custar", "Faltam X créditos", "Usar X créditos", "Comprar créditos" | "Isto usa", "Faltam X tokens", "Usar X tokens", "Comprar tokens" |
+| **`components/Gastar.tsx`** | 🐛 bug: `Equivale a R$ {}` — expressão vazia quebrada, resquício de edição anterior | **Removido.** Nunca mostramos equivalência em R$ no momento do gasto — isso desfaz o propósito da escala de tokens |
+| **`components/Diamante.tsx`** | SVG programático (losango azul liso) | **A imagem oficial** (`public/token-diamond.png`) — mesmo asset usado no app: face azul-Miami, face verde-lima, núcleo dourado, fundo transparente |
+| **`PainelPlantao.tsx`** | selo visível "Grátis · não desconta **crédito**" | "Grátis · não desconta **token**" |
+| **`components/Sino.tsx`** | notificação "Não desconta crédito" | "Não desconta token" |
+| **`app/abrir/page.tsx`** (fluxo de compra mobile) | "abriu na tela de créditos", "compra de créditos passa pela loja" | "tela de tokens", "compra de tokens passa pela loja" |
+| Comentários de documentação em 8 outros arquivos | mencionavam "crédito"/valores da escala antiga | atualizados para "token" e os valores novos |
+
+## ⚠️ O `lib/creditos.ts` já estava certo
+
+A fonte central de preços da web (nome do arquivo é histórico — o conteúdo
+já era `TOKENS`/`PRECOS` na escala nova desde a rodada anterior). Esta
+varredura pegou o que ainda **não tinha sido levado até a UI final**: o
+texto do menu, do modal de confirmação, e o ícone.
+
+## ✅ Validado
+
+- Zero ocorrências de "crédito" fora do nome do arquivo `lib/creditos.ts`
+- Todos os 26 usos de `<Diamante s={n} />` continuam funcionando (mesma
+  API — nenhum import quebrado)
+- Sintaxe balanceada em todos os arquivos tocados
+
+---
+
 # SOSC JUS WEB — v4.1.0
 ## A estação vira o **caminhão**
 

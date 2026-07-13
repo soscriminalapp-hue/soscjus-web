@@ -4,12 +4,13 @@
  * DonoDoVeiculo.tsx — o upsell honesto.
  *
  * ═══════════════════════════════════════════════════════════════════════
- *  O Pente-Fino do Veículo (40 créditos) já entrega TUDO do veículo —
+ *  O Pente-Fino do Veículo (20.000 tokens) já entrega TUDO do veículo —
  *  inclusive QUEM É O DONO, com o CPF dele.
  *
  *  Aí o advogado olha o CPF e pensa: "deixa eu ver quem é essa pessoa."
  *
- *  Isso é OUTRA consulta. Outra API, outro custo. Então: 20 créditos.
+ *  Isso é OUTRA consulta. Outra API, outro custo. Então: 10.000 tokens
+ *  (CONSULTA_CADASTRAL).
  *
  *  É honesto porque ELE ESCOLHE. Não é cobrança escondida — ele já tem
  *  o que pediu (o veículo). Se quiser ir além, o preço está na cara,

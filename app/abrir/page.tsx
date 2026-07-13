@@ -95,7 +95,7 @@ function AbrirInner() {
             <div className={s.ok}>✓</div>
             <h1>Pronto</h1>
             <p>
-              O aplicativo abriu na tela de créditos. Termine a compra por lá — e o
+              O aplicativo abriu na tela de tokens. Termine a compra por lá — e o
               computador destrava sozinho.
             </p>
           </>
@@ -103,7 +103,7 @@ function AbrirInner() {
           <>
             <h1>Você ainda não tem o aplicativo</h1>
             <p>
-              A compra de créditos passa pela loja do seu celular. Baixe o SOSC JUS —
+              A compra de tokens passa pela loja do seu celular. Baixe o SOSC JUS —
               é o mesmo login.
             </p>
 

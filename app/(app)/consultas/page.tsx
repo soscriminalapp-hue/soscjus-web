@@ -350,7 +350,7 @@ export default function Consultas() {
         setRes(r as Record<string, unknown>);
         if (f.feature) await lerSaldo(); // o saldo caiu
       } catch (e) {
-        // ═══ 402 = SEM CRÉDITO. A ferramenta não é vendida — o CRÉDITO é. ═══
+        // ═══ 402 = SEM TOKEN. A ferramenta não é vendida — o TOKEN é. ═══
         if (e instanceof ApiError && e.semCota) {
           refazer.current = () => void executar(true);
           setComprar('CREDITOS');

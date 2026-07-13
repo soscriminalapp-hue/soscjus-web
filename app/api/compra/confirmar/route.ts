@@ -14,14 +14,14 @@
  *
  *  ✅ Agora: o celular manda o TOKEN que veio no QR.
  *
- *  ⚠️ ISTO NÃO DÁ CRÉDITO A NINGUÉM.
+ *  ⚠️ ISTO NÃO DÁ TOKEN A NINGUÉM.
  *
- *     O crédito quem dá é o BACKEND SOSC, depois de validar o receipt da
+ *     O token quem dá é o BACKEND SOSC, depois de validar o receipt da
  *     Apple/Google (POST /iap/verify).
  *
  *     Esta rota só DESTRAVA A TELA do computador. Se alguém adivinhar o
  *     token (256 bits — boa sorte), o máximo que consegue é fazer a tela
- *     de outro advogado parar de girar. Nenhum crédito é criado.
+ *     de outro advogado parar de girar. Nenhum token é criado.
  *
  *  Corpo:
  *    { pedido: "uuid", token: "base64url" }
@@ -60,6 +60,6 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({
     ok: true,
     estado: p.estado,
-    creditos: p.creditos,
+    tokens: p.tokens,
   });
 }

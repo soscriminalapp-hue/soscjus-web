@@ -42,7 +42,7 @@ export interface CardProps {
   /** Ocupa 2 colunas. */
   grande?: boolean;
   /**
-   * Quanto custa, em créditos.
+   * Quanto custa, em tokens.
    *
    * ⚠️ NÃO OMITA em ferramenta paga. A variação é de 26×: o Relatório custa
    * 6 💎, o FinaisJus custa 160. Se ele clica sem saber e queima 40 de uma

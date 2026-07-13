@@ -268,8 +268,8 @@ export const PACOTES: Pacote[] = [
   { id: 'p1', tokens: 60_000, precoBRL: 59.9, bonusPct: 0, productId: 'br.com.soscriminal.creditos.100' },
   { id: 'p2', tokens: 130_000, precoBRL: 129.9, bonusPct: 8, productId: 'br.com.soscriminal.creditos.250' },
   { id: 'p3', tokens: 250_000, precoBRL: 249.9, bonusPct: 17, destaque: true, productId: 'br.com.soscriminal.creditos.500' },
-  { id: 'p4', tokens: 400_000, precoBRL: 399.9, bonusPct: 17, productId: 'br.com.soscriminal.creditos.800' },
-  { id: 'p5', tokens: 600_000, precoBRL: 599.9, bonusPct: 17, productId: 'br.com.soscriminal.creditos.1200' },
+  { id: 'p4', tokens: 400_000, precoBRL: 399.9, bonusPct: 17, productId: 'br.com.soscriminal.creditos.1000' },
+  { id: 'p5', tokens: 600_000, precoBRL: 599.9, bonusPct: 17, productId: 'br.com.soscriminal.creditos.1250' },
 ];
 
 /** ⚠️ Acima disto, confirma. Abaixo, clica e usa. */

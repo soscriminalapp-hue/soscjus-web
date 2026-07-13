@@ -203,7 +203,7 @@ export interface Relatorio {
 /* ═══════════════════════════════════════════════════════════════
    ACOMPANHAMENTO — R$ 9,90/mês
    1 pacote = 1 processo = 1 relatório DAQUELE processo.
-   Não vira crédito. Não acumula. Não migra.
+   Não vira token. Não acumula. Não migra.
    ═══════════════════════════════════════════════════════════════ */
 
 export interface Acompanhamento {

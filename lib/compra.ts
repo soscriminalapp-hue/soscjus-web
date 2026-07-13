@@ -5,14 +5,14 @@
  *  ⚠️ POR QUE ESTA PONTE EXISTE
  * ═══════════════════════════════════════════════════════════════════════════
  *
- *  A Apple EXIGE que a compra passe pelo IAP dela. Não dá pra vender crédito
+ *  A Apple EXIGE que a compra passe pelo IAP dela. Não dá pra vender token
  *  num site e liberar no app — é motivo de rejeição (Guideline 3.1.1).
  *
  *  Então:
- *    1. O advogado clica em "Comprar créditos" na ESTAÇÃO
+ *    1. O advogado clica em "Comprar tokens" na ESTAÇÃO
  *    2. A estação cria um PEDIDO e mostra um QR
  *    3. Ele aponta o CELULAR
- *    4. O app abre na tela de créditos, com o pacote já escolhido
+ *    4. O app abre na tela de tokens, com o pacote já escolhido
  *    5. Ele paga pelo StoreKit
  *    6. O app avisa o pedido → A ESTAÇÃO DESTRAVA SOZINHA
  *
@@ -33,7 +33,7 @@
  *     · Vale 10 minutos
  *     · Uso único: confirmou, morreu
  *     · E o backend SOSC valida o receipt de verdade. Aqui só destravamos
- *       a tela — o crédito quem dá é o backend.
+ *       a tela — o token quem dá é o backend.
  *
  * ═══════════════════════════════════════════════════════════════════════════
  *  ⚠️ EM MEMÓRIA — e por que está OK
@@ -71,11 +71,11 @@ export interface Pedido {
   /**
    * O QUE ele está comprando.
    *
-   * ⚠️ SÓ EXISTEM PACOTES DE CRÉDITO. As ferramentas NÃO são vendidas —
-   *    elas GASTAM crédito. Se veio outra coisa aqui, é bug.
+   * ⚠️ SÓ EXISTEM PACOTES DE TOKEN. As ferramentas NÃO são vendidas —
+   *    elas GASTAM token. Se veio outra coisa aqui, é bug.
    */
   productId: string;
-  creditos: number;
+  tokens: number;
   precoBRL: number;
   estado: Estado;
   criadoEm: number;
@@ -103,11 +103,11 @@ function limpar() {
  * Se divergirem, a estação mostra um preço e a loja cobra outro.
  */
 export const PACOTES = [
-  { productId: 'br.com.soscriminal.creditos.100', creditos: 100, precoBRL: 59.9 },
-  { productId: 'br.com.soscriminal.creditos.250', creditos: 250, precoBRL: 129.9 },
-  { productId: 'br.com.soscriminal.creditos.500', creditos: 500, precoBRL: 249.9 },
-  { productId: 'br.com.soscriminal.creditos.1000', creditos: 800, precoBRL: 399.9 },
-  { productId: 'br.com.soscriminal.creditos.1250', creditos: 1200, precoBRL: 599.9 },
+  { productId: 'br.com.soscriminal.creditos.100', tokens: 60_000, precoBRL: 59.9 },
+  { productId: 'br.com.soscriminal.creditos.250', tokens: 130_000, precoBRL: 129.9 },
+  { productId: 'br.com.soscriminal.creditos.500', tokens: 250_000, precoBRL: 249.9 },
+  { productId: 'br.com.soscriminal.creditos.1000', tokens: 400_000, precoBRL: 399.9 },
+  { productId: 'br.com.soscriminal.creditos.1250', tokens: 600_000, precoBRL: 599.9 },
 ] as const;
 
 export function acharPacote(productId: string) {
@@ -119,7 +119,7 @@ export function criarPedido(advogadoId: string, productId: string): Pedido | nul
   limpar();
 
   const pac = acharPacote(productId);
-  if (!pac) return null; // ⚠️ não é pacote de crédito — recusa
+  if (!pac) return null; // ⚠️ não é pacote de token — recusa
 
   const agora = Date.now();
   const p: Pedido = {
@@ -128,7 +128,7 @@ export function criarPedido(advogadoId: string, productId: string): Pedido | nul
     token: randomBytes(32).toString('base64url'),
     advogadoId,
     productId: pac.productId,
-    creditos: pac.creditos,
+    tokens: pac.tokens,
     precoBRL: pac.precoBRL,
     estado: 'AGUARDANDO',
     criadoEm: agora,

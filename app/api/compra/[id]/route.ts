@@ -32,7 +32,7 @@ export async function GET(_req: NextRequest, ctx: { params: { id: string } }) {
 
   return NextResponse.json({
     estado: p.estado,
-    creditos: p.creditos,
+    tokens: p.tokens,
     expiraEm: p.expiraEm,
   });
 }

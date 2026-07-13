@@ -2,19 +2,19 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *  COMPRA DE CRÉDITOS — a ponte PC → celular
+ *  COMPRA DE TOKENS — a ponte PC → celular
  * ═══════════════════════════════════════════════════════════════════════════
  *
  *  ⚠️ A ESTAÇÃO NÃO VENDE NADA. Ela mostra um QR.
  *
  *  A Apple EXIGE que a compra passe pelo IAP dela (Guideline 3.1.1).
- *  Vender crédito no site e liberar no app é motivo de REJEIÇÃO.
+ *  Vender token no site e liberar no app é motivo de REJEIÇÃO.
  *
  *  Então:
- *    1. Ele clica em "Comprar créditos"
+ *    1. Ele clica em "Comprar tokens"
  *    2. A estação cria um pedido e mostra o QR
  *    3. Ele aponta o CELULAR
- *    4. O app abre na tela de créditos, com o pacote escolhido
+ *    4. O app abre na tela de tokens, com o pacote escolhido
  *    5. Paga pelo StoreKit
  *    6. O app avisa → A ESTAÇÃO DESTRAVA SOZINHA
  *

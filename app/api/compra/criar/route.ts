@@ -29,11 +29,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'Escolha um pacote.' }, { status: 400 });
   }
 
-  // ⚠️ Só PACOTE DE CRÉDITO. As ferramentas NÃO são vendidas — elas GASTAM.
+  // ⚠️ Só PACOTE DE TOKEN. As ferramentas NÃO são vendidas — elas GASTAM.
   const p = criarPedido(s.sub, body.productId);
   if (!p) {
     return NextResponse.json(
-      { message: 'Este produto não é um pacote de créditos.' },
+      { message: 'Este produto não é um pacote de tokens.' },
       { status: 400 },
     );
   }
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({
     id: p.id,
-    creditos: p.creditos,
+    tokens: p.tokens,
     precoBRL: p.precoBRL,
     expiraEm: p.expiraEm,
     /** ⚠️ O QR aponta pra PÁGINA (https) — com fallback pra loja. */

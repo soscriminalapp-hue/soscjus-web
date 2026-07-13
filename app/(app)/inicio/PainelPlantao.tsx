@@ -16,14 +16,14 @@
  *  ⚠️ NUNCA COBRE POR ISTO
  * ═══════════════════════════════════════════════════════════════════════════
  *
- *  1. EFEITO DE REDE. Se ele achar que desconta crédito, DESLIGA.
+ *  1. EFEITO DE REDE. Se ele achar que desconta token, DESLIGA.
  *     O mural esvazia. O usuário busca advogado e não acha ninguém.
  *     O PRODUTO MORRE.
  *
  *  2. PROVIMENTO 205 (OAB). Cobrar por caso recebido é COBRANÇA POR LEAD
  *     — vedado. É o que separa "software" de "intermediação de clientela".
  *
- *  Por isso o selo verde-limão: "Grátis no seu plano · não desconta crédito".
+ *  Por isso o selo verde-limão: "Grátis no seu plano · não desconta token".
  */
 
 import { useCallback, useEffect, useState } from 'react';
@@ -118,7 +118,7 @@ export default function PainelPlantao() {
         </div>
 
         <div className={s.controle}>
-          <span className={s.gratis}>Grátis · não desconta crédito</span>
+          <span className={s.gratis}>Grátis · não desconta token</span>
           <button
             className={`${s.sw} ${ligado ? s.swOn : ''}`}
             onClick={alternar}
