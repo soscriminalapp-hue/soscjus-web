@@ -36,20 +36,21 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Icon from './Icon';
 import Diamante from './Diamante';
+import { fmt } from '@/lib/creditos';
 import s from './compra.module.css';
 
 /** ⚠️ ESPELHO do backend. Se divergir, mostra um preço e cobra outro. */
 const PACOTES = [
-  { productId: 'br.com.soscriminal.creditos.100', creditos: 100, preco: 59.9, bonus: 0 },
-  { productId: 'br.com.soscriminal.creditos.250', creditos: 250, preco: 129.9, bonus: 13 },
-  { productId: 'br.com.soscriminal.creditos.500', creditos: 500, preco: 249.9, bonus: 17, destaque: true },
-  { productId: 'br.com.soscriminal.creditos.800', creditos: 800, preco: 399.9, bonus: 17 },
-  { productId: 'br.com.soscriminal.creditos.1200', creditos: 1200, preco: 599.9, bonus: 17 },
+  { productId: 'br.com.soscriminal.creditos.100', tokens: 60_000, preco: 59.9, bonus: 0 },
+  { productId: 'br.com.soscriminal.creditos.250', tokens: 130_000, preco: 129.9, bonus: 8 },
+  { productId: 'br.com.soscriminal.creditos.500', tokens: 250_000, preco: 249.9, bonus: 17, destaque: true },
+  { productId: 'br.com.soscriminal.creditos.800', tokens: 400_000, preco: 399.9, bonus: 17 },
+  { productId: 'br.com.soscriminal.creditos.1200', tokens: 600_000, preco: 599.9, bonus: 17 },
 ];
 
 interface Pedido {
   id: string;
-  creditos: number;
+  tokens: number;
   precoBRL: number;
   expiraEm: number;
   qrUrl: string;
@@ -202,9 +203,9 @@ export default function Compra({
             <div className={s.ok}>
               <Icon n="ok" s={30} strokeWidth={2.6} />
             </div>
-            <h2>Créditos na conta</h2>
+            <h2>Tokens na conta</h2>
             <p>
-              <b>{pedido?.creditos.toLocaleString('pt-BR')} créditos</b> entraram. Você
+              <b>{fmt(pedido?.tokens ?? 0)} tokens</b> entraram. Você
               já pode continuar.
             </p>
           </div>
@@ -216,7 +217,7 @@ export default function Compra({
               <div>
                 <span className={s.eb}>APONTE O CELULAR</span>
                 <h2>
-                  {pedido.creditos.toLocaleString('pt-BR')} créditos · R${' '}
+                  {fmt(pedido.tokens)} tokens · R${' '}
                   {pedido.precoBRL.toFixed(2).replace('.', ',')}
                 </h2>
               </div>
@@ -250,7 +251,7 @@ export default function Compra({
             <header className={s.topo}>
               <Diamante s={30} />
               <div>
-                <span className={s.eb}>COMPRAR CRÉDITOS</span>
+                <span className={s.eb}>COMPRAR TOKENS</span>
                 <h2>Quanto você quer?</h2>
               </div>
             </header>
@@ -274,8 +275,8 @@ export default function Compra({
                   <div className={s.pEsq}>
                     <Diamante s={22} />
                     <div>
-                      <strong>{p.creditos.toLocaleString('pt-BR')}</strong>
-                      <small>créditos</small>
+                      <strong>{fmt(p.tokens)}</strong>
+                      <small>tokens</small>
                     </div>
                   </div>
                   <div className={s.pDir}>

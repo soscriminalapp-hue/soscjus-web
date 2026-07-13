@@ -20,7 +20,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { sosc, ApiError } from '@/lib/api';
-import { PRECOS, type Feature } from '@/lib/creditos';
+import { PRECOS, fmt, type Feature } from '@/lib/creditos';
 import Diamante from './Diamante';
 import Icon from './Icon';
 import Gastar from './Gastar';
@@ -87,7 +87,8 @@ export default function DonoDoVeiculo({ nome, cpf, saldo }: Props) {
             <>
               <span className={s.preco}>
                 <Diamante s={14} />
-                <b>{f.creditos}</b>
+                <b>{fmt(f.tokens)}</b>
+                <em>tokens</em>
               </span>
               Consultar esta pessoa
               <Icon n="chev" s={16} strokeWidth={2.4} />

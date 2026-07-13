@@ -20,7 +20,8 @@
  */
 
 import { useEffect } from 'react';
-import { PRECOS, emReais, type Feature } from '@/lib/creditos';
+import { PRECOS, fmt, type Feature } from '@/lib/creditos';
+import { Conta } from './Preco';
 import Diamante from './Diamante';
 import Icon from './Icon';
 import s from './gastar.module.css';
@@ -56,7 +57,7 @@ export default function Gastar({
   const f = PRECOS[chave];
   if (!f) return null;
 
-  const depois = saldo - f.creditos;
+  const depois = saldo - f.tokens;
   const da = depois >= 0;
 
   return (
@@ -86,7 +87,7 @@ export default function Gastar({
           <div className={s.linha}>
             <span>{f.recorrente ? 'Custa por mês' : 'Vai custar'}</span>
             <b className={s.custo}>
-              −{f.creditos}
+              −{fmt(f.tokens)}
             </b>
           </div>
           <div className={s.divisor} />
@@ -109,7 +110,7 @@ export default function Gastar({
           </div>
         ) : (
           <p className={s.equiv}>
-            Equivale a R$ {emReais(f.creditos)}
+            Equivale a R$ {}
             {f.recorrente ? ' por mês' : ''}
           </p>
         )}
@@ -121,7 +122,7 @@ export default function Gastar({
           {da ? (
             <button className="btn b-tech" onClick={onConfirmar}>
               <Diamante s={17} />
-              Usar {f.creditos} créditos
+              Usar {fmt(f.tokens)} créditos
             </button>
           ) : (
             <button className="btn b-tech" onClick={onRecarregar}>

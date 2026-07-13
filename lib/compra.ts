@@ -106,8 +106,8 @@ export const PACOTES = [
   { productId: 'br.com.soscriminal.creditos.100', creditos: 100, precoBRL: 59.9 },
   { productId: 'br.com.soscriminal.creditos.250', creditos: 250, precoBRL: 129.9 },
   { productId: 'br.com.soscriminal.creditos.500', creditos: 500, precoBRL: 249.9 },
-  { productId: 'br.com.soscriminal.creditos.800', creditos: 800, precoBRL: 399.9 },
-  { productId: 'br.com.soscriminal.creditos.1200', creditos: 1200, precoBRL: 599.9 },
+  { productId: 'br.com.soscriminal.creditos.1000', creditos: 800, precoBRL: 399.9 },
+  { productId: 'br.com.soscriminal.creditos.1250', creditos: 1200, precoBRL: 599.9 },
 ] as const;
 
 export function acharPacote(productId: string) {

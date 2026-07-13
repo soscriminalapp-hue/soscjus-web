@@ -5,7 +5,7 @@
  *
  * ═══════════════════════════════════════════════════════════════════
  *  ⚠️ 1 pacote = 1 processo = 1 relatório DAQUELE processo.
- *     Não vira crédito. Não acumula. Não migra.
+ *     Não vira token. Não acumula. Não migra.
  *     10 pacotes = 10 processos, cada um com O SEU relatório.
  * ═══════════════════════════════════════════════════════════════════
  *
@@ -16,7 +16,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { sosc, ApiError } from '@/lib/api';
-import { PRECOS, LIMIAR_CONFIRMACAO } from '@/lib/creditos';
+import { PRECOS, LIMIAR_CONFIRMACAO ,
+  fmt,
+} from '@/lib/creditos';
 import Icon from '@/components/Icon';
 import Diamante from '@/components/Diamante';
 import Gastar from '@/components/Gastar';
@@ -43,7 +45,7 @@ export default function Acompanhar({
   const [confirmar, setConfirmar] = useState<typeof F | null>(null);
   const [comprar, setComprar] = useState<string | null>(null);
 
-  const custo = PRECOS[F].creditos;
+  const custo = PRECOS[F].tokens;
   const da = ilimitado || saldo >= custo;
 
   async function alternar(pular?: boolean) {
@@ -63,7 +65,7 @@ export default function Acompanhar({
       setLigado(!ligado);
       router.refresh();
     } catch (e) {
-      // 402 → sem crédito. A web NÃO cobra: manda pro celular.
+      // 402 → sem token. A web NÃO cobra: manda pro celular.
       if (e instanceof ApiError && e.semCota) {
         setComprar('CREDITOS');
       } else {
@@ -128,12 +130,12 @@ export default function Acompanhar({
           ) : ligado ? (
             <span className={s.contaOk}>
               <Icon n="ok" s={14} strokeWidth={2.4} />
-              Ativo · {custo} créditos por mês
+              Ativo · {custo} tokens por mês
             </span>
           ) : (
             <span className={da ? s.contaLivre : s.contaCheio}>
               <Diamante s={14} />
-              {custo} créditos por mês
+              {custo} tokens por mês
               {!da ? ' · você não tem saldo' : ''}
             </span>
           )}

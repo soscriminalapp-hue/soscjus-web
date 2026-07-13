@@ -502,7 +502,7 @@ export default async function Inicio() {
             <span className={s.saldoInline}>
               <Diamante s={15} />
               <b>{saldo.toLocaleString('pt-BR')}</b>
-              créditos
+              tokens
             </span>
           ) : null}
         </header>

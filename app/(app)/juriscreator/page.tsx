@@ -23,7 +23,9 @@
 
 import { useState } from 'react';
 import { sosc, ApiError } from '@/lib/api';
-import { PRECOS } from '@/lib/creditos';
+import { PRECOS ,
+  fmt,
+} from '@/lib/creditos';
 import Cabecalho from '@/components/Cabecalho';
 import Icon from '@/components/Icon';
 import Diamante from '@/components/Diamante';
@@ -57,7 +59,7 @@ export default function JurisCreator() {
   } | null>(null);
   const [comprar, setComprar] = useState<string | null>(null);
 
-  const custo = PRECOS.JURISCREATOR.creditos;
+  const custo = PRECOS.JURISCREATOR.tokens;
 
   async function gerar() {
     if (tema.trim().length < 5) {

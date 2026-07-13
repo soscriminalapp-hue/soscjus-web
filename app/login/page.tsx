@@ -14,8 +14,8 @@ import Image from 'next/image';
 import { api, ApiError } from '@/lib/api';
 import s from './login.module.css';
 
-// useSearchParams() exige um limite de Suspense no App Router (senão o build
-// falha no prerender de /login). Envolvemos o formulário no default export.
+// useSearchParams() exige limite de Suspense no App Router (senão o build quebra
+// no prerender de /login). Envolvemos o formulário no default export.
 function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();

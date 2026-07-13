@@ -30,7 +30,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { sosc, ApiError } from '@/lib/api';
-import { PRECOS } from '@/lib/creditos';
+import { PRECOS ,
+  fmt,
+} from '@/lib/creditos';
 import Icon from '@/components/Icon';
 import Diamante from '@/components/Diamante';
 import { Gratis } from '@/components/Preco';
@@ -56,7 +58,7 @@ export default function GerarRelatorio({
   const [erro, setErro] = useState('');
   const [comprar, setComprar] = useState<string | null>(null);
 
-  const custo = PRECOS[F].creditos;
+  const custo = PRECOS[F].tokens;
 
   async function gerar() {
     setOcupado(true);
@@ -157,7 +159,7 @@ export default function GerarRelatorio({
           ) : (
             <span className={s.pago}>
               <Diamante s={14} />
-              {custo} créditos
+              {custo} tokens
               {saldo < custo ? ' · você não tem saldo' : ''}
             </span>
           )}

@@ -30,7 +30,7 @@
  * 5. Sai um dossiê de 8 abas. A peça pode ser baixada em DOCX timbrado
  *    com a logomarca do escritório.
  *
- * 6. PAYWALL: a web NUNCA cobra. Sem crédito → 402 → abre o QR e o
+ * 6. PAYWALL: a web NUNCA cobra. Sem token → 402 → abre o QR e o
  *    advogado paga no celular, pela Apple ou Google.
  */
 
@@ -40,7 +40,9 @@ import Cabecalho from '@/components/Cabecalho';
 import OndeUsar from '@/components/OndeUsar';
 import Icon from '@/components/Icon';
 import Compra from '@/components/Compra';
-import { PRECOS } from '@/lib/creditos';
+import { PRECOS ,
+  fmt,
+} from '@/lib/creditos';
 import s from './finaisjus.module.css';
 
 type Aba =
@@ -163,7 +165,7 @@ export default function FinaisJus() {
         /* corpo não-JSON */
       }
 
-      // 402 → sem crédito. A web NÃO cobra: manda pro celular.
+      // 402 → sem token. A web NÃO cobra: manda pro celular.
       if (xhr.status === 402) {
         setComprar('FINAISJUS');
         return;

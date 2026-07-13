@@ -32,8 +32,8 @@ import s from './abrir.module.css';
 const APP_STORE = 'https://apps.apple.com/br/app/sosc-jus/id6770715490';
 const PLAY = 'https://play.google.com/store/apps/details?id=br.com.soscriminal.app';
 
-// useSearchParams() exige limite de Suspense no App Router (senão o prerender
-// de /abrir quebra o build). Envolvemos o conteúdo no default export.
+// useSearchParams() exige limite de Suspense no App Router (senão o prerender de
+// /abrir quebra o build). Envolvemos o conteúdo no default export.
 function AbrirInner() {
   const params = useSearchParams();
   const [temApp, setTemApp] = useState<boolean | null>(null);

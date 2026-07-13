@@ -406,3 +406,61 @@
   .aPreco { text-align: left; }
   .inf { font-size: 3.4rem !important; }
 }
+
+/* ═══ v4.1 — TOKENS ═══ */
+
+/* 🇧🇷 a bandeirinha */
+.br { font-size: .95rem; flex-shrink: 0; }
+.legendaBr {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(216, 166, 49, .25);
+  background: var(--gold-dim);
+}
+.legendaBr p { font-size: .88rem; color: var(--t2); line-height: 1.55; }
+.legendaBr b { color: var(--gold); font-weight: 700; }
+
+/* a linha da tabela */
+.itemTopo { display: flex; align-items: center; gap: 7px; }
+.rel {
+  display: block;
+  font-style: normal;
+  font-size: .76rem;
+  font-weight: 700;
+  color: var(--lime);
+  margin-top: 4px;
+}
+.itemPreco small {
+  display: block;
+  font-size: .72rem;
+  color: var(--t3);
+  margin-top: 2px;
+  text-align: right;
+}
+.itemPreco span {
+  font-size: .78rem;
+  color: var(--t3);
+}
+
+/* 🟢 o riscado nas cortesias */
+.gTopo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.eraWrap { display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0; }
+.riscado {
+  font-size: .78rem;
+  color: var(--t3);
+  text-decoration: line-through;
+}
+.gratisTag {
+  font-size: .8rem;
+  font-weight: 800;
+  color: var(--lime);
+}

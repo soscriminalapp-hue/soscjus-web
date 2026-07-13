@@ -1,18 +1,28 @@
 'use client';
 
 /**
- * MEUS CRÉDITOS — a carteira.
+ * ═══════════════════════════════════════════════════════════════════════════
+ *  🪙 MEUS TOKENS — a carteira
+ * ═══════════════════════════════════════════════════════════════════════════
  *
- * ⚠️ A REGRA DE VALIDADE, ESCRITA NA TELA:
+ *  ⚠️ A REGRA DE VALIDADE, ESCRITA NA TELA:
  *
- *   · Crédito do PLANO   → zera dia 1º. Não usou, perdeu.
- *   · Crédito COMPRADO   → NUNCA expira.
- *   · Gasta primeiro o do plano.
+ *    · Token do PLANO    → zera dia 1º. Não usou, perdeu.
+ *    · Token COMPRADO    → NUNCA expira.
+ *    · Gasta primeiro o do plano.
  *
- * Isso não é pegadinha — está escrito, em letras grandes. Se fosse escondido,
- * seria abusivo. Sendo claro, é justo: o plano é assinatura (usa ou perde,
- * como qualquer plano de celular); o comprado é dinheiro adiantado (é dele, e
- * segurar seria o Procon batendo).
+ *  Isso não é pegadinha — está escrito, em letras grandes.
+ *
+ *  Se fosse escondido, seria abusivo. Sendo claro, é justo: o plano é
+ *  assinatura (usa ou perde, como qualquer plano de celular); o comprado
+ *  é dinheiro adiantado (é dele, e segurar seria o Procon batendo).
+ *
+ * ═══════════════════════════════════════════════════════════════════════════
+ *  🇧🇷 A BANDEIRINHA — ela VALORIZA
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ *  O advogado bate o olho e entende: "isso varre o Brasil inteiro".
+ *  É o que separa o SOSC JUS de um site de consulta qualquer.
  */
 
 import { useCallback, useEffect, useState } from 'react';
@@ -23,9 +33,8 @@ import {
   ORDEM_TABELA,
   ORDEM_CORTESIAS,
   CORTESIAS,
-  creditosDoPlano,
-  emReais,
-  precoDeTabela,
+  tokensDoPlano,
+  fmt,
   type Saldo,
 } from '@/lib/creditos';
 import Cabecalho from '@/components/Cabecalho';
@@ -58,7 +67,7 @@ export default function Plano() {
   const doPlano = saldo?.doPlano ?? 0;
   const comprados = saldo?.comprados ?? 0;
   const total = ilimitado ? Infinity : (saldo?.total ?? 0);
-  const mensal = creditosDoPlano(plano, fundador);
+  const mensal = tokensDoPlano(plano, fundador);
   const pct = mensal > 0 ? Math.min(100, (doPlano / mensal) * 100) : 0;
 
   return (
@@ -66,12 +75,12 @@ export default function Plano() {
       <Cabecalho
         eyebrow="Uma conta só · o mesmo login do aplicativo"
         titulo="Meus"
-        destaque="Créditos"
+        destaque="Tokens"
         tom="tech"
-        texto="Cada ferramenta custa um número de créditos. Você vê o preço antes de usar, e escolhe onde gastar."
+        texto="Cada ferramenta usa um número de tokens. Você vê antes de clicar, e escolhe onde gastar."
       />
 
-      {/* ═══ O SALDO ═══ */}
+      {/* ═══ 🪙 O SALDO ═══ */}
       <div className={`${s.carteira} ${ilimitado ? s.infinita : ''}`}>
         <div className={s.pedra}>
           <Diamante s={64} />
@@ -82,13 +91,22 @@ export default function Plano() {
             {ilimitado ? 'CONTA DO DONO' : fundador ? 'FUNDADOR' : 'SEU SALDO'}
           </span>
           <strong className={ilimitado ? s.inf : ''}>
-            {ilimitado ? '∞' : total.toLocaleString('pt-BR')}
+            {ilimitado ? (
+              // ⚠️ SVG — o caractere "∞" vira "oo" na fonte mono
+              <svg viewBox="0 0 40 20" width="72" height="36" aria-label="ilimitado">
+                <path
+                  d="M10 10c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6-6-2.7-6-6zm12 0c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6-6-2.7-6-6z"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2.4}
+                />
+              </svg>
+            ) : (
+              fmt(total)
+            )}
           </strong>
-          <small>
-            {ilimitado
-              ? 'créditos · sem limite'
-              : `créditos · R$ ${emReais(total)}`}
-          </small>
+          {/* ⚠️ A PALAVRA. Sem ela, ele lê R$. */}
+          <small>{ilimitado ? 'tokens · sem limite' : 'tokens'}</small>
         </div>
 
         {ilimitado ? (
@@ -102,24 +120,22 @@ export default function Plano() {
           <div className={s.quebra}>
             <div className={s.parcela}>
               <div className={s.pTopo}>
-                <span>
-                  {fundador ? 'Cortesia de fundador' : `Do seu plano ${plano}`}
-                </span>
-                <b>{doPlano}</b>
+                <span>{fundador ? 'Cortesia de fundador' : `Do seu plano ${plano}`}</span>
+                <b>{fmt(doPlano)}</b>
               </div>
               <div className={s.barra}>
                 <i style={{ width: `${pct}%` }} />
               </div>
               <small className={s.expira}>
                 <Icon n="relogio" s={13} />
-                Zera dia 1º · renova para {mensal}
+                Zera dia 1º · renova para {fmt(mensal)} tokens
               </small>
             </div>
 
             <div className={s.parcela}>
               <div className={s.pTopo}>
                 <span>Que você comprou</span>
-                <b className={s.eterno}>{comprados}</b>
+                <b className={s.eterno}>{fmt(comprados)}</b>
               </div>
               <div className={`${s.barra} ${s.barraEterna}`}>
                 <i style={{ width: comprados > 0 ? '100%' : '0%' }} />
@@ -137,20 +153,20 @@ export default function Plano() {
         <div className="nota tech">
           <Diamante s={20} />
           <p>
-            <b>Gastamos primeiro o crédito do seu plano.</b> Assim o que você comprou
-            dura mais — e o do plano zeraria dia 1º de qualquer jeito. O crédito
+            <b>Gastamos primeiro o token do seu plano.</b> Assim o que você comprou
+            dura mais — e o do plano zeraria dia 1º de qualquer jeito. O token
             comprado é seu para sempre.
           </p>
         </div>
       ) : null}
 
-      {/* ═══ RECARGA ═══ */}
+      {/* ═══ 🛒 COMPRAR ═══ */}
       {!ilimitado ? (
         <>
-          <h2 className={s.titulo}>Comprar créditos</h2>
+          <h2 className={s.titulo}>Comprar tokens</h2>
           <p className={s.sub}>
-            Quanto mais você leva, mais barato fica o crédito. Você confirma no
-            celular — na loja onde já tem cadastro.
+            Quanto mais você leva, mais barato fica. Você confirma no celular — na
+            loja onde já tem cadastro.
           </p>
 
           <div className={s.pacotes}>
@@ -169,36 +185,43 @@ export default function Plano() {
                   <Diamante s={p.destaque ? 34 : 28} />
                 </div>
 
-                <strong>{p.creditos.toLocaleString('pt-BR')}</strong>
-                <span className={s.pctLabel}>créditos</span>
+                <strong>{fmt(p.tokens)}</strong>
+                <span className={s.pctLabel}>tokens</span>
 
+                {/* ⚠️ R$ SÓ AQUI — é o preço real que a Apple cobra */}
                 <div className={s.pctPreco}>
                   R$ {p.precoBRL.toFixed(2).replace('.', ',')}
                 </div>
-                <small className={s.pctUnit}>
-                  R$ {(p.precoBRL / p.creditos).toFixed(2).replace('.', ',')} cada
-                </small>
               </button>
             ))}
           </div>
         </>
       ) : null}
 
-      {/* ═══ GRÁTIS ═══ */}
+      {/* ═══ 🟢 GRÁTIS ═══ */}
       <h2 className={s.titulo}>O que não custa nada</h2>
       <p className={s.sub}>
-        Você só gasta crédito quando uma consulta é feita. Trabalhar com o que já
-        está no seu painel é de graça.
+        Você só gasta token quando uma consulta é feita. Organizar o que já está no
+        seu painel é de graça.
       </p>
 
       <div className={s.gratis}>
         {ORDEM_CORTESIAS.map((k) => {
-          const c = CORTESIAS[k];
+          const c = CORTESIAS[k] as { nome: string; porque: string; eraRS?: string };
           return (
             <div key={k} className={s.gItem}>
               <Icon n="ok" s={17} strokeWidth={2.6} />
               <div>
-                <strong>{c.nome}</strong>
+                <div className={s.gTopo}>
+                  <strong>{c.nome}</strong>
+                  {/* 🟢 ERA PAGO — o riscado mostra o valor E o presente */}
+                  {c.eraRS ? (
+                    <span className={s.eraWrap}>
+                      <span className={s.riscado}>R$ {c.eraRS}</span>
+                      <span className={s.gratisTag}>Grátis</span>
+                    </span>
+                  ) : null}
+                </div>
                 <small>{c.porque}</small>
               </div>
             </div>
@@ -206,41 +229,49 @@ export default function Plano() {
         })}
       </div>
 
-      <div className="nota money">
-        <Icon n="ok" s={20} />
+      {/* ═══ 🪙 A TABELA ═══ */}
+      <h2 className={s.titulo}>Quanto usa cada coisa</h2>
+      <p className={s.sub}>
+        A maioria já vem com o relatório. Um segundo relatório do mesmo item usa
+        3.000 tokens.
+      </p>
+
+      {/* ⚠️ A legenda da 🇧🇷 — sem ela, a bandeirinha vira enfeite */}
+      <div className={s.legendaBr}>
+        <span className={s.br}>🇧🇷</span>
         <p>
-          <b>Cadastrar um processo é grátis.</b> O crédito só sai quando formos ao
-          tribunal buscar a capa e as movimentações — porque aí sim existe um custo.
+          <b>Consulta nacional.</b> Varre o Brasil inteiro — todos os tribunais,
+          todas as bases oficiais.
         </p>
       </div>
-
-      {/* ═══ A TABELA ═══ */}
-      <h2 className={s.titulo}>Quanto custa cada coisa</h2>
-      <p className={s.sub}>
-        A maioria já vem com o relatório incluído. Se quiser um segundo relatório do
-        mesmo item, aí sim são 6 créditos.
-      </p>
 
       <div className="card">
         <div className="card-b flush">
           {ORDEM_TABELA.map((k) => {
             const f = PRECOS[k];
-            const da = ilimitado || total >= f.creditos;
+            const da = ilimitado || total >= f.tokens;
             return (
               <div key={k} className={`${s.item} ${da ? '' : s.itemFora}`}>
                 <div className={s.itemNome}>
-                  <strong>{f.nome}</strong>
-                  <small>
-                    {f.recorrente ? 'Cobrado todo mês · ' : ''}
-                    {f.relatorioIncluso ? 'Relatório já vem junto' : f.entrega}
-                  </small>
+                  <div className={s.itemTopo}>
+                    {f.nacional ? <span className={s.br}>🇧🇷</span> : null}
+                    <strong>{f.nome}</strong>
+                  </div>
+                  {/* ⚠️ O QUE ELA FAZ — não "relatório já vem junto" */}
+                  <small>{f.entrega}</small>
+                  {f.relatorioIncluso ? (
+                    <em className={s.rel}>+ relatório incluído</em>
+                  ) : null}
                 </div>
+
+                {/* ⚠️ SÓ TOKENS. Nunca R$. */}
                 <div className={s.itemPreco}>
                   <Diamante s={16} />
-                  <b>{f.creditos}</b>
-                  {f.recorrente ? <em>/mês</em> : null}
+                  <b>{fmt(f.tokens)}</b>
+                  <span>tokens</span>
+                  {/* ⚠️ LEGENDA — nunca "10.000/mês" */}
+                  {f.recorrente ? <small>Cobrado todo mês</small> : null}
                 </div>
-                <div className={s.itemReais}>R$ {precoDeTabela(k)}</div>
               </div>
             );
           })}
@@ -253,18 +284,15 @@ export default function Plano() {
         A Estação é do ADVOGADO. O Alerta Diário (R$ 39,90/mês) é do USUÁRIO —
         ele consulta o PRÓPRIO CPF todo dia.
 
-        O advogado não fica consultando o próprio mandado. Ele consulta o do
-        CLIENTE, avulso (CONSULTA_MANDADO · 💎 20).
-
-        Mostrar aqui confunde: ele tenta assinar algo que não é dele.
+        O advogado não faz isso. Ele consulta o do CLIENTE, avulso.
       */}
 
       <div className="nota">
         <Icon n="lock" s={20} />
         <p>
-          <b>Por que mostramos o preço antes.</b> Um relatório custa 6 créditos; o
-          FinaisJus custa 160. Se você clicasse sem saber, gastaria 26 vezes mais do
-          que imaginava. Aqui você bate o olho, sabe quanto é, e decide.
+          <b>Por que mostramos antes do clique.</b> Um relatório usa 3.000 tokens;
+          o FinaisJus usa 80.000. Se você clicasse sem saber, gastaria 26 vezes
+          mais do que imaginava. Aqui você bate o olho, sabe quanto é, e decide.
         </p>
       </div>
 

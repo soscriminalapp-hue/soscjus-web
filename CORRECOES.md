@@ -1,234 +1,215 @@
-# SOSC JUS WEB — v4.0.2
-## Os bloqueadores da auditoria — corrigidos
+# SOSC JUS WEB — v4.1.0
+## A estação vira o **caminhão**
 
-> ⚠️ **SÓ A WEB.** O app (build 269) já está com você.
-
----
-
-# 🔴 OS 4 BLOQUEADORES
-
-## 1 · O projeto **não compilava**
-
-**Duas colisões da variável `s`:**
-
-```tsx
-// ❌ app/(app)/processos/[cnj]/page.tsx
-import s from './capa.module.css';
-const [p, s] = await Promise.all([...]);   // ← SOMBREIA o CSS!
-
-// ✅
-const [p, cred] = await Promise.all([...]);
-```
-
-```tsx
-// ❌ app/(app)/consultas/page.tsx
-<s className={s.riscado}>R$ 9,90</s>       // ← a TAG <s> colide com o import
-
-// ✅
-<span className={s.riscado}>R$ 9,90</span>
-```
-
-**E mais:**
-- `tom="mente"` → **`tom="mind"`** *(o tipo só aceita 6 valores)*
-- `DonoDoVeiculo`: `useState<string | null>` → **`useState<Feature | null>`**
-
-### ✅ Compilado com `tsc` de verdade
-
-```
-ERROS REAIS: 0
-```
-
-**Rode `npm run typecheck` antes do build.** Está no `INSTALAR.md`.
+> **"As tecnologias chegam primeiro no caminhão. Testa lá, depois passa pro carro."**
+>
+> A tela grande permite **explorar** o que o celular **corta**.
+> Testa aqui. Depois porta pro app.
 
 ---
 
-## 2 · 🔴 O QR **nunca fechava** — o bug mais grave
+# 🎯 O MENU QUE RESPONDE
 
-### O furo
+## O pecado capital de todo dashboard ruim
 
-```ts
-// app/api/compra/[id]/route.ts — o POST que o CELULAR chama
-export async function POST(...) {
-  const s = await sessaoAtual();        // ← O COOKIE DO NAVEGADOR DO PC
-  if (!s) return 401;
+**Estava tudo cinza.** Ele clicava e **não sabia onde estava**.
+
+```css
+/* ❌ o .on nem existia no CSS */
 ```
 
-**Mas quem confirma é o CELULAR.** Ele **não tem** esse cookie.
+## ✅ Agora
 
-**O fluxo NUNCA FECHAVA.** A tela do computador **girava pra sempre**.
-
-### A correção
-
-O pedido agora tem um **TOKEN** (32 bytes aleatórios) que vai **dentro do QR**.
-
-```
-POST /api/compra/confirmar   { pedido, token }    ← SEM COOKIE
-```
-
-- Token de **256 bits** — não dá pra adivinhar
-- **10 minutos** de validade
-- **Uso único** — confirmou, morreu
-- Comparação em **tempo constante** *(anti timing attack)*
-
-⚠️ **E isto NÃO dá crédito a ninguém.** O crédito quem dá é o **backend SOSC**,
-depois de validar o receipt (`POST /iap/verify`).
-
-Esta rota só **destrava a tela**. Se alguém adivinhar o token, o máximo que
-consegue é fazer a tela de outro advogado parar de girar.
-
-### Os nomes divergiam
-
-```ts
-// ❌ a web mandava
-{ feature: 'CREDITOS' }        // a API não entende
-{ feature: 'FINAISJUS' }       // ferramenta NÃO é vendida — ela GASTA crédito
-
-// ✅ agora
-{ productId: 'br.com.soscriminal.creditos.500' }
-```
-
-**Só pacotes de crédito.** Qualquer outra coisa → **400**.
-
-### E não havia fallback
-
-```
-❌ O QR apontava direto pra soscjus://creditos?...
-   Sem o app instalado → o navegador dava ERRO.
-   O advogado ficava olhando uma tela quebrada.
-```
-
-**✅ Tela nova: `/abrir`**
-
-1. Tenta abrir o app (`soscjus://`)
-2. Se em **1,5s** a página ainda estiver visível → **não abriu**
-3. Mostra **App Store** / **Google Play**
-
-É o padrão do WhatsApp, do Uber, do iFood.
-
-⚠️ **E `/abrir` é PÚBLICA** — o celular não tem o cookie da estação.
-*(o middleware foi corrigido)*
+- **Barra dourada** à esquerda — *"você está aqui"*
+- **Fundo aceso** + ícone e texto em ouro
+- **Hover** já responde
+- **O logo leva pro Início** — o atalho universal
+- **A trilha é clicável**
 
 ---
 
-## 3 · Next.js **14.2.15 — CVE**
+# 🔔 O SINO — o que faz ele deixar a estação **aberta**
 
-```
-14.2.15  →  14.2.35
-```
+**Sem isto, ele abre, olha, e fecha.**
+**Com isto, ele deixa aberto — porque a estação CHAMA ELE.**
 
-**Não baixe a versão.**
+## A ordem é por **urgência** — não por data
+
+| | Peso | O quê |
+|---|---|---|
+| 🚨 **SOS ACIONADO** | **100** | o cliente está sendo abordado **AGORA** |
+| 💬 **Sala Chat** | 50 | o cliente falou com ele |
+| 📡 **Plantão** | 40 | gente procurando advogado |
+| ⏰ **Prazo vencendo** | 30 | hoje ou amanhã |
+| ● **Processo moveu** | 10 | o tribunal publicou |
+
+## 🚨 E o SOS **grita**
+
+O sino fica **vermelho, pulsando**. O aviso tem **barra vermelha**.
+
+**É o mais urgente que existe** — mesmo sendo raro (1×/mês).
+
+## ⚠️ Polling de 30s — e por que basta (por enquanto)
+
+O backend não tem WebSocket. Fazer SSE agora atrasaria tudo.
+
+**30s é aceitável** para prazo, movimentação e plantão.
+
+⚠️ **Para o SOS, NÃO É.** Ele precisa saber **agora**.
+**→ v4.2:** SSE em `/sos/stream`.
 
 ---
 
-## 4 · `npm ci` **não rodava**
+# 📋 MEUS PROCESSOS — a tabela profissional
 
-O ZIP não tinha `package-lock.json` nem `.env.example` — mas a documentação
-mandava usar os dois.
+## ⚠️ Ele tem **284 processos**
 
-**✅ `.env.example` está no pacote.**
+**No celular:** uma lista infinita. Ele rola, rola, **e não acha**.
 
-**⚠️ `package-lock.json`:** ele é gerado na **primeira** instalação:
+**Na tela grande:** uma **TABELA**.
 
-```bash
-npm install          # gera o lock
-git add package-lock.json
-npm ci               # daqui pra frente, funciona
+```
+┌───┬────────────────────┬──────────┬───────────┬────────────┬────────┬──────┐
+│ ● │ 5000290-98.2026... │ João H.  │ 🔴 Criminal│ Sentença   │ hoje   │ 💎20 │
+│ ● │ 0703456-12.2025... │ Mariana  │ 🟠 Execução│ Conclusos  │ 3 dias │ ✅   │
+└───┴────────────────────┴──────────┴───────────┴────────────┴────────┴──────┘
 ```
 
-**Está no `INSTALAR.md`.**
+## 🎨 As cores por classe
 
----
-
-# 📱 vs 🖥️ — a honestidade
-
-> **Um produto que finge fazer tudo em todo lugar é um produto que mente.**
-
-## 📱 MELHOR NO CELULAR — a estação **avisa** (não bloqueia)
-
-| | Por quê |
+| Classe | Cor |
 |---|---|
-| **JurisCreator** | **20s e POSTA no Instagram.** Aqui você baixa, manda pro celular, abre o app… |
-| **Consultar Veículo** | **Fotografa a placa.** Aqui você digita — e erra. |
-| **Analisar Print** | O print **está no celular**. |
+| ⚡ **Habeas Corpus** | **amarelo-urgente** |
+| **Criminal** | 🔴 vermelho |
+| **Execução Penal** | 🟠 laranja |
+| **Recursos** | 🟣 roxo |
+| **Cível** | 🔵 azul |
+| **Trabalhista** | 🟢 verde |
+| **Família** | 🩷 rosa |
+| **Fiscal** | 🟡 dourado |
 
-## 🖥️ MUITO MELHOR AQUI
+## ⚠️ O advogado não busca por "área"
 
-| | Por quê |
-|---|---|
-| **FinaisJus Pro** | **Petição se faz no computador.** É o hábito de 30 anos. |
-| **Meus Processos** | 200 processos → tabela, filtro, exportar. |
-| **Ler o processo** | Movimentações + relatório **lado a lado**. |
+**Ele busca por O QUE VAI FAZER HOJE.**
 
-## 📵 SÓ NO CELULAR — nem abre aqui *(tela nova: `/celular`)*
+> *"Hoje eu vou trabalhar nos recursos"* — é um dia de trabalho real.
+> *"Hoje eu vou olhar os HCs"* — é um dia de trabalho real.
 
-| | Por quê |
-|---|---|
-| 🚨 **Acionar SOS** | É **emergência**. Ele está **na rua**. |
-| 🛡️ **Prerrogativa** | Ele está **na delegacia**. |
-| 📸 **Gravar Prova** | Câmera + GPS + hash. **O PC não tem isso.** |
+**Por isso RECURSO e HABEAS CORPUS têm filtro PRÓPRIO** — mesmo atravessando
+todas as áreas.
+
+## Ordenar
+
+- **Que moveu** *(padrão — é o que importa)*
+- Mais recente
+- Mais antigo
+- Por cliente
 
 ---
 
-# 🎯 A HOME — 3 eixos
+# ⚡ HABEAS CORPUS — o agrupamento que ninguém faz
+
+## O problema
+
+O réu está preso na **Ação Penal**. O advogado impetra:
 
 ```
-1️⃣  PROSPECÇÃO          📡 Plantão · 👤 Convidar
-2️⃣  GESTÃO DO PROCESSO  🔴 Prazos · 📅 Audiências · ⚖️ Movimentações
-3️⃣  GESTÃO DO CLIENTE   👥 Clientes · 💰 Honorários
+AÇÃO PENAL 5000290-98  (o cliente está preso há 287 dias)
+   ├─ HC 1234 · TJMG → negado
+   ├─ HC 5678 · TJMG → negado
+   ├─ HC 9012 · STJ  → liminar indeferida
+   ├─ HC 3456 · STJ  → aguardando
+   └─ HC 7890 · STF  → distribuído
 ```
 
-## ⚠️ Por que o Plantão vem primeiro — e o SOS não
+**Cinco HCs. Um processo. Um homem preso.**
 
-| | Frequência |
+Se eles aparecem **soltos** no meio de 89 processos criminais,
+**o advogado PERDE O FIO.**
+
+## ✅ A solução
+
+Clique em **⚡ Habeas Corpus** e veja **todos, agrupados pela ORIGEM**:
+
+```
+┌─────────────────────────────────────────────────────┐
+│  📋 PROCESSO DE ORIGEM                      3 HC   │
+│     5000290-98.2026.8.13.0027                       │
+├─────────────────────────────────────────────────────┤
+│  TJ   HC 1234 · Denegada a ordem      🔴 Negado     │
+│  STJ  HC 5678 · Conclusos ao relator  🔵 Aguardando │
+│  STF  HC 9012 · Distribuído           🔵 Aguardando │
+└─────────────────────────────────────────────────────┘
+```
+
+## ⚠️ A ESCADA: **TJ → STJ → STF**
+
+Ele precisa ver **em que degrau está**.
+
+## E o status é lido da movimentação
+
+| | |
 |---|---|
-| **📡 Plantão Adv.** | **5–10 por dia** |
-| **🚨 Alerta SOSC** | **1 por mês** |
+| 🟢 **Concedido** | *"concedida a ordem", "alvará de soltura"* |
+| 🔴 **Negado** | *"denegada", "indeferido", "prejudicado"* |
+| ⚡ **Liminar** | *"liminar"* |
+| 🔵 **Aguardando** | *"conclusos", "distribuído", "vista"* |
 
-**Importante ≠ frequente.**
+## ⚠️ E o `conexoDe` **já existe no banco**
 
-Se o card de SOS ocupasse o topo e ficasse **vazio 29 dias por mês**, o
-advogado abriria a estação e veria **espaço morto**.
+```prisma
+model Processo {
+  conexoDe  String?   // ← o processo de origem
+  @@index([conexoDe])
+}
+```
 
-**O SOS aparece só quando existe** — como uma faixa vermelha por cima de tudo.
+**A rota `POST /manual` com `conexoDe` já vincula.** É só usar.
 
-*(A implementar na v4.1 — hoje ele não está na estação.)*
+---
+
+# ⚠️ A TELA GRANDE PERMITE **EXPLICAR**
+
+**No celular, cada palavra disputa espaço. Ele corta.**
+
+**Aqui sobra tela.** Então:
+
+```
+⚡ Habeas Corpus
+   É liberdade. Um processo pode ter vários — TJ, STJ, STF.
+   Clique e veja todos, agrupados pela origem.
+```
+
+```
+🟣 Recursos
+   Apelação, agravo, RESP, RE. Atravessa todas as áreas —
+   clique e veja todos.
+```
+
+**Ele entende o que está olhando.**
+
+---
+
+# 🔜 O QUE FALTA
+
+| | |
+|---|---|
+| **Detalhe do processo em 2 colunas** | capa + movimentações \| relatório + prazos + audiências |
+| **Ficha do Cliente** | processos · contrato · procuração · honorários · cobranças |
+| **FinaisJus com arrastar e soltar** | o PDF de 800 páginas e o vídeo de 3 GB, **na tela** |
+| **SSE para o SOS** | tempo real — hoje é polling de 30s |
+| **Convidar cliente** | executar o convite |
 
 ---
 
 # 📦 SUBIR
 
 ```bash
-cp .env.example .env.local
-openssl rand -base64 48        # → SESSION_SECRET
-
-npm install                    # ⚠️ gera o package-lock.json
-npm run typecheck              # ⚠️ tem que dar ZERO
+npm install          # gera o package-lock.json
+npm run typecheck    # ⚠️ tem que dar ZERO
 npm run build
 pm2 restart soscjus-estacao
 ```
-
-⚠️ **`NEXT_PUBLIC_SITE_URL` é obrigatório** — é ela que vai no QR.
-Sem isso, o QR aponta pro `localhost` e o celular não abre.
-
----
-
-# 🔜 O QUE FALTA (v4.1)
-
-A auditoria está certa: **metade ainda é demonstrativa.**
-
-| | |
-|---|---|
-| **Centro de Conexão SOSC** | alertas, aceitar/recusar, áudio e GPS ao vivo |
-| **Sala Chat** | |
-| **Ficha do Cliente** | processos, contrato, assinatura, cobranças |
-| **Contrato e Procuração** | |
-| **Documentos assinados** | |
-| **Cobrança PIX/boleto** | |
-| **Relatório SOSC** | |
-| **Configurações** | OAB, logomarca, PIX |
-| **Convidar Cliente** | hoje não executa o convite |
-
-**Mas primeiro isto tinha que compilar.** Agora compila.
 
 ---
 

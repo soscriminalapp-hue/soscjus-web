@@ -1,19 +1,31 @@
+.wrap { display: inline-flex; flex-direction: column; gap: 2px; }
+
 .preco {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: .88rem;
-  color: var(--t3);
+  gap: 5px;
+  font-size: .9rem;
 }
 .preco b {
   font-family: var(--mono);
   font-weight: 700;
   color: var(--miami);
+  font-variant-numeric: tabular-nums;
 }
-.preco small { font-size: .78rem; color: var(--t3); }
+/* ⚠️ A PALAVRA — é ela que ancora */
+.preco em {
+  font-style: normal;
+  font-size: .82rem;
+  color: var(--t3);
+}
 .preco svg { flex-shrink: 0; opacity: .9; }
 
-/* não dá pra pagar — apaga, mas não alarma */
+/* ⚠️ LEGENDA — nunca sufixo */
+.legenda {
+  font-size: .74rem;
+  color: var(--t3);
+}
+
 .naoDa { opacity: .45; }
 .naoDa b { color: var(--t3); }
 
@@ -21,8 +33,42 @@
 .gratis {
   display: inline-flex;
   align-items: center;
-  font-size: .84rem;
+  font-size: .86rem;
   font-weight: 700;
   color: var(--lime);
   letter-spacing: .02em;
 }
+
+/* 🟢 era pago — o riscado */
+.eraWrap { display: inline-flex; align-items: center; gap: 8px; }
+.riscado {
+  font-size: .82rem;
+  color: var(--t3);
+  text-decoration: line-through;
+}
+
+/* ⚠️ A CONTA — o que sobra */
+.conta {
+  border: 1.5px solid var(--line2);
+  border-radius: 12px;
+  background: var(--g800);
+  padding: 4px 16px;
+}
+.linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 0;
+}
+.linha span { font-size: .88rem; color: var(--t3); }
+.linha b {
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.forte { color: var(--t2) !important; font-weight: 600; }
+.div { height: 1px; background: var(--line2); }
+.sobra { color: var(--miami) !important; font-size: 1.15rem !important; }
+.falta { color: var(--risk-lit) !important; font-size: 1.15rem !important; }

@@ -19,14 +19,16 @@
  *  ⚠️ O BOTÃO NÃO COMPRA. O BOTÃO GASTA.
  * ═══════════════════════════════════════════════════════════════════════════
  *
- *  Ele já tem crédito. Clicar aqui DEBITA do saldo — não abre loja.
- *  Sem saldo → 402 → aí sim manda comprar crédito.
+ *  Ele já tem token. Clicar aqui DEBITA do saldo — não abre loja.
+ *  Sem saldo → 402 → aí sim manda comprar token.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { sosc, ApiError } from '@/lib/api';
-import { PRECOS, LIMIAR_CONFIRMACAO, type Feature } from '@/lib/creditos';
+import { PRECOS, LIMIAR_CONFIRMACAO, type Feature ,
+  fmt,
+} from '@/lib/creditos';
 import Cabecalho from '@/components/Cabecalho';
 import Icon, { type Nome } from '@/components/Icon';
 import Diamante from '@/components/Diamante';
@@ -283,7 +285,7 @@ export default function Consultas() {
   /* ─── EXECUTA — o botão GASTA, não compra ─── */
   const executar = useCallback(
     async (pular?: boolean) => {
-      const custo = f.feature ? PRECOS[f.feature].creditos : 0;
+      const custo = f.feature ? PRECOS[f.feature].tokens : 0;
 
       // ═══ FLUIDEZ NO BARATO. TRANSPARÊNCIA NO CARO. ═══
       if (f.feature && !pular && custo > LIMIAR_CONFIRMACAO && !ilimitado) {
@@ -362,7 +364,7 @@ export default function Consultas() {
     [f, campos, foto, ilimitado, lerSaldo],
   );
 
-  const custo = f.feature ? PRECOS[f.feature].creditos : 0;
+  const custo = f.feature ? PRECOS[f.feature].tokens : 0;
   const da = ilimitado || !f.feature || saldo >= custo;
 
   return (
@@ -378,7 +380,7 @@ export default function Consultas() {
         {/* ─── O SELETOR ─── */}
         <nav className={s.lista}>
           {FERRAMENTAS.map((x) => {
-            const c = x.feature ? PRECOS[x.feature].creditos : 0;
+            const c = x.feature ? PRECOS[x.feature].tokens : 0;
             return (
               <button
                 key={x.id}
@@ -533,7 +535,7 @@ export default function Consultas() {
             {!da ? (
               <p className={s.semSaldo}>
                 <Icon n="alerta" s={14} />
-                Faltam {custo - saldo} créditos.{' '}
+                Faltam {custo - saldo} tokens.{' '}
                 <button onClick={() => setComprar('CREDITOS')}>Comprar</button>
               </p>
             ) : null}

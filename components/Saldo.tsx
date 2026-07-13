@@ -12,7 +12,7 @@
 
 import Link from 'next/link';
 import Diamante from './Diamante';
-import { tomDoSaldo } from '@/lib/creditos';
+import { tomDoSaldo, fmt } from '@/lib/creditos';
 import s from './saldo.module.css';
 
 export default function Saldo({
@@ -27,7 +27,7 @@ export default function Saldo({
   const tom = tomDoSaldo(total, ilimitado);
 
   return (
-    <Link href="/plano" className={`${s.saldo} ${s[tom]}`} title="Meus créditos">
+    <Link href="/plano" className={`${s.saldo} ${s[tom]}`} title="Meus tokens">
       <Diamante s={17} />
       {ilimitado ? (
         // ⚠️ SVG, não o caractere "∞" — a fonte mono renderiza como "oo"
@@ -40,9 +40,10 @@ export default function Saldo({
           />
         </svg>
       ) : (
-        <b>{total.toLocaleString('pt-BR')}</b>
+        <b>{fmt(total)}</b>
       )}
-      <span>créditos</span>
+      {/* ⚠️ A PALAVRA. Sem ela, ele lê R$. */}
+      <span>tokens</span>
       {fundador ? <em className={s.selo}>FUNDADOR</em> : null}
     </Link>
   );

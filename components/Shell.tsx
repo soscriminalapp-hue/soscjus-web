@@ -17,6 +17,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Icon, { type Nome } from './Icon';
 import Saldo from './Saldo';
+import Sino from './Sino';
 import s from './shell.module.css';
 
 interface Item {
@@ -287,6 +288,7 @@ export default function Shell({
               <Icon n="menu" s={22} />
             </button>
 
+            {/* A trilha: o primeiro nível LEVA de volta */}
             <div className={s.trilha}>
               <span>{atual?.grupo ?? 'Estação'}</span>
               <Icon n="chev" s={13} strokeWidth={2.2} />
@@ -294,6 +296,9 @@ export default function Shell({
             </div>
 
             <div className={s.acoes}>
+              {/* 🔔 O SINO — é ele que faz o advogado deixar a estação ABERTA */}
+              <Sino />
+
               <Saldo
                 total={adv.creditos ?? 0}
                 ilimitado={adv.ilimitado}
