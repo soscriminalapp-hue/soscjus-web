@@ -1,11 +1,26 @@
 'use client';
 
 /**
- * Consultas — as cinco.
+ * ═══════════════════════════════════════════════════════════════════════════
+ *  AS CONSULTAS — idênticas ao aplicativo
+ * ═══════════════════════════════════════════════════════════════════════════
  *
- * O 402 é o ponto central: quando a cota acaba, o backend responde 402 e a
- * tela abre o QR. A web NUNCA cobra. E quando o celular confirma, a consulta
- * roda SOZINHA — o advogado não precisa voltar e clicar de novo.
+ *  ⚠️ OS NOMES SÃO OS MESMOS DO APP. NÃO INVENTE.
+ *
+ *    ❌ "Buscar Processos"      → parece que busca NOS processos DELE
+ *    ✅ "Consulta Processual SOSC" → é o PENTE-FINO: até 200 processos de
+ *                                    uma pessoa, no Brasil inteiro
+ *
+ *  ⚠️ AS DESCRIÇÕES TAMBÉM. Copiadas do app, palavra por palavra.
+ *
+ *  🇧🇷 A BANDEIRINHA aparece nas consultas NACIONAIS — como no app.
+ *
+ * ═══════════════════════════════════════════════════════════════════════════
+ *  ⚠️ O BOTÃO NÃO COMPRA. O BOTÃO GASTA.
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ *  Ele já tem crédito. Clicar aqui DEBITA do saldo — não abre loja.
+ *  Sem saldo → 402 → aí sim manda comprar crédito.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -14,174 +29,227 @@ import { sosc, ApiError } from '@/lib/api';
 import { PRECOS, LIMIAR_CONFIRMACAO, type Feature } from '@/lib/creditos';
 import Cabecalho from '@/components/Cabecalho';
 import Icon, { type Nome } from '@/components/Icon';
-import Compra from '@/components/Compra';
-import Preco, { Gratis } from '@/components/Preco';
+import Diamante from '@/components/Diamante';
+import { Gratis } from '@/components/Preco';
 import Gastar from '@/components/Gastar';
+import Compra from '@/components/Compra';
 import s from './consultas.module.css';
 
-type Id = 'processo' | 'mandado' | 'cpf' | 'veiculo' | 'print';
+type Id = 'processual' | 'mandado' | 'cpf' | 'veiculo' | 'print';
+
+interface Campo {
+  chave: string;
+  rotulo: string;
+  dica: string;
+  mono?: boolean;
+  opcional?: boolean;
+}
 
 interface Ferramenta {
   id: Id;
+  /** ⚠️ O NOME DO APP. Não invente outro. */
   nome: string;
   icone: Nome;
-  cor: 'jur' | 'risco' | 'tech';
-  /** A frase. Sem jargão. */
+  cor: 'jur' | 'risco' | 'tech' | 'mente';
+  /** 🇧🇷 Consulta nacional. */
+  nacional?: boolean;
+  /** A frase de capa — do app. */
+  chamada: string;
+  /** A explicação — do app. */
   explica: string;
-  campo: string;
-  dica: string;
-  mono?: boolean;
-  /** Segundo campo (nome completo, no mandado). */
-  campo2?: string;
-  dica2?: string;
-  /** Aceita foto (placa, print). */
-  foto?: 'placa' | 'print';
-  /** Feature paga. null = 🟢 GRÁTIS. */
+  campos: Campo[];
+  /** null = 🟢 GRÁTIS */
   feature: Feature | null;
+  /** era pago e virou grátis → mostra o riscado */
+  eraRS?: string;
+  foto?: 'placa' | 'print';
+  /** O que ele recebe — do app. */
+  recebe?: Array<[string, string]>;
+  botao: string;
 }
 
 const FERRAMENTAS: Ferramenta[] = [
   {
-    id: 'processo',
-    nome: 'Buscar Processos',
+    id: 'processual',
+    nome: 'Consulta Processual SOSC',
     icone: 'balanca',
     cor: 'jur',
+    nacional: true,
+    chamada: 'Pente-Fino SOSC',
     explica:
-      'Digite o CPF de uma pessoa e veja todos os processos dela no Brasil inteiro. Serve também para CNPJ ou para o número do processo.',
-    campo: 'CPF, CNPJ ou número do processo',
-    dica: '000.000.000-00',
-    mono: true,
+      'Uma varredura rigorosa de toda a vida processual do cliente — até 200 processos numa única busca por CPF/CNPJ. Não é uma busca casual: use quando quiser mapear tudo o que existe em nome da pessoa.',
+    campos: [
+      {
+        chave: 'valor',
+        rotulo: 'CPF, CNPJ ou número do processo',
+        dica: '000.000.000-00',
+        mono: true,
+      },
+    ],
     feature: 'CONSULTA_PROCESSUAL',
+    recebe: [
+      ['⚖️', 'Até 200 processos, em qualquer tribunal do Brasil'],
+      ['📋', 'A capa de cada um: classe, assunto, vara, valor'],
+      ['📅', 'As movimentações — e os prazos e audiências que saem delas'],
+      ['🔗', 'Vincule aos seus processos com um clique'],
+    ],
+    botao: 'Fazer pente-fino',
   },
   {
     id: 'mandado',
-    nome: 'Mandado de Prisão',
+    nome: 'Consultar Mandado',
     icone: 'alerta',
     cor: 'risco',
+    nacional: true,
+    chamada: 'Mandado de Prisão',
     explica:
-      'Veja se existe mandado de prisão em aberto contra alguém. Consulta o banco nacional e as bases dos estados. O resultado vale para a data e a hora da consulta, e sai com comprovante.',
-    campo: 'CPF',
-    dica: '000.000.000-00',
-    mono: true,
-    campo2: 'Nome completo',
-    dica2: 'Como está no documento',
+      'Consulta o Banco Nacional de Mandados de Prisão (BNMP/CNJ) por CPF. Sai com relatório em PDF.',
+    campos: [
+      { chave: 'cpf', rotulo: 'CPF', dica: 'Só números', mono: true },
+      { chave: 'nome', rotulo: 'Nome completo', dica: 'Nome da pessoa' },
+      {
+        chave: 'nomeMae',
+        rotulo: 'Nome da mãe',
+        dica: 'Refina o resultado',
+        opcional: true,
+      },
+    ],
     feature: 'CONSULTA_MANDADO',
+    recebe: [
+      ['🚨', 'Se existe mandado em aberto — e qual'],
+      ['📄', 'O comprovante oficial em PDF'],
+      ['⚖️', 'O processo de origem do mandado'],
+      ['🔄', 'Se é recaptura'],
+    ],
+    botao: 'Consultar mandado + relatório',
   },
   {
     id: 'cpf',
     nome: 'Consultar CPF',
     icone: 'busca',
     cor: 'jur',
+    chamada: 'Consulta completa',
     explica:
-      'Ficha completa e antecedentes criminais. Você pode buscar pelo CPF, pelo celular, pelo e-mail ou só pelo nome — o sistema tenta os caminhos até achar.',
-    campo: 'CPF, celular, e-mail ou nome',
-    dica: '000.000.000-00',
+      'Ficha cadastral + antecedentes criminais + mandado de prisão, em um relatório único. Busque pelo que você tiver: nome, CPF, celular ou e-mail.',
+    campos: [
+      { chave: 'nome', rotulo: 'Nome completo', dica: 'Nome da pessoa', opcional: true },
+      { chave: 'cpf', rotulo: 'CPF', dica: 'Só números', mono: true, opcional: true },
+      { chave: 'celular', rotulo: 'Celular', dica: '(00) 00000-0000', mono: true, opcional: true },
+      { chave: 'email', rotulo: 'E-mail', dica: 'pessoa@email.com', opcional: true },
+    ],
     feature: 'CONSULTA_CADASTRAL',
+    recebe: [
+      ['👤', 'Ficha cadastral: nome, nascimento, mãe, endereços, telefones'],
+      ['⚖️', 'Antecedentes criminais'],
+      ['🚨', 'Mandado de prisão (BNMP/CNJ)'],
+      ['📄', 'Tudo num relatório único'],
+    ],
+    botao: 'Consulta completa',
   },
   {
     id: 'veiculo',
     nome: 'Consultar Veículo',
     icone: 'carro',
-    cor: 'risco',
+    cor: 'mente',
+    chamada: 'Pente-fino do veículo',
     explica:
-      'Digite a placa ou anexe uma foto dela. Mostra o modelo, o ano, o valor na tabela FIPE, o dono e se tem restrição — roubo, furto ou financiamento.',
-    campo: 'Placa',
-    dica: 'ABC1D23',
-    mono: true,
-    foto: 'placa',
+      'Pela placa — digitada ou fotografada — o SOSC JUS faz o pente-fino do veículo em fonte oficial.',
+    campos: [{ chave: 'placa', rotulo: 'Placa do veículo', dica: 'ABC1D23', mono: true }],
     feature: 'PENTE_FINO_VEICULO',
+    foto: 'placa',
+    recebe: [
+      ['🔴', 'Restrições: RENAJUD (penhora judicial) · roubo e furto · Receita Federal · leilão · infrações (RENAINF) · comunicado de venda · recall · pendência de emissão · chassi remarcado'],
+      ['💰', 'Valor de mercado: tabela FIPE, com o mês de referência'],
+      ['👤', 'Proprietário'],
+      ['🚗', 'O veículo: marca, modelo, ano, cor, combustível'],
+      ['🔧', 'Identificação e técnico: chassi, motor, potência, eixos'],
+      ['📄', 'Documentação: ano do exercício · emissão do CRLV e do CRV'],
+    ],
+    botao: 'Pente-fino + relatório',
   },
   {
     id: 'print',
-    nome: 'Analisar Print',
+    nome: 'Analisar / Verificar Print',
     icone: 'print',
     cor: 'tech',
+    chamada: 'Análise técnica · selo · cadeia',
     explica:
-      'O cliente mandou um print de conversa? Antes de juntar no processo, confira aqui. O sistema procura sinais de montagem — recorte, letra trocada, horário que não bate — e transcreve o que está escrito.',
-    campo: 'Sobre o que é (opcional)',
-    dica: 'Ex.: conversa entre a vítima e o réu',
+      'Anexe um print ou uma gravação de tela — sua ou de terceiro. O motor detecta corte de vídeo, rastro de editor e metadados que não batem.',
+    campos: [
+      {
+        chave: 'contexto',
+        rotulo: 'Sobre o que é',
+        dica: 'Ex.: conversa entre a vítima e o réu',
+        opcional: true,
+      },
+    ],
+    /* 🟢 GRÁTIS — era R$ 9,90 */
+    feature: null,
+    eraRS: '9,90',
     foto: 'print',
-    feature: null, // 🟢 GRÁTIS
+    recebe: [
+      ['🔍', 'Indícios de manipulação: metadados · rastro de editor (Photoshop, CapCut…) · data de criação × modificação · corte no vídeo · análise visual (fonte, alinhamento, elementos impossíveis)'],
+      ['🔗', 'Cadeia de custódia: se este arquivo já passou pelo SOSC JUS, mostramos quem registrou, quando e onde — e se foi alterado entre um registro e outro'],
+      ['🖋️', 'Selo de integridade: hash SHA-256 · carimbo de tempo · GPS do registro'],
+      ['📄', 'Laudo em PDF, pronto pra juntar no processo'],
+    ],
+    botao: 'Analisar + laudo',
   },
 ];
 
-/* ── Cotas ── */
-interface Cotas {
-  processo?: { restante: number | null; cota: number | null };
-  cpf?: { restante: number | null; cota: number | null };
-  ilimitado?: boolean;
-}
-
-function rotulo(c?: { restante: number | null; cota: number | null }, ilim?: boolean) {
-  if (ilim || !c || c.cota == null) return { t: 'Sem limite', tom: 'free' as const };
-  const r = c.restante ?? 0;
-  if (r <= 0) return { t: `Acabou — 0 de ${c.cota}`, tom: 'stop' as const };
-  if (r <= Math.max(1, Math.ceil(c.cota * 0.3)))
-    return { t: `Sobrou ${r} de ${c.cota}`, tom: 'warn' as const };
-  return { t: `Sobraram ${r} de ${c.cota}`, tom: 'ok' as const };
-}
-
 export default function Consultas() {
   const params = useSearchParams();
-  const inicial = (params.get('f') as Id) ?? 'processo';
+  const inicial = (params.get('f') as Id) ?? 'processual';
 
   const [sel, setSel] = useState<Id>(
-    FERRAMENTAS.some((f) => f.id === inicial) ? inicial : 'processo',
+    FERRAMENTAS.some((f) => f.id === inicial) ? inicial : 'processual',
   );
-  const [v1, setV1] = useState('');
-  const [v2, setV2] = useState('');
+  const [campos, setCampos] = useState<Record<string, string>>({});
   const [foto, setFoto] = useState<File | null>(null);
   const [lendoFoto, setLendoFoto] = useState(false);
   const [ocupado, setOcupado] = useState(false);
   const [erro, setErro] = useState('');
   const [res, setRes] = useState<Record<string, unknown> | null>(null);
+  const [confirmar, setConfirmar] = useState<Feature | null>(null);
   const [comprar, setComprar] = useState<string | null>(null);
-  const [cotas, setCotas] = useState<Cotas>({});
+  const [saldo, setSaldo] = useState(0);
+  const [ilimitado, setIlimitado] = useState(false);
 
   const f = FERRAMENTAS.find((x) => x.id === sel)!;
   const refazer = useRef<(() => void) | null>(null);
 
-  /* ── carrega cotas ── */
-  const lerCotas = useCallback(async () => {
+  const lerSaldo = useCallback(async () => {
     try {
-      const [p, c] = await Promise.all([
-        sosc.get<{ restante: number | null; cota: number | null; ilimitado?: boolean }>(
-          '/processos/consulta/cota',
-        ),
-        sosc.get<{
-          cadastral?: { restante: number | null; cota: number | null };
-          ilimitado?: boolean;
-        }>('/processos/cpf/cotas'),
-      ]);
-      setCotas({
-        processo: { restante: p.restante, cota: p.cota },
-        cpf: c.cadastral,
-        ilimitado: p.ilimitado || c.ilimitado,
-      });
+      const r = await sosc.get<{
+        saldo?: { total?: number | null; ilimitado?: boolean };
+      }>('/creditos/saldo');
+      setIlimitado(Boolean(r.saldo?.ilimitado));
+      setSaldo(r.saldo?.total ?? 0);
     } catch {
-      /* não bloqueia a tela */
+      /* não bloqueia */
     }
   }, []);
 
   useEffect(() => {
-    void lerCotas();
-  }, [lerCotas]);
+    void lerSaldo();
+  }, [lerSaldo]);
 
   function trocar(id: Id) {
     setSel(id);
-    setV1('');
-    setV2('');
+    setCampos({});
     setFoto(null);
     setRes(null);
     setErro('');
   }
 
-  /* ── leitura de placa / print ── */
+  /* ─── leitura de placa ─── */
   async function lerImagem(file: File) {
     setFoto(file);
-    setLendoFoto(true);
     setErro('');
     setRes(null);
+    if (f.foto !== 'placa') return;
+
+    setLendoFoto(true);
     try {
       const b64 = await new Promise<string>((ok, no) => {
         const r = new FileReader();
@@ -189,26 +257,22 @@ export default function Consultas() {
         r.onerror = () => no(new Error('Não foi possível ler a imagem.'));
         r.readAsDataURL(file);
       });
-
       const mediaType = ['image/png', 'image/webp'].includes(file.type)
         ? file.type
         : 'image/jpeg';
 
-      if (f.foto === 'placa') {
-        const r = await sosc.post<{ placa?: string; confianca?: number; motivo?: string }>(
-          '/processos/veiculo/ler-placa',
-          { imagemBase64: b64, mediaType },
+      const r = await sosc.post<{ placa?: string; motivo?: string }>(
+        '/processos/veiculo/ler-placa',
+        { imagemBase64: b64, mediaType },
+      );
+      if (!r.placa) {
+        setErro(
+          r.motivo ??
+            'Não deu para ler a placa com segurança. Chegue mais perto, evite o reflexo e tire outra foto.',
         );
-        if (!r.placa) {
-          setErro(
-            r.motivo ??
-              'Não deu para ler a placa com segurança. Chegue mais perto, evite o reflexo e tire outra foto. É melhor não preencher do que preencher errado.',
-          );
-        } else {
-          setV1(r.placa);
-        }
+      } else {
+        setCampos((c) => ({ ...c, placa: r.placa! }));
       }
-      // O print é enviado junto na própria consulta.
     } catch (e) {
       setErro(e instanceof ApiError ? e.message : 'Não foi possível ler a imagem.');
     } finally {
@@ -216,106 +280,105 @@ export default function Consultas() {
     }
   }
 
-  /* ── executa ── */
-  const executar = useCallback(async () => {
-    if (f.id !== 'print' && !v1.trim()) {
-      setErro('Preencha o campo antes de consultar.');
-      return;
-    }
-    if (f.id === 'mandado' && !v2.trim()) {
-      setErro('Preencha o nome completo. Sem ele a busca não cruza nas bases.');
-      return;
-    }
+  /* ─── EXECUTA — o botão GASTA, não compra ─── */
+  const executar = useCallback(
+    async (pular?: boolean) => {
+      const custo = f.feature ? PRECOS[f.feature].creditos : 0;
 
-    setOcupado(true);
-    setErro('');
-    setRes(null);
+      // ═══ FLUIDEZ NO BARATO. TRANSPARÊNCIA NO CARO. ═══
+      if (f.feature && !pular && custo > LIMIAR_CONFIRMACAO && !ilimitado) {
+        setConfirmar(f.feature);
+        return;
+      }
+      setConfirmar(null);
+      setOcupado(true);
+      setErro('');
+      setRes(null);
 
-    try {
-      let r: unknown;
-      const so = v1.replace(/\D/g, '');
+      try {
+        let r: unknown;
 
-      if (f.id === 'processo') {
-        r = await sosc.post('/processos/consulta', {
-          tipo: so.length === 20 ? 'cnj' : 'cpf',
-          valor: v1.trim(),
-        });
-      } else if (f.id === 'mandado') {
-        r = await sosc.post('/processos/mandado/consulta', {
-          cpf: so,
-          nome: v2.trim(),
-        });
-      } else if (f.id === 'cpf') {
-        const tipo = /@/.test(v1)
-          ? 'email'
-          : so.length === 11
-            ? 'cpf'
-            : so.length >= 10
-              ? 'celular'
-              : 'nome';
-        r = await sosc.post('/processos/cpf/buscar', {
-          termo: v1.trim(),
-          tipo,
-          [tipo]: v1.trim(),
-        });
-      } else if (f.id === 'veiculo') {
-        r = await sosc.post('/processos/veiculo/consultar', {
-          placa: v1.replace(/[^A-Za-z0-9]/g, '').toUpperCase(),
-        });
-      } else {
-        // print
-        if (!foto) {
-          setErro('Anexe o print antes de analisar.');
-          setOcupado(false);
-          return;
+        if (f.id === 'processual') {
+          const v = (campos.valor ?? '').trim();
+          const so = v.replace(/\D/g, '');
+          if (!v) throw new ApiError(400, 'Digite o CPF, CNPJ ou o número do processo.');
+          r = await sosc.post('/processos/consulta', {
+            tipo: so.length === 20 ? 'cnj' : 'cpf',
+            valor: v,
+          });
+        } else if (f.id === 'mandado') {
+          if (!campos.cpf || !campos.nome) {
+            throw new ApiError(400, 'Preencha o CPF e o nome completo.');
+          }
+          r = await sosc.post('/processos/mandado/consulta', {
+            cpf: campos.cpf.replace(/\D/g, ''),
+            nome: campos.nome.trim(),
+            nomeMae: campos.nomeMae?.trim() || undefined,
+          });
+        } else if (f.id === 'cpf') {
+          const tem = ['nome', 'cpf', 'celular', 'email'].some((k) =>
+            (campos[k] ?? '').trim(),
+          );
+          if (!tem) throw new ApiError(400, 'Preencha ao menos um campo.');
+          r = await sosc.post('/processos/cpf/buscar', {
+            nome: campos.nome?.trim() || undefined,
+            cpf: campos.cpf?.replace(/\D/g, '') || undefined,
+            celular: campos.celular?.replace(/\D/g, '') || undefined,
+            email: campos.email?.trim() || undefined,
+          });
+        } else if (f.id === 'veiculo') {
+          const placa = (campos.placa ?? '').replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+          if (!placa) throw new ApiError(400, 'Digite a placa ou anexe a foto dela.');
+          r = await sosc.post('/processos/veiculo/consultar', { placa });
+        } else {
+          if (!foto) throw new ApiError(400, 'Anexe o print ou o vídeo.');
+          const b64 = await new Promise<string>((ok) => {
+            const rd = new FileReader();
+            rd.onload = () => ok(String(rd.result).split(',')[1] ?? '');
+            rd.readAsDataURL(foto);
+          });
+          // ⚠️ /prova/analisar — NÃO é /print/analisar
+          r = await sosc.post('/processos/prova/analisar', {
+            imagemBase64: b64,
+            mediaType: foto.type || 'image/jpeg',
+            contexto: campos.contexto?.trim() || undefined,
+          });
         }
-        const b64 = await new Promise<string>((ok) => {
-          const rd = new FileReader();
-          rd.onload = () => ok(String(rd.result).split(',')[1] ?? '');
-          rd.readAsDataURL(foto);
-        });
-        r = await sosc.post('/processos/prova/analisar', {
-          imagemBase64: b64,
-          mediaType: foto.type || 'image/jpeg',
-          contexto: v1.trim() || undefined,
-        });
-      }
 
-      setRes(r as Record<string, unknown>);
-      void lerCotas();
-    } catch (e) {
-      // ═══ O 402: a cota acabou. A web NÃO cobra. ═══
-      if (e instanceof ApiError && e.semCota) {
-        refazer.current = () => void executar();
-        setComprar(f.feature);
-      } else {
-        setErro(
-          e instanceof ApiError ? e.message : 'A consulta falhou. Tente de novo.',
-        );
+        setRes(r as Record<string, unknown>);
+        if (f.feature) await lerSaldo(); // o saldo caiu
+      } catch (e) {
+        // ═══ 402 = SEM CRÉDITO. A ferramenta não é vendida — o CRÉDITO é. ═══
+        if (e instanceof ApiError && e.semCota) {
+          refazer.current = () => void executar(true);
+          setComprar('CREDITOS');
+        } else {
+          setErro(e instanceof ApiError ? e.message : 'A consulta falhou. Tente de novo.');
+        }
+      } finally {
+        setOcupado(false);
       }
-    } finally {
-      setOcupado(false);
-    }
-  }, [f, v1, v2, foto, lerCotas]);
+    },
+    [f, campos, foto, ilimitado, lerSaldo],
+  );
 
-  const cot = f.id === 'processo' ? cotas.processo : f.id === 'cpf' ? cotas.cpf : undefined;
-  const rot = rotulo(cot, cotas.ilimitado);
+  const custo = f.feature ? PRECOS[f.feature].creditos : 0;
+  const da = ilimitado || !f.feature || saldo >= custo;
 
   return (
     <>
       <Cabecalho
-        eyebrow="Bases nacionais"
-        titulo="Fazer uma"
-        destaque="Consulta"
+        eyebrow="Bases nacionais · fonte oficial"
+        titulo="Consultar"
+        destaque="alguém"
         texto="As senhas dos fornecedores ficam no servidor. Você manda o dado, recebe o resultado."
       />
 
       <div className={s.grade}>
-        {/* ─── seletor ─── */}
+        {/* ─── O SELETOR ─── */}
         <nav className={s.lista}>
           {FERRAMENTAS.map((x) => {
-            const c = x.id === 'processo' ? cotas.processo : x.id === 'cpf' ? cotas.cpf : undefined;
-            const r = rotulo(c, cotas.ilimitado);
+            const c = x.feature ? PRECOS[x.feature].creditos : 0;
             return (
               <button
                 key={x.id}
@@ -326,46 +389,58 @@ export default function Consultas() {
                   <Icon n={x.icone} s={22} />
                 </span>
                 <span className={s.rot}>
-                  <strong>{x.nome}</strong>
-                  {c ? <small className={s[r.tom]}>{r.t}</small> : null}
+                  <strong>
+                    {x.nacional ? <em className={s.br}>🇧🇷</em> : null}
+                    {x.nome}
+                  </strong>
+                  {x.feature ? (
+                    <small className={s.preco}>
+                      <Diamante s={12} />
+                      {c}
+                    </small>
+                  ) : (
+                    <small className={s.gratisRow}>
+                      {x.eraRS ? <span className={s.riscado}>R$ {x.eraRS}</span> : null}
+                      <Gratis />
+                    </small>
+                  )}
                 </span>
               </button>
             );
           })}
         </nav>
 
-        {/* ─── formulário ─── */}
-        <div className="card" style={{ margin: 0 }}>
-          <div className="card-b" style={{ padding: 30 }}>
-            <h2 className={s.tit}>{f.nome}</h2>
-            <p className={s.explica}>{f.explica}</p>
-
-            {cot ? (
-              <span className={`est ${rot.tom}`} style={{ marginBottom: 22 }}>
-                {rot.tom === 'ok' ? <Icon n="ok" s={14} strokeWidth={2.4} /> : null}
-                {rot.tom === 'warn' ? <Icon n="alerta" s={14} strokeWidth={2.4} /> : null}
-                {rot.tom === 'stop' ? <Icon n="x" s={14} strokeWidth={2.4} /> : null}
-                {rot.t}
+        {/* ─── O FORMULÁRIO ─── */}
+        <div className={s.painel}>
+          <header className={s.pTopo}>
+            {f.nacional ? (
+              <span className={s.selo}>
+                <Icon n="alerta" s={13} strokeWidth={2.4} />
+                🇧🇷 CONSULTA NACIONAL
               </span>
             ) : null}
+            <h2>{f.chamada}</h2>
+            <p>{f.explica}</p>
+          </header>
 
+          <div className={s.pCorpo}>
             {/* foto (placa ou print) */}
             {f.foto ? (
               <label className={`${s.foto} ${foto ? s.fotoCheia : ''}`}>
                 <input
                   type="file"
-                  accept="image/*"
+                  accept={f.foto === 'print' ? 'image/*,video/*' : 'image/*'}
                   capture={f.foto === 'placa' ? 'environment' : undefined}
                   onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) void lerImagem(file);
+                    const x = e.target.files?.[0];
+                    if (x) void lerImagem(x);
                   }}
                   disabled={ocupado || lendoFoto}
                 />
                 {lendoFoto ? (
                   <>
                     <span className="spin" />
-                    <b>Lendo a imagem…</b>
+                    <b>Lendo a placa…</b>
                   </>
                 ) : foto ? (
                   <>
@@ -377,42 +452,46 @@ export default function Consultas() {
                   <>
                     <Icon n="subir" s={22} />
                     <b>
-                      {f.foto === 'placa' ? 'Tirar foto da placa' : 'Anexar o print'}
+                      {f.foto === 'placa'
+                        ? 'Fotografar a placa'
+                        : 'Anexar print ou vídeo'}
                     </b>
                     <small>
                       {f.foto === 'placa'
-                        ? 'Pelo celular abre a câmera. O sistema lê e você confere antes de buscar.'
-                        : 'O original, sem editar. Editar apaga as marcas que denunciam a montagem.'}
+                        ? 'Fotografe de frente, a até 2 metros, sem sombra sobre ela.'
+                        : 'captura de tela · gravação de tela'}
                     </small>
                   </>
                 )}
               </label>
             ) : null}
 
-            <label className="fld">
-              <span>{f.campo}</span>
-              <input
-                className={f.mono ? 'mono' : ''}
-                value={v1}
-                onChange={(e) =>
-                  setV1(f.id === 'veiculo' ? e.target.value.toUpperCase().slice(0, 8) : e.target.value)
-                }
-                placeholder={f.dica}
-                disabled={ocupado}
-              />
-            </label>
-
-            {f.campo2 ? (
-              <label className="fld">
-                <span>{f.campo2}</span>
-                <input
-                  value={v2}
-                  onChange={(e) => setV2(e.target.value)}
-                  placeholder={f.dica2}
-                  disabled={ocupado}
-                />
-              </label>
-            ) : null}
+            {/* os campos */}
+            <div className={f.campos.length > 2 ? s.f2 : ''}>
+              {f.campos.map((c) => (
+                <label key={c.chave} className="fld">
+                  <span>
+                    {c.rotulo}
+                    {c.opcional ? <em className={s.opc}> (opcional)</em> : null}
+                  </span>
+                  <input
+                    className={c.mono ? 'mono' : ''}
+                    value={campos[c.chave] ?? ''}
+                    onChange={(e) =>
+                      setCampos((v) => ({
+                        ...v,
+                        [c.chave]:
+                          c.chave === 'placa'
+                            ? e.target.value.toUpperCase().slice(0, 8)
+                            : e.target.value,
+                      }))
+                    }
+                    placeholder={c.dica}
+                    disabled={ocupado}
+                  />
+                </label>
+              ))}
+            </div>
 
             {erro ? (
               <div className={s.erro} role="alert">
@@ -421,11 +500,11 @@ export default function Consultas() {
               </div>
             ) : null}
 
+            {/* ⚠️ O BOTÃO GASTA. NÃO COMPRA. */}
             <button
-              className={`btn ${f.cor === 'risco' ? 'b-risk' : f.cor === 'tech' ? 'b-tech' : 'b-gold'} full`}
+              className={`btn ${f.cor === 'risco' ? 'b-risk' : f.cor === 'tech' ? 'b-tech' : f.cor === 'mente' ? 'b-mind' : 'b-gold'} full ${s.acao}`}
               onClick={() => void executar()}
               disabled={ocupado || lendoFoto}
-              style={{ padding: 15 }}
             >
               {ocupado ? (
                 <>
@@ -434,13 +513,55 @@ export default function Consultas() {
                 </>
               ) : (
                 <>
-                  <Icon n={f.id === 'print' ? 'print' : 'busca'} s={19} strokeWidth={2.1} />
-                  {f.id === 'print' ? 'Analisar' : 'Consultar'}
+                  <Icon n={f.icone} s={19} strokeWidth={2.1} />
+                  {f.botao}
+                  {f.feature ? (
+                    <span className={s.btnPreco}>
+                      <Diamante s={15} />
+                      {custo}
+                    </span>
+                  ) : (
+                    <span className={s.btnGratis}>
+                      {f.eraRS ? <span className={s.riscadoBtn}>R$ {f.eraRS}</span> : null}
+                      Grátis
+                    </span>
+                  )}
                 </>
               )}
             </button>
 
-            {/* resultado cru — cada consulta tem um formato */}
+            {!da ? (
+              <p className={s.semSaldo}>
+                <Icon n="alerta" s={14} />
+                Faltam {custo - saldo} créditos.{' '}
+                <button onClick={() => setComprar('CREDITOS')}>Comprar</button>
+              </p>
+            ) : null}
+
+            {/* ─── O QUE VOCÊ RECEBE — do app ─── */}
+            {f.recebe ? (
+              <div className={s.recebe}>
+                <h3>
+                  O que você recebe
+                  {f.feature ? (
+                    <span className={s.rPreco}>
+                      <Diamante s={14} />
+                      {custo}
+                    </span>
+                  ) : null}
+                </h3>
+                <ul>
+                  {f.recebe.map(([e, t], i) => (
+                    <li key={i}>
+                      <span className={s.emoji}>{e}</span>
+                      <span>{t}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+
+            {/* o resultado */}
             {res ? (
               <div className={s.res}>
                 <div className={s.resH}>
@@ -453,20 +574,30 @@ export default function Consultas() {
 
             <p className={s.seguro}>
               <Icon n="lock" s={14} />
-              Consulta protegida. As senhas dos fornecedores nunca passam pelo seu
-              navegador.
+              Consulta em fonte oficial. As senhas dos fornecedores nunca passam pelo
+              seu navegador.
             </p>
           </div>
         </div>
       </div>
+
+      <Gastar
+        chave={confirmar}
+        saldo={saldo}
+        onConfirmar={() => void executar(true)}
+        onCancelar={() => setConfirmar(null)}
+        onRecarregar={() => {
+          setConfirmar(null);
+          setComprar('CREDITOS');
+        }}
+      />
 
       <Compra
         feature={comprar}
         onFechar={() => setComprar(null)}
         onConfirmado={() => {
           setComprar(null);
-          void lerCotas();
-          // DESTRAVA SOZINHA: refaz a consulta que estava pendente.
+          void lerSaldo();
           refazer.current?.();
         }}
       />

@@ -8,12 +8,14 @@
  * cookie httpOnly.
  */
 
-import { useState, Suspense, type FormEvent } from 'react';
+import { Suspense, useState, type FormEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { api, ApiError } from '@/lib/api';
 import s from './login.module.css';
 
+// useSearchParams() exige um limite de Suspense no App Router (senão o build
+// falha no prerender de /login). Envolvemos o formulário no default export.
 function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
@@ -172,8 +174,6 @@ function LoginForm() {
   );
 }
 
-// B268: /login usa useSearchParams() → exige Suspense boundary p/ o build
-// estático do Next (senao "prerender-error" no Vercel).
 export default function Login() {
   return (
     <Suspense fallback={null}>

@@ -37,6 +37,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { finaisjus, ApiError, type StatusFinaisJus, type DossieFinaisJus } from '@/lib/api';
 import Cabecalho from '@/components/Cabecalho';
+import OndeUsar from '@/components/OndeUsar';
 import Icon from '@/components/Icon';
 import Compra from '@/components/Compra';
 import { PRECOS } from '@/lib/creditos';
@@ -211,6 +212,24 @@ export default function FinaisJus() {
           dossie ? (
             <button className="btn b-ghost" onClick={limpar}>
               <Icon n="mais" s={19} strokeWidth={2.1} />
+
+      {/*
+        🖥️ PETIÇÃO SE FAZ NO COMPUTADOR.
+
+        É o hábito de 30 anos do advogado. Ninguém escreve alegações finais
+        no celular.
+
+        E aqui ele:
+          · sobe vídeo de 3 GB e CONTINUA TRABALHANDO em outra aba
+          · lê 200 páginas de transcrição numa tela de 27"
+          · marca o trecho, cruza o depoimento, ESCREVE a peça
+      */}
+      <div className={s.melhorAqui}>
+        <OndeUsar
+          onde="estacao"
+          motivo="Petição se faz no computador. Suba o vídeo da audiência e continue trabalhando — quando terminar, você lê a transcrição inteira e escreve a peça, tudo na mesma tela."
+        />
+      </div>
               Nova peça
             </button>
           ) : null

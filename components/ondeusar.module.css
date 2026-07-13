@@ -1,0 +1,44 @@
+.selo {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1.5px solid;
+  font-size: .84rem;
+}
+.selo strong {
+  display: block;
+  font-weight: 700;
+  font-size: .86rem;
+}
+.selo small {
+  display: block;
+  font-size: .82rem;
+  color: var(--t2);
+  margin-top: 2px;
+  line-height: 1.45;
+}
+.selo svg { flex-shrink: 0; margin-top: 1px; }
+
+/* 📱 celular — azul-tech */
+.cel {
+  border-color: rgba(0, 194, 232, .3);
+  background: var(--miami-dim);
+  color: var(--miami);
+}
+
+/* 🖥️ estação — ouro */
+.est {
+  border-color: rgba(216, 166, 49, .3);
+  background: var(--gold-dim);
+  color: var(--gold);
+}
+
+.mini {
+  padding: 6px 10px;
+  border-radius: 20px;
+  gap: 6px;
+  align-items: center;
+}
+.mini strong { font-size: .76rem; }

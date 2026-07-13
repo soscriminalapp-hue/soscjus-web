@@ -11,7 +11,8 @@ export type Nome =
   | 'ia' | 'relatorio' | 'oab' | 'logo' | 'plano' | 'sair' | 'menu' | 'sino'
   | 'chev' | 'mais' | 'x' | 'ok' | 'sync' | 'olho' | 'baixar' | 'subir'
   | 'lock' | 'pin' | 'wa' | 'relogio' | 'atividade' | 'convite' | 'chat'
-  | 'apple' | 'play' | 'externo' | 'copiar' | 'celular' | 'escudo';
+  | 'apple' | 'play' | 'externo' | 'copiar' | 'celular' | 'escudo'
+  | 'monitor' | 'sos' | 'prerrogativa' | 'grade' | 'download';
 
 const P: Record<Nome, JSX.Element> = {
   inicio: <><path d="M3 11.5 12 4l9 7.5M5.5 10.5V20h13v-9.5M9 20v-6h6v6"/></>,
@@ -56,6 +57,11 @@ const P: Record<Nome, JSX.Element> = {
   externo: <><path d="M14 4h6v6M20 4 10 14M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></>,
   copiar: <><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></>,
   celular: <><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18h4"/></>,
+  monitor: <><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></>,
+  sos: <><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></>,
+  prerrogativa: <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12h6M12 9v6"/></>,
+  grade: <><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></>,
+  download: <><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></>,
   escudo: <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></>,
 };
 

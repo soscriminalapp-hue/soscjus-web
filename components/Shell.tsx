@@ -25,51 +25,131 @@ interface Item {
   icone: Nome;
   selo?: string;
   tom?: 'risco' | 'tech';
+  /**
+   * ⚠️ A tela existe e abre — mas ainda NÃO está plugada no backend.
+   *
+   * Sem este aviso, o advogado clica, vê "Tela pronta — falta plugar", e
+   * acha que o app está quebrado. Melhor ele saber ANTES de clicar.
+   */
+  emBreve?: boolean;
+  /**
+   * 📱 ESTA FERRAMENTA É MELHOR NO CELULAR.
+   *
+   * ⚠️ Dizer isso GANHA a confiança dele.
+   *
+   * Se ele tenta consultar veículo aqui, digita a placa errada e perde
+   * 40 créditos — ele culpa o produto.
+   *
+   * Se a estação AVISA "fotografe a placa no celular", ele pensa:
+   * "esse pessoal sabe o que faz".
+   */
+  celular?: boolean;
+  /** Só no app — nem abre aqui. */
+  soApp?: boolean;
 }
 interface Grupo {
   titulo?: string;
   itens: Item[];
 }
 
+/*
+  ═══════════════════════════════════════════════════════════════════════════
+   ✅ FUNCIONA DE VERDADE (7):
+      Início · Meus Processos · Prazos e Audiências · Clientes ·
+      Fazer uma Consulta · FinaisJus Pro · Meus Créditos
+
+   🔧 A TELA ABRE, mas ainda NÃO está plugada no backend (7):
+      Plantão · Contrato e Procuração · Já Assinados · Cobrar Honorários ·
+      JurisCreator · Relatório SOSC · Configurações
+
+      ⚠️ Elas levam o selo "em breve" — para o advogado saber ANTES de clicar.
+         Sem isso, ele clica, vê "Tela pronta — falta plugar", e acha que o
+         app está quebrado.
+
+      Cada uma traz, no próprio arquivo, a lista dos endpoints que precisa.
+  ═══════════════════════════════════════════════════════════════════════════
+*/
 const MENU: Grupo[] = [
   { itens: [{ href: '/inicio', rotulo: 'Início', icone: 'inicio' }] },
+
   {
     titulo: 'Todo dia',
     itens: [
       { href: '/processos', rotulo: 'Meus Processos', icone: 'processo' },
       { href: '/agenda', rotulo: 'Prazos e Audiências', icone: 'agenda', tom: 'risco' },
-      { href: '/plantao', rotulo: 'Plantão Adv.', icone: 'radar', tom: 'tech' },
+      { href: '/plantao', rotulo: 'Plantão Adv.', icone: 'radar', tom: 'tech', emBreve: true },
     ],
   },
+
   {
     titulo: 'Seus clientes',
     itens: [
       { href: '/clientes', rotulo: 'Clientes', icone: 'clientes' },
-      { href: '/documentos', rotulo: 'Contrato e Procuração', icone: 'doc' },
-      { href: '/assinados', rotulo: 'Já Assinados', icone: 'assinado' },
-      { href: '/cobrancas', rotulo: 'Cobrar Honorários', icone: 'dinheiro' },
+      { href: '/clientes?convidar=1', rotulo: 'Convidar Cliente', icone: 'convite' },
+      { href: '/documentos', rotulo: 'Contrato e Procuração', icone: 'doc', emBreve: true },
+      { href: '/assinados', rotulo: 'Já Assinados', icone: 'assinado', emBreve: true },
+      { href: '/cobrancas', rotulo: 'Cobrar Honorários', icone: 'dinheiro', emBreve: true },
     ],
   },
+
   {
     titulo: 'Consultas',
     itens: [{ href: '/consultas', rotulo: 'Fazer uma Consulta', icone: 'busca' }],
   },
+
   {
     titulo: 'Ferramentas SOSC',
     itens: [
+      // 🖥️ PETIÇÃO SE FAZ NO COMPUTADOR. É o hábito de 30 anos.
       { href: '/finaisjus', rotulo: 'FinaisJus Pro', icone: 'balanca' },
-      { href: '/juriscreator', rotulo: 'JurisCreator', icone: 'ia' },
-      { href: '/relatorio', rotulo: 'Relatório SOSC', icone: 'relatorio' },
+      // 📱 20 segundos e POSTA no Instagram. No PC ele teria que baixar,
+      //    mandar pro celular, abrir o app... Aqui é 3 toques.
+      { href: '/juriscreator', rotulo: 'JurisCreator', icone: 'ia', celular: true },
+      { href: '/relatorio', rotulo: 'Relatório SOSC', icone: 'relatorio', emBreve: true },
     ],
   },
+
   {
     titulo: 'Seu escritório',
     itens: [
-      { href: '/escritorio', rotulo: 'Configurações', icone: 'oab' },
-      { href: '/plano', rotulo: 'Meu Plano', icone: 'plano' },
+      { href: '/escritorio', rotulo: 'Minha OAB', icone: 'oab', emBreve: true },
+      { href: '/escritorio?t=logo', rotulo: 'Minha Logomarca', icone: 'logo', emBreve: true },
+      { href: '/escritorio?t=pix', rotulo: 'Chave PIX', icone: 'pix', emBreve: true },
+      { href: '/plano', rotulo: 'Meus Créditos', icone: 'plano' },
+    ],
+  },
+
+  {
+    // ⚠️ ISTO NÃO ABRE NA WEB. É ferramenta de rua.
+    titulo: 'Só no celular',
+    itens: [
+      { href: '/celular?f=sos', rotulo: 'Acionar SOS', icone: 'sos', soApp: true },
+      { href: '/celular?f=prerrogativa', rotulo: 'Prerrogativa', icone: 'prerrogativa', soApp: true },
+      { href: '/celular?f=prova', rotulo: 'Gravar Prova', icone: 'escudo', soApp: true },
     ],
   },
 ];
+
+/*
+  ═══════════════════════════════════════════════════════════════════════════
+   ✅ FUNCIONA (7):
+      Início · Meus Processos · Prazos e Audiências · Clientes ·
+      Convidar · Fazer uma Consulta · FinaisJus Pro · Meus Créditos
+
+   🔧 A TELA ABRE, mas ainda não está plugada (7):
+      Plantão · Contrato e Procuração · Já Assinados · Cobrar Honorários ·
+      Relatório SOSC · Minha OAB · Logomarca · Chave PIX
+
+      Levam o selo "em breve" — para ele saber ANTES de clicar.
+
+   📱 MELHOR NO CELULAR (1):
+      JurisCreator — 20 segundos e POSTA no Instagram.
+
+   📵 SÓ NO CELULAR (3):
+      Acionar SOS · Prerrogativa · Gravar Prova
+      São ferramentas de RUA. Câmera, GPS, push. Não abrem aqui.
+  ═══════════════════════════════════════════════════════════════════════════
+*/
 
 export interface Advogado {
   nome: string;
@@ -151,6 +231,18 @@ export default function Shell({
                     >
                       <Icon n={i.icone} s={21} />
                       <span>{i.rotulo}</span>
+                      {/* ⚠️ Avisa ANTES do clique. */}
+                      {i.soApp ? (
+                        <b className={s.soApp} title="Só no aplicativo">
+                          <Icon n="celular" s={12} strokeWidth={2.2} />
+                        </b>
+                      ) : i.celular ? (
+                        <b className={s.melhorCel} title="Melhor no celular">
+                          <Icon n="celular" s={12} strokeWidth={2.2} />
+                        </b>
+                      ) : i.emBreve ? (
+                        <b className={s.emBreve}>em breve</b>
+                      ) : null}
                       {i.selo ? (
                         <b
                           className={
@@ -181,7 +273,7 @@ export default function Shell({
           </div>
 
           {/* B268 — a versão. Salva horas de debug quando algo não bate. */}
-          <div className={s.versao}>SOSC JUS · 4.0.0 (268)</div>
+          <div className={s.versao}>SOSC JUS · 4.0.1 (269)</div>
         </aside>
 
         {/* ═══ PALCO ═══ */}
@@ -209,7 +301,8 @@ export default function Shell({
               />
               <Link href="/consultas" className="btn b-gold">
                 <Icon n="busca" s={19} strokeWidth={2.1} />
-                Nova consulta
+                {/* ⚠️ o texto some no celular — o botão era cortado na borda */}
+                <span>Nova consulta</span>
               </Link>
             </div>
           </header>

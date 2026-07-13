@@ -1,0 +1,112 @@
+.tela {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(700px 400px at 50% 0%, rgba(216, 166, 49, .07), transparent 60%),
+    #0a0b0d;
+}
+
+.caixa {
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  padding: 40px 32px;
+  border: 1.5px solid rgba(255, 255, 255, .09);
+  border-radius: 20px;
+  background: #101114;
+  position: relative;
+  overflow: hidden;
+}
+.caixa::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #B6FF00, #00C2E8 50%, #FF2D95);
+}
+
+.marca { margin-bottom: 28px; }
+.marca strong {
+  font-family: Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  color: #F2EDE4;
+}
+.marca em { font-style: normal; color: #D8A631; }
+
+.caixa h1 {
+  font-family: Georgia, serif;
+  font-size: 1.55rem;
+  font-weight: 600;
+  color: #F2EDE4;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+.caixa p {
+  font-size: .96rem;
+  color: #A4AAB2;
+  line-height: 1.62;
+  margin-bottom: 26px;
+}
+
+.spin {
+  display: inline-block;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 22px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, .12);
+  border-top-color: #D8A631;
+  animation: gira .8s linear infinite;
+}
+@keyframes gira { to { transform: rotate(360deg); } }
+
+.ok {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(47, 191, 113, .16);
+  color: #5EE295;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.lojas { display: grid; gap: 11px; margin-bottom: 18px; }
+.loja {
+  display: block;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(255, 255, 255, .1);
+  background: #16181c;
+  color: #ECEAE5;
+  transition: .16s;
+}
+.loja:hover { border-color: rgba(216, 166, 49, .5); }
+.destaque {
+  border-color: #D8A631;
+  background: rgba(216, 166, 49, .1);
+}
+.loja strong { display: block; font-size: 1.02rem; font-weight: 700; }
+.loja small { display: block; font-size: .8rem; color: #6b727b; margin-top: 2px; }
+
+.tentar {
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(255, 255, 255, .1);
+  background: transparent;
+  color: #6b727b;
+  font-size: .88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .14s;
+}
+.tentar:hover { color: #ECEAE5; border-color: rgba(255, 255, 255, .2); }

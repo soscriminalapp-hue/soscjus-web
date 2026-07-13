@@ -118,6 +118,20 @@
 .seloRisco { background: var(--risk) !important; color: #fff !important; }
 .seloTech  { background: var(--tech) !important; color: #fff !important; }
 
+/* ⚠️ A tela abre, mas ainda não está plugada. Avisa ANTES do clique. */
+.emBreve {
+  margin-left: auto;
+  font-family: var(--sans) !important;
+  font-size: .62rem !important;
+  font-weight: 700;
+  letter-spacing: .04em;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, .06) !important;
+  color: var(--t3) !important;
+  border: 1px solid var(--line2);
+}
+
 .pe {
   border-top: 1px solid var(--line2);
   padding: 14px 16px;
@@ -183,9 +197,22 @@
   gap: 9px;
   font-size: .8rem;
   color: var(--t3);
+  min-width: 0;                 /* ⚠️ deixa encolher */
+}
+.trilha span,
+.trilha b {
+  white-space: nowrap;          /* ⚠️ NÃO quebra em 3 linhas */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .trilha b { color: var(--text); font-weight: 600; font-size: .88rem; }
-.acoes { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.acoes {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;               /* ⚠️ o botão NÃO é cortado na borda */
+}
 
 .area {
   padding: 32px 28px 80px;
@@ -228,10 +255,21 @@
   .hamburguer:hover { background: var(--g750); }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 860px) {
   .area { padding: 22px 16px 60px; }
-  .topo { padding: 0 16px; height: 62px; }
-  .acoes .btn { padding: 10px 14px; font-size: .84rem; }
+  .topo { padding: 0 12px; height: 62px; gap: 10px; }
+
+  /* ⚠️ O breadcrumb quebrava em 3 linhas e empurrava o botão pra fora. */
+  .trilha { display: none; }
+
+  .acoes { gap: 8px; }
+  .acoes .btn { padding: 10px 13px; font-size: .82rem; }
+  /* ⚠️ "Nova consulta" era cortado na borda. No celular, só o ícone. */
+  .acoes .btn span { display: none; }
+}
+
+@media (max-width: 420px) {
+  .acoes .btn { padding: 10px; }
 }
 
 /* B268 — a versão, bem discreta */
@@ -243,4 +281,43 @@
   opacity: .5;
   text-align: center;
   border-top: 1px solid var(--line2);
+}
+
+/* ═══ 📱 vs 🖥️ — a honestidade ═══ */
+
+/* 📱 MELHOR no celular — mas ainda abre aqui */
+.melhorCel {
+  margin-left: auto;
+  display: inline-grid !important;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: var(--miami-dim) !important;
+  color: var(--miami) !important;
+  border: 1px solid rgba(0, 194, 232, .3);
+  flex-shrink: 0;
+}
+
+/* 📵 SÓ no celular — não abre aqui */
+.soApp {
+  margin-left: auto;
+  display: inline-grid !important;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: var(--g700) !important;
+  color: var(--t3) !important;
+  border: 1px solid var(--line2);
+  flex-shrink: 0;
+}
+
+/* o grupo "Só no celular" fica apagado */
+.grupo:last-child a {
+  opacity: .62;
+}
+.grupo:last-child a:hover {
+  opacity: 1;
+  background: var(--g800);
 }

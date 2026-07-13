@@ -13,14 +13,29 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const COOKIE = process.env.SESSION_COOKIE ?? 'soscjus_estacao';
 
-/** Rotas que não exigem login. */
-const PUBLICAS = ['/login'];
+/**
+ * Rotas que não exigem login.
+ *
+ * ⚠️ /abrir É PÚBLICA — e TEM QUE SER.
+ *
+ * É a página que o QR abre NO CELULAR. Ele não tem o cookie da estação
+ * (que vive no navegador do computador).
+ *
+ * Se ela exigisse login, o QR levaria pra tela de login — e o advogado
+ * ficaria sem entender nada.
+ */
+const PUBLICAS = ['/login', '/abrir'];
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const temCookie = Boolean(req.cookies.get(COOKIE)?.value);
 
   if (PUBLICAS.some((p) => pathname.startsWith(p))) {
+    // ⚠️ /abrir passa SEMPRE — com ou sem cookie.
+    //    Ela roda no CELULAR, não no computador.
+    if (pathname.startsWith('/abrir')) {
+      return NextResponse.next();
+    }
     if (temCookie) {
       return NextResponse.redirect(new URL('/inicio', req.url));
     }

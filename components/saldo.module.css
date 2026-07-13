@@ -37,10 +37,10 @@
   background: linear-gradient(135deg, var(--gold-dim), var(--miami-dim));
 }
 .infinito svg { filter: drop-shadow(0 0 10px rgba(0, 194, 232, .8)); }
+/* ⚠️ O ∞ é SVG. O caractere renderiza como "oo" na fonte mono. */
 .inf {
-  font-size: 1.4rem !important;
-  color: var(--gold-lit) !important;
-  line-height: 1;
+  color: var(--gold-lit);
+  flex-shrink: 0;
 }
 
 /* os 50 */

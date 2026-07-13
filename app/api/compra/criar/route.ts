@@ -1,30 +1,16 @@
 /**
  * POST /api/compra/criar
  *
- * Cria o pedido e devolve o QR Code (data URL) que o advogado aponta o celular.
- * O deep link leva o app direto para a tela de pagamento da loja.
+ * A ESTAÇÃO cria o pedido. Só ela — precisa do cookie.
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import QRCode from 'qrcode';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { sessaoAtual } from '@/lib/session';
-import { criarPedido } from '@/lib/compra';
+import { criarPedido, urlDoQr, deeplink } from '@/lib/compra';
 import { env } from '@/lib/env';
 
 export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
-
-/** Só o que a estação pode pedir. Nada de feature arbitrária. */
-const FEATURES: Record<string, string> = {
-  CPF_CADASTRAL: 'Consulta de CPF — ficha cadastral',
-  CPF_ANTECEDENTES: 'Consulta de CPF — antecedentes',
-  MANDADO: 'Consulta de mandado de prisão',
-  CONSULTA_PROCESSUAL: 'Consulta processual',
-  VEICULO: 'Consulta veicular',
-  PRINT: 'Análise de print',
-  PECA: 'Peça completa — FinaisJus Pro',
-  CRIATIVO: 'Criativo — JurisCreator',
-};
 
 export async function POST(req: NextRequest) {
   const s = await sessaoAtual();
@@ -32,39 +18,36 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'Sessão expirada.' }, { status: 401 });
   }
 
-  let feature = '';
+  let body: { productId?: string };
   try {
-    const b = (await req.json()) as { feature?: string };
-    feature = String(b.feature ?? '').toUpperCase();
+    body = await req.json();
   } catch {
-    return NextResponse.json({ message: 'Requisição inválida.' }, { status: 400 });
+    return NextResponse.json({ message: 'Corpo inválido.' }, { status: 400 });
   }
 
-  const titulo = FEATURES[feature];
-  if (!titulo) {
-    return NextResponse.json({ message: 'Item não disponível para compra.' }, { status: 400 });
+  if (!body.productId) {
+    return NextResponse.json({ message: 'Escolha um pacote.' }, { status: 400 });
   }
 
-  const p = criarPedido(s.sub, feature, titulo);
+  // ⚠️ Só PACOTE DE CRÉDITO. As ferramentas NÃO são vendidas — elas GASTAM.
+  const p = criarPedido(s.sub, body.productId);
+  if (!p) {
+    return NextResponse.json(
+      { message: 'Este produto não é um pacote de créditos.' },
+      { status: 400 },
+    );
+  }
 
-  // Deep link: abre o app já na tela de pagamento.
-  // Fallback (app não instalado): o QR leva para a loja.
-  const deepLink = `${env.APP_SCHEME}://compra/${p.id}`;
-
-  const qr = await QRCode.toDataURL(deepLink, {
-    errorCorrectionLevel: 'M',
-    margin: 1,
-    width: 420,
-    color: { dark: '#0a0b0d', light: '#f2ede4' },
-  });
+  const base = env.SITE || new URL(req.url).origin;
 
   return NextResponse.json({
     id: p.id,
-    codigo: p.codigo,
-    titulo: p.titulo,
-    qr,
-    deepLink,
+    creditos: p.creditos,
+    precoBRL: p.precoBRL,
     expiraEm: p.expiraEm,
-    lojas: { apple: env.APP_STORE, google: env.PLAY_STORE },
+    /** ⚠️ O QR aponta pra PÁGINA (https) — com fallback pra loja. */
+    qrUrl: urlDoQr(base, p),
+    /** Pra quem está NO celular: abre o app direto. */
+    deeplink: deeplink(p),
   });
 }

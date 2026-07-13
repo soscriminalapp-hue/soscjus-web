@@ -1,0 +1,115 @@
+.lojas {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 26px;
+  flex-wrap: wrap;
+}
+.loja {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px 22px;
+  border-radius: 12px;
+  border: 1.5px solid var(--line2);
+  background: var(--g850);
+  color: var(--text);
+  transition: .16s;
+}
+.loja:hover {
+  border-color: var(--gold);
+  background: var(--g800);
+  transform: translateY(-2px);
+}
+.loja small {
+  display: block;
+  font-size: .72rem;
+  color: var(--t3);
+}
+.loja strong {
+  display: block;
+  font-size: 1.02rem;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+.grade {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 26px;
+}
+
+.card {
+  padding: 24px;
+  border: 1.5px solid var(--line2);
+  border-radius: 16px;
+  background: var(--g850);
+  transition: .2s;
+}
+.card:hover { transform: translateY(-3px); box-shadow: 0 16px 44px rgba(0, 0, 0, .42); }
+.foco {
+  border-color: rgba(0, 194, 232, .45);
+  box-shadow: 0 0 0 3px rgba(0, 194, 232, .1);
+}
+
+.ic {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  border: 1.5px solid var(--line2);
+  background: var(--g800);
+  margin-bottom: 16px;
+}
+.risco .ic { border-color: rgba(200, 32, 47, .35);  background: var(--risk-dim);  color: var(--risk-lit); }
+.jur .ic   { border-color: rgba(216, 166, 49, .35); background: var(--gold-dim);  color: var(--gold); }
+.tech .ic  { border-color: rgba(0, 194, 232, .35);  background: var(--miami-dim); color: var(--miami); }
+
+.card h2 {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--paper);
+  margin-bottom: 10px;
+}
+.oque {
+  font-size: .94rem;
+  color: var(--t2);
+  line-height: 1.62;
+  margin-bottom: 16px;
+}
+
+/* ⚠️ O PORQUÊ — é isto que ganha a confiança dele */
+.porque {
+  display: flex;
+  gap: 10px;
+  padding: 13px 15px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(0, 194, 232, .28);
+  background: var(--miami-dim);
+  color: var(--miami);
+  margin-bottom: 16px;
+}
+.porque svg { flex-shrink: 0; margin-top: 2px; }
+.porque p {
+  font-size: .88rem;
+  color: var(--t2);
+  line-height: 1.55;
+}
+
+.precisa { display: flex; gap: 7px; flex-wrap: wrap; }
+.precisa span {
+  font-family: var(--mono);
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: var(--g700);
+  color: var(--t3);
+}
+
+@media (max-width: 1100px) {
+  .grade { grid-template-columns: 1fr; }
+}

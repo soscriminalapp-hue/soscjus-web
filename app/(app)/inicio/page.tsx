@@ -1,41 +1,100 @@
 /**
- * Início — a home da estação.
+ * ═══════════════════════════════════════════════════════════════════════════
+ *  A ESTAÇÃO — a tela do dia
+ * ═══════════════════════════════════════════════════════════════════════════
  *
- * ⚠️ DUAS REGRAS QUE MANDAM NESTA TELA:
+ *  Ele liga o computador às 8h e abre isto. NÃO quer um menu.
+ *  Quer saber SE ESTÁ EM PERIGO — e ONDE ESTÁ O PRÓXIMO CLIENTE.
  *
- *  1. NENHUM DADO DE CLIENTE. O advogado trabalha com a tela aberta, e passa
- *     estagiário, cliente e visita atrás dele. Só números.
+ *  ⚠️ A ORDEM É SAGRADA:
  *
- *  2. O PREÇO APARECE ANTES DO CLIQUE. A variação é de 26× (6 💎 → 160 💎).
- *     Se ele clica sem saber e queima 40 de uma vez, não pensa "que legal" —
- *     pensa "esse app me roubou".
+ *    1. PROSPECÇÃO       📡 Plantão · 👤 Convidar
+ *                        "Advogado sem cliente, pra que ferramenta?"
+ *
+ *    2. GESTÃO DO PROCESSO  🔴 Prazos · 📅 Audiências · ⚖️ Movimentações
+ *                        "eu não perco prazo"
+ *
+ *    3. GESTÃO DO CLIENTE   👥 Clientes · 💰 Honorários
+ *                        "eu recebo"
+ *
+ *  ⚠️ PRAZO E AUDIÊNCIA SÃO CARDS SEPARADOS.
+ *     Motores diferentes: um conta dias, o outro marca compromisso.
+ *
+ *  ⚠️ NÃO PONHA "Chave PIX" NEM "Logomarca" AQUI.
+ *     Isso é configuração — ele faz uma vez e esquece.
+ *
+ * ═══════════════════════════════════════════════════════════════════════════
+ *  O CICLO QUE ESTA TELA SERVE
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ *      📡 PLANTÃO ──────► cliente NOVO
+ *                              │
+ *      👤 CONVIDAR ────► cliente que JÁ TEM
+ *                              │
+ *                              ▼
+ *                    🎁 1ª busca grátis (custa R$ 4,50 ao dono)
+ *                              │
+ *                              ▼
+ *                    ⚖️ 10 processos aparecem
+ *                       (ele só sabia de 1)
+ *                              │
+ *                              ▼
+ *                    🔗 vincula os que interessam  ← GRÁTIS
+ *                              │
+ *                              ▼
+ *                    💎 acompanha (20/mês)         ← o alarme
+ *                              │
+ *                              ▼
+ *                    💰 HONORÁRIO
+ *
+ *  Duas portas de entrada. Um funil só.
  */
 
+import Link from 'next/link';
 import { buscarSosc } from '@/lib/proxy';
 import { sessaoAtual } from '@/lib/session';
-import Cabecalho from '@/components/Cabecalho';
-import Secao from '@/components/Secao';
-import Grade from '@/components/Grade';
-import Card from '@/components/Card';
 import Icon from '@/components/Icon';
 import Diamante from '@/components/Diamante';
+import PainelPlantao from './PainelPlantao';
+import s from './inicio.module.css';
 
 export const dynamic = 'force-dynamic';
 
-interface Cota {
-  novidades?: number;
+/* ─── o que o backend devolve ─── */
+interface Prazo {
+  id?: string;
+  numeroProcesso?: string;
+  cliente?: string;
+  tipo?: string;
+  dataFimEfetiva?: string;
+  dataFim?: string;
+  diasRestantes?: number;
+  confianca?: 'ALTA' | 'MEDIA' | 'BAIXA' | null;
+  base?: string;
 }
-interface Prazos {
-  prazos?: Array<{ diasRestantes?: number }>;
+interface Audiencia {
+  id?: string;
+  numeroProcesso?: string;
+  cliente?: string;
+  tipo?: string;
+  data?: string;
+  varaComarca?: string;
+  linkVideo?: string | null;
 }
-interface Audiencias {
-  audiencias?: unknown[];
+interface Proc {
+  numero_processo?: string;
+  classe?: string;
+  cliente?: string;
+  ultima_mov?: string;
+  temNovidade?: boolean;
+  area?: string;
 }
-interface Clientes {
-  clients?: unknown[];
-}
-interface SaldoAPI {
-  saldo?: { total?: number | null; ilimitado?: boolean };
+interface Cobranca {
+  id?: string;
+  amountCents?: number;
+  status?: string;
+  dueDate?: string;
+  client?: { fullName?: string };
 }
 
 function saudacao(h: number) {
@@ -44,301 +103,466 @@ function saudacao(h: number) {
 function primeiroNome(n: string) {
   return n.replace(/^Dr[aª]?\.?\s*/i, '').trim().split(/\s+/)[0] || 'Advogado';
 }
+function reais(c: number) {
+  return (c / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+}
+function hora(v?: string) {
+  if (!v) return '—';
+  const d = new Date(v);
+  return Number.isNaN(d.getTime())
+    ? '—'
+    : d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+}
+function ehHoje(v?: string) {
+  if (!v) return false;
+  const d = new Date(v);
+  const h = new Date();
+  return d.toDateString() === h.toDateString();
+}
 
 export default async function Inicio() {
-  const s = await sessaoAtual();
+  const ses = await sessaoAtual();
   const agora = new Date();
 
-  const [proc, saldoR, prazos, audiencias, clientes] = await Promise.all([
-    buscarSosc<Cota>('/processos/meus-processos/cota'),
-    buscarSosc<SaldoAPI>('/creditos/saldo'),
-    buscarSosc<Prazos>('/processos/meus-prazos?dias=180'),
-    buscarSosc<Audiencias>('/processos/minhas-audiencias?dias=180'),
-    buscarSosc<Clientes>('/clients'),
+  const [prazosR, audsR, procsR, cobR, saldoR] = await Promise.all([
+    buscarSosc<{ prazos?: Prazo[] }>('/processos/meus-prazos?dias=30'),
+    buscarSosc<{ audiencias?: Audiencia[] }>('/processos/minhas-audiencias?dias=30'),
+    buscarSosc<{ resultados?: Proc[] }>('/processos/meus-processos'),
+    buscarSosc<{ charges?: Cobranca[] }>('/honorarios/charges'),
+    buscarSosc<{ saldo?: { total?: number | null; ilimitado?: boolean } }>(
+      '/creditos/saldo',
+    ),
   ]);
 
-  const novidades = proc.data?.novidades ?? 0;
-  const listaPrazos = prazos.data?.prazos ?? [];
-  const vencidos = listaPrazos.filter((p) => (p.diasRestantes ?? 0) < 0).length;
-  const nAudiencias = audiencias.data?.audiencias?.length ?? 0;
-  const nClientes = clientes.data?.clients?.length ?? 0;
+  const prazos = (prazosR.data?.prazos ?? []).sort(
+    (a, b) => (a.diasRestantes ?? 999) - (b.diasRestantes ?? 999),
+  );
+  const auds = (audsR.data?.audiencias ?? []).sort((a, b) =>
+    String(a.data).localeCompare(String(b.data)),
+  );
+  const procs = procsR.data?.resultados ?? [];
+  const cobrancas = cobR.data?.charges ?? [];
+
+  /* ─── 🔴 O RISCO ─── */
+  const vencidos = prazos.filter((p) => (p.diasRestantes ?? 99) < 0);
+  const hoje = prazos.filter((p) => (p.diasRestantes ?? 99) === 0);
+  const semana = prazos.filter(
+    (p) => (p.diasRestantes ?? 99) > 0 && (p.diasRestantes ?? 99) <= 7,
+  );
+  const urgentes = [...vencidos, ...hoje, ...semana];
+
+  /* ─── 📅 AUDIÊNCIA ─── */
+  const audHoje = auds.filter((a) => ehHoje(a.data));
+  const proxAud = auds.find((a) => !ehHoje(a.data));
+
+  /* ─── ⚖️ O QUE MOVEU ─── */
+  const moveram = procs.filter((p) => p.temNovidade);
+
+  /* ─── 💰 O DINHEIRO ─── */
+  const aReceber = cobrancas
+    .filter((c) => c.status !== 'PAID' && c.status !== 'CANCELED')
+    .reduce((t, c) => t + (c.amountCents ?? 0), 0);
+  const vencidas = cobrancas.filter(
+    (c) =>
+      c.status !== 'PAID' &&
+      c.status !== 'CANCELED' &&
+      c.dueDate &&
+      new Date(c.dueDate) < agora,
+  ).length;
 
   const ilimitado = saldoR.data?.saldo?.ilimitado ?? false;
   const saldo = ilimitado ? Infinity : (saldoR.data?.saldo?.total ?? 0);
 
   return (
     <>
-      <Cabecalho
-        eyebrow={agora.toLocaleDateString('pt-BR', {
-          weekday: 'long',
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-        })}
-        titulo={`${saudacao(agora.getHours())},`}
-        destaque={`${primeiroNome(s?.nome ?? '')}.`}
-        texto="Cada ferramenta mostra quanto custa, antes do clique. Nenhum dado de cliente aparece nesta tela."
-      />
+      {/* ═══════════ O CABEÇALHO ═══════════ */}
+      <header className={s.topo}>
+        <div>
+          <span className={s.data}>
+            {agora.toLocaleDateString('pt-BR', {
+              weekday: 'long',
+              day: 'numeric',
+              month: 'long',
+            })}
+          </span>
+          <h1>
+            {saudacao(agora.getHours())},{' '}
+            <em>{primeiroNome(ses?.nome ?? '')}.</em>
+          </h1>
+        </div>
 
-      {/* ═══ TODO DIA ═══ */}
-      <Secao titulo="O que você faz" destaque="todo dia" sub="Comece por aqui" cor="lime" />
-      <Grade cols={2}>
-        <Card
-          grande
-          familia="jur"
-          icone="processo"
-          titulo="Meus Processos"
-          texto="Veja todos os processos em que você atua, em qualquer tribunal do Brasil. O sistema busca pela sua OAB — você não precisa cadastrar nada."
-          href="/processos"
-          selo={novidades > 0 ? { n: novidades } : undefined}
-          estado={
-            novidades > 0
-              ? { texto: `${novidades} andaram hoje`, tom: 'warn' }
-              : { texto: 'Grátis para abrir', tom: 'free' }
-          }
-        />
+        {urgentes.length > 0 ? (
+          <div className={s.alarme}>
+            <Icon n="alerta" s={22} />
+            <div>
+              <strong>{urgentes.length}</strong>
+              <span>
+                {urgentes.length === 1 ? 'prazo pede' : 'prazos pedem'} atenção
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div className={s.calmo}>
+            <Icon n="ok" s={20} strokeWidth={2.4} />
+            <span>Nenhum prazo urgente</span>
+          </div>
+        )}
+      </header>
 
-        <Card
-          familia="risco"
-          icone="agenda"
-          titulo="Prazos e Audiências"
-          texto="O sistema lê cada movimentação e avisa quando virou prazo ou audiência. Mas quem confere nos autos é você — isto é um aviso, não é uma certidão."
-          href="/agenda"
-          selo={vencidos > 0 ? { n: vencidos } : undefined}
-          gratis
-          estado={
-            vencidos > 0
-              ? { texto: `${vencidos} já venceram`, tom: 'stop' }
-              : { texto: `${listaPrazos.length} prazos · ${nAudiencias} audiências`, tom: 'ok' }
-          }
-        />
+      {/* ═══════════════════════════════════════════════════════
+          1️⃣  PROSPECÇÃO — "advogado sem cliente, pra que ferramenta?"
+          ═══════════════════════════════════════════════════════ */}
+      <PainelPlantao />
 
-        <Card
-          grande
-          familia="tech"
-          icone="radar"
-          titulo="Plantão Adv."
-          texto={
-            <>
-              Diga em que áreas e cidades você atende e ligue o plantão. Quem precisa de
-              advogado vê o seu cartão e decide se procura você.{' '}
-              <b style={{ color: 'var(--lime)' }}>
-                O SOSC JUS não escolhe por ninguém e não fica com nada.
-              </b>
-            </>
-          }
-          href="/plantao"
-          acao="Ver casos"
-          gratis
-        />
-      </Grade>
+      {/* ═══════════════════════════════════════════════════════
+          2️⃣  GESTÃO DO PROCESSO
+          ⚠️ PRAZO e AUDIÊNCIA são CARDS SEPARADOS.
+             Motores diferentes: um conta dias, o outro marca compromisso.
+          ═══════════════════════════════════════════════════════ */}
+      <div className={s.duasColunas}>
+        {/* ─── 🔴 PRAZOS ─── */}
+        <section className={`${s.painel} ${urgentes.length ? s.painelRisco : ''}`}>
+          <header className={s.painelTopo}>
+            <div className={s.painelTit}>
+              <span className={`${s.pIc} ${s.icRisco}`}>
+                <Icon n="relogio" s={20} />
+              </span>
+              <div>
+                <h2>Prazos</h2>
+                <small>Contagem legal · confira nos autos</small>
+              </div>
+            </div>
+            <Link href="/agenda?t=prazos" className={s.verTudo}>
+              {prazos.length} no total
+              <Icon n="chev" s={14} strokeWidth={2.4} />
+            </Link>
+          </header>
 
-      {/* ═══ CLIENTES ═══ */}
-      <Secao titulo="Seus" destaque="clientes" sub="Do contrato até receber o dinheiro" cor="rosa" />
-      <Grade cols={3}>
-        <Card
-          familia="neutro"
-          icone="clientes"
-          titulo="Clientes"
-          texto="Todo mundo que se vinculou a você pelo aplicativo. Cada um traz seus processos, contratos e conversas."
-          href="/clientes"
-          gratis
-          estado={{ texto: `${nClientes} vinculados`, tom: 'free' }}
-        />
-        <Card
-          familia="jur"
-          icone="doc"
-          titulo="Contrato e Procuração"
-          texto="Preencha um formulário e o documento fica pronto, com a sua logomarca. Imprima ou mande o cliente assinar pelo celular."
-          href="/documentos"
-          gratis
-        />
-        <Card
-          familia="dinheiro"
-          icone="assinado"
-          titulo="Já Assinados"
-          texto="Tudo que o cliente já assinou, com a data, a selfie que ele tirou na hora e a firma. É a sua prova de que foi ele mesmo."
-          href="/assinados"
-          gratis
-        />
-        <Card
-          grande
-          familia="dinheiro"
-          icone="dinheiro"
-          titulo="Cobrar Honorários"
-          texto={
-            <>
-              Cobre por PIX ou anexe o boleto que você gerou no seu banco.{' '}
-              <b style={{ color: 'var(--lime)' }}>
-                O dinheiro vai direto pra sua conta — o SOSC JUS não fica com nada.
-              </b>
-            </>
-          }
-          href="/cobrancas"
-          gratis
-        />
-      </Grade>
+          <div className={s.lista}>
+            {urgentes.length === 0 ? (
+              <div className={s.vazio}>
+                <Icon n="ok" s={28} strokeWidth={2.2} />
+                <p>Nenhum prazo nos próximos 7 dias.</p>
+              </div>
+            ) : (
+              urgentes.slice(0, 5).map((p, i) => {
+                const d = p.diasRestantes ?? 0;
+                const venceu = d < 0;
+                const eHoje = d === 0;
+                return (
+                  <Link
+                    key={p.id ?? i}
+                    href={`/processos/${encodeURIComponent(p.numeroProcesso ?? '')}`}
+                    className={`${s.linha} ${venceu ? s.lVencido : eHoje ? s.lHoje : ''}`}
+                  >
+                    <div className={s.dias}>
+                      <strong>{venceu ? Math.abs(d) : d}</strong>
+                      <span>{venceu ? 'atrás' : eHoje ? 'HOJE' : 'dias'}</span>
+                    </div>
+                    <div className={s.lCorpo}>
+                      <strong>{p.tipo ?? 'Prazo'}</strong>
+                      <span>{p.cliente ?? p.numeroProcesso}</span>
+                      {p.base ? <small>{p.base}</small> : null}
+                    </div>
+                    <Icon n="chev" s={16} className={s.seta} />
+                  </Link>
+                );
+              })
+            )}
+          </div>
+        </section>
 
-      {/* ═══ CONSULTAS ═══ */}
-      <Secao
-        titulo="Consultas"
-        sub="O preço está no card. Você nunca descobre depois de gastar."
-      />
-      <Grade cols={3}>
-        <Card
-          familia="jur"
-          icone="balanca"
-          titulo="Consulta Processual SOSC"
-          texto="Pente-fino. Digite o CPF e veja todos os processos da pessoa no Brasil inteiro. Serve para CNPJ também."
-          href="/consultas?f=processual"
-          acao="Consultar"
-          custa="CONSULTA_PROCESSUAL"
-          saldo={saldo}
-        />
-        <Card
-          familia="risco"
-          icone="alerta"
-          titulo="Consulta de Mandado"
-          texto="Existe mandado de prisão em aberto contra a pessoa? Consulta o banco nacional e sai com comprovante."
-          href="/consultas?f=mandado"
-          acao="Consultar"
-          custa="CONSULTA_MANDADO"
-          saldo={saldo}
-        />
-        <Card
-          familia="jur"
-          icone="busca"
-          titulo="Consulta Cadastral"
-          texto="Nome, CPF, celular ou e-mail. Traz tudo da pessoa — ficha, antecedentes, e mandado se houver."
-          href="/consultas?f=cadastral"
-          acao="Consultar"
-          custa="CONSULTA_CADASTRAL"
-          saldo={saldo}
-        />
-        <Card
-          familia="risco"
-          icone="carro"
-          titulo="Pente-Fino do Veículo"
-          texto="Digite a placa ou tire uma foto. Modelo, ano, FIPE, restrições — e quem é o dono, com o CPF dele."
-          href="/consultas?f=veiculo"
-          acao="Consultar"
-          custa="PENTE_FINO_VEICULO"
-          saldo={saldo}
-        />
-        <Card
-          familia="tech"
-          icone="print"
-          titulo="Analisar Print"
-          texto="O cliente mandou print de conversa? Antes de juntar no processo, confira se a imagem foi adulterada."
-          href="/consultas?f=print"
-          acao="Analisar"
-          gratis
-        />
-        <Card
-          familia="neutro"
-          icone="convite"
-          titulo="Convidar Cliente"
-          texto="Mande um convite para o cliente entrar no aplicativo. Depois que ele aceitar, vocês compartilham tudo."
-          href="/clientes?convidar=1"
-          acao="Convidar"
-          gratis
-        />
-      </Grade>
+        {/* ─── 📅 AUDIÊNCIAS ─── */}
+        <section className={`${s.painel} ${audHoje.length ? s.painelHoje : ''}`}>
+          <header className={s.painelTopo}>
+            <div className={s.painelTit}>
+              <span className={`${s.pIc} ${s.icTech}`}>
+                <Icon n="agenda" s={20} />
+              </span>
+              <div>
+                <h2>Audiências</h2>
+                <small>Data, local e o link</small>
+              </div>
+            </div>
+            <Link href="/agenda?t=audiencias" className={s.verTudo}>
+              {auds.length} no total
+              <Icon n="chev" s={14} strokeWidth={2.4} />
+            </Link>
+          </header>
 
-      {/* ═══ FERRAMENTAS SOSC ═══ */}
-      <Secao titulo="Ferramentas" destaque="SOSC" sub="Fazem o trabalho pesado por você" cor="miami" />
-      <Grade cols={2}>
-        <Card
-          grande
-          familia="mente"
-          icone="balanca"
-          titulo="FinaisJus Pro"
-          texto={
-            <>
-              Jogue aqui o PDF do processo e o vídeo ou o áudio da audiência. Ele
-              transcreve separando quem falou, mostra onde a testemunha se
-              contradisse, aponta as nulidades e{' '}
-              <b style={{ color: 'var(--pink)' }}>devolve a peça escrita.</b>
-            </>
-          }
-          href="/finaisjus"
-          custa="FINAISJUS"
-          saldo={saldo}
-        />
-        <Card
-          familia="mente"
-          icone="ia"
-          titulo="JurisCreator"
-          texto="Procure a jurisprudência sobre um assunto. Ele acha a decisão e monta um post pronto para você publicar."
-          href="/juriscreator"
-          custa="JURISCREATOR"
-          saldo={saldo}
-        />
-        <Card
-          familia="jur"
-          icone="relatorio"
-          titulo="Relatório SOSC"
-          texto="Explica o processo em linguagem que o cliente entende. Sai com a sua logomarca — e só chega nele depois que você aprovar."
-          href="/relatorio"
-          custa="RELATORIO"
-          saldo={saldo}
-        />
-      </Grade>
+          <div className={s.lista}>
+            {audHoje.length === 0 && !proxAud ? (
+              <div className={s.vazio}>
+                <Icon n="agenda" s={28} />
+                <p>Nenhuma audiência marcada.</p>
+              </div>
+            ) : (
+              <>
+                {audHoje.map((a, i) => (
+                  <div key={a.id ?? i} className={`${s.linha} ${s.lHoje}`}>
+                    <div className={s.horaBox}>
+                      <strong>{hora(a.data)}</strong>
+                      <span>HOJE</span>
+                    </div>
+                    <div className={s.lCorpo}>
+                      <strong>{a.tipo ?? 'Audiência'}</strong>
+                      <span>{a.cliente ?? a.numeroProcesso}</span>
+                      <small>{a.varaComarca}</small>
+                    </div>
+                    {a.linkVideo ? (
+                      <a
+                        href={a.linkVideo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={s.btnVideo}
+                      >
+                        Entrar
+                      </a>
+                    ) : (
+                      <Icon n="chev" s={16} className={s.seta} />
+                    )}
+                  </div>
+                ))}
 
-      {/* ═══ ESCRITÓRIO ═══ */}
-      <Secao titulo="Seu escritório" sub="Configure uma vez e não mexe mais" />
-      <Grade cols={3}>
-        <Card
-          familia="dinheiro"
-          icone="pix"
-          titulo="Sua Chave PIX"
-          texto="Sem ela você não consegue cobrar. Cadastre e o contrato já sai com a cobrança pronta."
-          href="/escritorio"
-          acao="Cadastrar"
-          gratis
-        />
-        <Card
-          familia="neutro"
-          icone="logo"
-          titulo="Sua Logomarca"
-          texto="Ela entra sozinha em todo contrato, procuração e relatório que você fizer."
-          href="/escritorio"
-          acao="Trocar"
-          gratis
-        />
-        <Card
-          familia="neutro"
-          icone="plano"
-          titulo="Meus Créditos"
-          texto="Veja quanto você tem, quanto custa cada ferramenta e compre mais quando precisar."
-          href="/plano"
-          acao="Ver"
-          estado={{
-            texto: ilimitado
-              ? 'Ilimitado'
-              : `${saldo.toLocaleString('pt-BR')} créditos`,
-            tom: ilimitado || saldo > 0 ? 'ok' : 'stop',
-          }}
-        />
-      </Grade>
-
-      <div className="nota tech">
-        <Diamante s={20} />
-        <p>
-          <b>O preço está sempre à vista, antes do clique.</b> Um relatório custa 6
-          créditos; o FinaisJus custa 160. Você nunca descobre quanto gastou depois
-          de gastar.
-        </p>
+                {proxAud ? (
+                  <Link
+                    href={`/processos/${encodeURIComponent(proxAud.numeroProcesso ?? '')}`}
+                    className={s.linha}
+                  >
+                    <div className={s.horaBox}>
+                      <strong>
+                        {proxAud.data
+                          ? new Date(proxAud.data).toLocaleDateString('pt-BR', {
+                              day: '2-digit',
+                              month: '2-digit',
+                            })
+                          : '—'}
+                      </strong>
+                      <span>{hora(proxAud.data)}</span>
+                    </div>
+                    <div className={s.lCorpo}>
+                      <strong>{proxAud.tipo ?? 'Audiência'}</strong>
+                      <span>{proxAud.cliente ?? proxAud.numeroProcesso}</span>
+                      <small>{proxAud.varaComarca}</small>
+                    </div>
+                    <Icon n="chev" s={16} className={s.seta} />
+                  </Link>
+                ) : null}
+              </>
+            )}
+          </div>
+        </section>
       </div>
 
-      <div className="nota">
-        <Icon n="lock" s={20} />
-        <p>
-          <b>E o nome dos seus clientes não aparece aqui.</b> Você trabalha com a tela
-          aberta. Passa estagiário, passa cliente, passa visita. Nesta tela só há
-          números.
-        </p>
+      {/* ─── ⚖️ O QUE MOVEU ─── */}
+      <section className={s.painel}>
+        <header className={s.painelTopo}>
+          <div className={s.painelTit}>
+            <span className={`${s.pIc} ${s.icJur}`}>
+              <Icon n="atividade" s={20} />
+            </span>
+            <div>
+              <h2>
+                O que moveu
+                {moveram.length > 0 ? (
+                  <b className={s.pisca}>{moveram.length}</b>
+                ) : null}
+              </h2>
+              <small>Só os processos que você acompanha avisam</small>
+            </div>
+          </div>
+          <Link href="/processos" className={s.verTudo}>
+            {procs.length} processos
+            <Icon n="chev" s={14} strokeWidth={2.4} />
+          </Link>
+        </header>
+
+        <div className={s.lista}>
+          {moveram.length === 0 ? (
+            <div className={s.vazio}>
+              <Icon n="atividade" s={28} />
+              <p>Nada novo desde ontem.</p>
+              <Link href="/processos" className={s.vazioLink}>
+                Ver meus processos
+              </Link>
+            </div>
+          ) : (
+            moveram.slice(0, 6).map((p, i) => (
+              <Link
+                key={p.numero_processo ?? i}
+                href={`/processos/${encodeURIComponent(p.numero_processo ?? '')}`}
+                className={`${s.linha} ${s.lNovo}`}
+              >
+                <span className={s.bolinha} />
+                <div className={s.lCorpo}>
+                  <strong>{p.ultima_mov ?? 'Movimentação nova'}</strong>
+                  <span>{p.cliente ?? p.classe}</span>
+                  <small className={s.mono}>{p.numero_processo}</small>
+                </div>
+                <Icon n="chev" s={16} className={s.seta} />
+              </Link>
+            ))
+          )}
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════
+          3️⃣  GESTÃO DO CLIENTE — "eu recebo"
+          ═══════════════════════════════════════════════════════ */}
+      <div className={s.duasColunas}>
+        {/* ─── 👤 CONVIDAR — a PROSPECÇÃO escondida ─── */}
+        <section className={`${s.painel} ${s.painelConvite}`}>
+          <header className={s.painelTopo}>
+            <div className={s.painelTit}>
+              <span className={`${s.pIc} ${s.icLime}`}>
+                <Icon n="convite" s={20} />
+              </span>
+              <div>
+                <h2>Convidar Cliente</h2>
+                <small>
+                  <b className={s.lime}>Cada convite é uma carteira que você não viu</b>
+                </small>
+              </div>
+            </div>
+          </header>
+
+          <div className={s.convite}>
+            <p>
+              Quando ele entrar, o SOSC JUS busca <b>todos os processos dele</b> —
+              inclusive os que <b>você não sabia que existiam</b>.
+            </p>
+            <p className={s.conviteArq}>
+              <Icon n="ok" s={15} strokeWidth={2.6} />
+              Até os <b>arquivados</b>: você pode pedir a baixa definitiva.
+            </p>
+            <div className={s.convitePe}>
+              <span className={s.gratisSelo}>
+                Grátis · a busca dele é por nossa conta
+              </span>
+              <Link href="/clientes?convidar=1" className="btn b-money">
+                <Icon n="wa" s={18} strokeWidth={2.1} />
+                Convidar pelo WhatsApp
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ─── 💰 O DINHEIRO ─── */}
+        <section className={`${s.painel} ${vencidas ? s.painelRisco : ''}`}>
+          <header className={s.painelTopo}>
+            <div className={s.painelTit}>
+              <span className={`${s.pIc} ${s.icMoney}`}>
+                <Icon n="dinheiro" s={20} />
+              </span>
+              <div>
+                <h2>A receber</h2>
+                <small>O dinheiro vai direto pra sua conta</small>
+              </div>
+            </div>
+            <Link href="/cobrancas" className={s.verTudo}>
+              Ver todas
+              <Icon n="chev" s={14} strokeWidth={2.4} />
+            </Link>
+          </header>
+
+          <div className={s.dinheiro}>
+            <div className={s.valor}>
+              <small>Em aberto</small>
+              <strong>R$ {reais(aReceber)}</strong>
+            </div>
+            {vencidas > 0 ? (
+              <div className={s.vencidas}>
+                <Icon n="alerta" s={16} />
+                <span>
+                  <b>{vencidas}</b>{' '}
+                  {vencidas === 1 ? 'cobrança vencida' : 'cobranças vencidas'}
+                </span>
+              </div>
+            ) : (
+              <div className={s.emDia}>
+                <Icon n="ok" s={16} strokeWidth={2.4} />
+                <span>Nenhuma vencida</span>
+              </div>
+            )}
+          </div>
+        </section>
       </div>
+
+      {/* ═══════════════════════════════════════════════════════
+          🔍 AS CONSULTAS — ele vai aqui QUANDO PRECISA.
+             Não estão na cara porque não são o dia a dia.
+          ═══════════════════════════════════════════════════════ */}
+      <section className={s.consultas}>
+        <header className={s.consTopo}>
+          <div>
+            <h2>Consultar alguém</h2>
+            <small>Chegou cliente novo? Comece por aqui.</small>
+          </div>
+          {!ilimitado ? (
+            <span className={s.saldoInline}>
+              <Diamante s={15} />
+              <b>{saldo.toLocaleString('pt-BR')}</b>
+              créditos
+            </span>
+          ) : null}
+        </header>
+
+        <div className={s.consGrade}>
+          <Link href="/consultas?f=processual" className={`${s.cons} ${s.consJur}`}>
+            <span className={s.consBandeira}>🇧🇷</span>
+            <Icon n="balanca" s={26} />
+            <strong>Consulta Processual SOSC</strong>
+            <p>
+              O <b>pente-fino</b>: até <b>200 processos</b> de uma pessoa, no Brasil
+              inteiro. Por CPF ou CNPJ.
+            </p>
+            <span className={s.consPreco}>
+              <Diamante s={13} />
+              20
+            </span>
+          </Link>
+
+          <Link href="/consultas?f=mandado" className={`${s.cons} ${s.consRisco}`}>
+            <span className={s.consBandeira}>🇧🇷</span>
+            <Icon n="alerta" s={26} />
+            <strong>Consultar Mandado</strong>
+            <p>
+              Existe <b>mandado de prisão em aberto</b>? Consulta o BNMP/CNJ nacional,
+              com comprovante.
+            </p>
+            <span className={s.consPreco}>
+              <Diamante s={13} />
+              20
+            </span>
+          </Link>
+
+          <Link href="/consultas?f=cpf" className={`${s.cons} ${s.consJur}`}>
+            <Icon n="busca" s={26} />
+            <strong>Consultar CPF</strong>
+            <p>
+              <b>Ficha cadastral + antecedentes + mandado</b>, num relatório único.
+              Busque por nome, CPF, celular ou e-mail.
+            </p>
+            <span className={s.consPreco}>
+              <Diamante s={13} />
+              20
+            </span>
+          </Link>
+
+          <Link href="/consultas?f=veiculo" className={`${s.cons} ${s.consMente}`}>
+            <Icon n="carro" s={26} />
+            <strong>Consultar Veículo</strong>
+            <p>
+              <b>Pente-fino</b> pela placa: restrições (<b>RENAJUD</b>), FIPE,
+              proprietário, roubo, leilão, chassi remarcado.
+            </p>
+            <span className={s.consPreco}>
+              <Diamante s={13} />
+              40
+            </span>
+          </Link>
+        </div>
+      </section>
     </>
   );
 }

@@ -281,3 +281,57 @@
   .corpo { padding: 20px 18px; }
   .qr, .qrVazio { width: 170px; height: 170px; }
 }
+
+/* ═══ B4.0.2 — as classes novas ═══ */
+.pronto { text-align: center; padding: 20px 0; }
+.ok {
+  width: 62px; height: 62px; margin: 0 auto 18px;
+  display: grid; place-items: center; border-radius: 50%;
+  background: var(--money-dim); color: var(--money-lit);
+}
+.pronto h2 {
+  font-family: var(--serif); font-size: 1.5rem; font-weight: 600;
+  color: var(--paper); margin-bottom: 8px;
+}
+.pronto p { font-size: .96rem; color: var(--t2); line-height: 1.6; }
+.pronto b { color: var(--miami); font-weight: 700; }
+
+.pacotes { display: grid; gap: 9px; margin-bottom: 6px; }
+.pacote {
+  position: relative;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px; border-radius: 12px;
+  border: 1.5px solid var(--line2); background: var(--g800);
+  transition: .15s;
+}
+.pacote:hover:not(:disabled) {
+  border-color: rgba(0, 194, 232, .45); background: var(--g700);
+  transform: translateX(2px);
+}
+.pacote:disabled { opacity: .5; cursor: not-allowed; }
+.destaque {
+  border-color: rgba(0, 194, 232, .45);
+  background: rgba(0, 194, 232, .07);
+  padding-top: 24px;
+}
+.fita {
+  position: absolute; top: 0; left: 0; right: 0;
+  padding: 3px; text-align: center;
+  background: var(--miami); color: #04222a;
+  font-size: .62rem; font-weight: 800; letter-spacing: .1em;
+  text-transform: uppercase;
+  border-radius: 10px 10px 0 0;
+}
+.pEsq { display: flex; align-items: center; gap: 11px; }
+.pEsq strong {
+  display: block; font-family: var(--mono); font-size: 1.25rem;
+  font-weight: 700; color: var(--paper); line-height: 1;
+}
+.pEsq small { display: block; font-size: .74rem; color: var(--t3); margin-top: 2px; }
+.pDir { display: flex; align-items: center; gap: 9px; }
+.pDir b { font-size: 1.05rem; font-weight: 700; color: var(--miami); }
+.bonus {
+  font-family: var(--mono); font-size: .7rem; font-weight: 700;
+  padding: 3px 7px; border-radius: 20px;
+  background: var(--money-dim); color: var(--money-lit);
+}

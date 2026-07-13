@@ -1,0 +1,328 @@
+/* ═══ 📡 O PLANTÃO — o card mais importante ═══ */
+.painel {
+  border: 1.5px solid var(--line2);
+  border-radius: 16px;
+  background: var(--g850);
+  overflow: hidden;
+  margin-bottom: 20px;
+  transition: .25s;
+  position: relative;
+}
+/* ASSINATURA: o fio tricolor */
+.painel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--lime), var(--miami) 55%, var(--pink));
+  opacity: 0;
+  transition: .25s;
+}
+
+/* LIGADO — vivo */
+.on {
+  border-color: rgba(0, 194, 232, .38);
+  background:
+    radial-gradient(600px 200px at 8% 0%, rgba(0, 194, 232, .1), transparent 60%),
+    var(--g850);
+}
+.on::before { opacity: 1; }
+
+/* DESLIGADO — morto */
+.off {
+  border-color: rgba(200, 32, 47, .22);
+  background:
+    radial-gradient(600px 200px at 8% 0%, rgba(200, 32, 47, .05), transparent 60%),
+    var(--g850);
+}
+
+.topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px 24px;
+  flex-wrap: wrap;
+}
+.tit { display: flex; align-items: center; gap: 15px; }
+
+.radar {
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+  position: relative;
+  display: grid;
+  place-items: center;
+  color: var(--t3);
+  transition: .25s;
+}
+.radar i {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  opacity: .2;
+}
+.on .radar { color: var(--miami); }
+.on .radar i {
+  border-color: var(--miami);
+  opacity: 0;
+  animation: onda 2.4s ease-out infinite;
+}
+.on .radar i:nth-child(2) { animation-delay: 1.2s; }
+@keyframes onda {
+  0%   { transform: scale(.5); opacity: .7; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+.off .radar { color: var(--risk-lit); opacity: .5; }
+
+.tit h2 {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--paper);
+  letter-spacing: -.01em;
+}
+.tit small {
+  display: block;
+  font-size: .88rem;
+  color: var(--t3);
+  margin-top: 2px;
+}
+.off .tit small { color: var(--risk-lit); }
+
+.controle {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+/* ⚠️ O SELO. Sem isto, ele acha que desconta crédito — e DESLIGA. */
+.gratis {
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--lime);
+  white-space: nowrap;
+}
+
+.sw {
+  width: 56px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 30px;
+  background: var(--g700);
+  border: 1.5px solid var(--line2);
+  position: relative;
+  transition: .22s cubic-bezier(.3, .9, .4, 1.1);
+}
+.sw::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--t3);
+  transition: .22s cubic-bezier(.3, .9, .4, 1.1);
+}
+.swOn { background: var(--miami-dim); border-color: var(--miami); }
+.swOn::after {
+  left: 28px;
+  background: var(--miami);
+  box-shadow: 0 0 14px rgba(0, 194, 232, .7);
+}
+.sw:disabled { opacity: .35; cursor: not-allowed; }
+
+/* ─── 🔴 TEM GENTE PROCURANDO ─── */
+.alerta {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 14px 24px;
+  background: rgba(0, 194, 232, .09);
+  border-top: 1px solid rgba(0, 194, 232, .18);
+}
+.alerta strong {
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--miami);
+}
+
+.pulso { width: 22px; height: 22px; flex-shrink: 0; position: relative; }
+.pulso i {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--lime);
+  animation: ping 1.7s ease-out infinite;
+}
+.pulso i:nth-child(2) { animation-delay: .85s; }
+.pulso b {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--lime);
+  box-shadow: 0 0 12px var(--lime);
+}
+@keyframes ping {
+  0%   { transform: scale(.35); opacity: 1; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+.casos { border-top: 1px solid var(--line2); }
+.caso {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 24px;
+  border-bottom: 1px solid var(--line2);
+  transition: .14s;
+}
+.caso:last-child { border-bottom: none; }
+.caso:hover { background: var(--g800); }
+
+.area {
+  font-family: var(--mono);
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 5px 11px;
+  border-radius: 20px;
+  background: var(--risk-dim);
+  color: var(--risk-lit);
+  flex-shrink: 0;
+}
+.cCorpo { flex: 1; min-width: 0; }
+.cCorpo strong {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.cCorpo small {
+  display: block;
+  font-size: .82rem;
+  color: var(--t3);
+  margin-top: 1px;
+}
+.cBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border-radius: var(--r);
+  background: var(--miami);
+  color: #04222a;
+  font-size: .88rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  transition: .14s;
+}
+.caso:hover .cBtn { transform: translateX(2px); }
+
+.maisCasos {
+  display: block;
+  padding: 13px 24px;
+  text-align: center;
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--miami);
+  border-top: 1px solid var(--line2);
+  transition: .14s;
+}
+.maisCasos:hover { background: var(--g800); }
+
+/* ─── LIGADO, VAZIO ─── */
+.esperando {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--line2);
+}
+.esperando strong {
+  display: block;
+  font-size: .98rem;
+  font-weight: 700;
+  color: var(--lime);
+}
+.esperando p {
+  font-size: .86rem;
+  color: var(--t3);
+  margin-top: 2px;
+}
+.esperando > div { flex: 1; }
+.ajustar {
+  font-size: .84rem;
+  font-weight: 700;
+  color: var(--t3);
+  padding: 8px 14px;
+  border-radius: var(--r);
+  border: 1.5px solid var(--line2);
+  transition: .14s;
+}
+.ajustar:hover { color: var(--text); border-color: var(--line); }
+
+/* ─── ⚠️ DESLIGADO — o grito ─── */
+.desligado {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 18px 24px;
+  border-top: 1px solid rgba(200, 32, 47, .2);
+  background: rgba(200, 32, 47, .04);
+  color: var(--risk-lit);
+  flex-wrap: wrap;
+}
+.desligado > div { flex: 1; min-width: 220px; }
+.desligado strong {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--risk-lit);
+}
+.desligado p {
+  font-size: .92rem;
+  color: var(--t2);
+  margin-top: 3px;
+  line-height: 1.5;
+}
+.desligado p b { color: var(--text); font-weight: 600; }
+
+/* ─── SEM PERFIL ─── */
+.convite {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 18px 24px;
+  border-top: 1px solid var(--line2);
+  background: var(--tech-dim);
+  color: var(--tech-lit);
+  flex-wrap: wrap;
+}
+.convite > div { flex: 1; min-width: 220px; }
+.convite strong {
+  display: block;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.convite p {
+  font-size: .9rem;
+  color: var(--t2);
+  margin-top: 3px;
+  line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  .topo { flex-direction: column; align-items: flex-start; }
+  .controle { width: 100%; justify-content: space-between; }
+  .caso { flex-wrap: wrap; }
+}

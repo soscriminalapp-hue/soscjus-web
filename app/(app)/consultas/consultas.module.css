@@ -196,3 +196,158 @@
   .grade { grid-template-columns: 1fr; }
   .lista { position: static; }
 }
+
+/* ═══ B269 — as classes novas ═══ */
+
+/* 🇧🇷 a bandeirinha no seletor */
+.br { font-style: normal; margin-right: 6px; }
+
+/* 💎 o preço no item */
+.preco {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--miami);
+}
+
+/* 🟢 grátis — com o preço riscado */
+.gratisRow { display: inline-flex; align-items: center; gap: 7px; }
+.riscado {
+  font-size: .78rem;
+  color: var(--t3);
+  text-decoration: line-through;
+}
+
+.opc { font-style: normal; color: var(--t3); font-weight: 400; }
+
+/* o preço DENTRO do botão */
+.btnPreco {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 10px;
+  padding-left: 11px;
+  border-left: 1px solid rgba(0, 0, 0, .2);
+  font-family: var(--mono);
+  font-weight: 800;
+}
+.btnGratis {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: 10px;
+  padding-left: 11px;
+  border-left: 1px solid rgba(0, 0, 0, .2);
+  font-weight: 800;
+}
+.riscadoBtn {
+  opacity: .55;
+  font-weight: 500;
+  text-decoration: line-through;
+}
+
+.semSaldo {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  justify-content: center;
+  margin-top: 12px;
+  font-size: .86rem;
+  color: var(--risk-lit);
+}
+.semSaldo button {
+  font-weight: 700;
+  color: var(--miami);
+  text-decoration: underline;
+}
+
+/* ─── "O que você recebe" — do app ─── */
+.recebe {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1.5px solid var(--line2);
+  border-radius: 12px;
+  background: var(--g800);
+}
+.recebe h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: .96rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+.rPreco {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: .88rem;
+  color: var(--miami);
+}
+.recebe ul { list-style: none; display: grid; gap: 12px; }
+.recebe li {
+  display: flex;
+  gap: 11px;
+  font-size: .9rem;
+  color: var(--t2);
+  line-height: 1.55;
+}
+.emoji { flex-shrink: 0; font-size: 1rem; }
+
+/* ═══ O PAINEL — a coluna direita ═══ */
+.painel {
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  background: var(--g850);
+  overflow: hidden;
+}
+
+.pTopo {
+  padding: 26px 28px 22px;
+  border-bottom: 1px solid var(--line2);
+  background: linear-gradient(170deg, rgba(216, 166, 49, .05), transparent 70%);
+}
+.pTopo h2 {
+  font-family: var(--serif);
+  font-size: 1.65rem;
+  font-weight: 600;
+  color: var(--paper);
+  letter-spacing: -.015em;
+  margin-bottom: 8px;
+}
+.pTopo p {
+  font-size: .98rem;
+  color: var(--t2);
+  line-height: 1.62;
+  max-width: 66ch;
+}
+
+/* 🇧🇷 CONSULTA NACIONAL — o selo do app */
+.selo {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 13px;
+  margin-bottom: 14px;
+  border-radius: 20px;
+  background: var(--gold);
+  color: #151206;
+  font-family: var(--mono);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+}
+
+.pCorpo { padding: 24px 28px 28px; }
+.acao { margin-top: 20px; }
+
+@media (max-width: 760px) {
+  .pTopo { padding: 20px 18px 16px; }
+  .pTopo h2 { font-size: 1.35rem; }
+  .pCorpo { padding: 18px; }
+}

@@ -233,3 +233,6 @@
   .dois { grid-template-columns: 1fr; }
   .folha { padding: 22px 20px; }
 }
+
+/* 🖥️ petição se faz no computador */
+.melhorAqui { margin-bottom: 22px; }

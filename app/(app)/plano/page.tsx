@@ -23,7 +23,6 @@ import {
   ORDEM_TABELA,
   ORDEM_CORTESIAS,
   CORTESIAS,
-  ALERTA_DIARIO,
   creditosDoPlano,
   emReais,
   precoDeTabela,
@@ -248,28 +247,17 @@ export default function Plano() {
         </div>
       </div>
 
-      {/* ═══ A ASSINATURA À PARTE ═══ */}
-      <div className={s.assinatura}>
-        <div className={s.aIc}>
-          <Icon n="alerta" s={26} />
-        </div>
-        <div className={s.aTxt}>
-          <span className={s.eb}>ASSINATURA · NÃO USA CRÉDITO</span>
-          <strong>{ALERTA_DIARIO.nome}</strong>
-          <p>
-            Seu CPF é verificado no BNMP <b>todos os dias</b>. Se surgir mandado, você
-            sabe na hora.
-          </p>
-          <small>
-            Avulso sai R$ 2,90 por consulta — <b>R$ 87,00 num mês</b>. A assinatura
-            custa menos da metade.
-          </small>
-        </div>
-        <div className={s.aPreco}>
-          <strong>R$ {ALERTA_DIARIO.precoBRL.toFixed(2).replace('.', ',')}</strong>
-          <small>por mês</small>
-        </div>
-      </div>
+      {/*
+        ⚠️ O ALERTA DE MANDADO DIÁRIO **NÃO** APARECE AQUI.
+
+        A Estação é do ADVOGADO. O Alerta Diário (R$ 39,90/mês) é do USUÁRIO —
+        ele consulta o PRÓPRIO CPF todo dia.
+
+        O advogado não fica consultando o próprio mandado. Ele consulta o do
+        CLIENTE, avulso (CONSULTA_MANDADO · 💎 20).
+
+        Mostrar aqui confunde: ele tenta assinar algo que não é dele.
+      */}
 
       <div className="nota">
         <Icon n="lock" s={20} />
