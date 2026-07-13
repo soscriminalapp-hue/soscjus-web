@@ -86,7 +86,7 @@ export default async function Capa({ params }: { params: { cnj: string } }) {
   const ses = await sessaoAtual();
 
   // ⚠️ Lê o que JÁ ESTÁ SALVO. NÃO re-sincroniza — isso queimaria R$ 4,50.
-  const [p, s] = await Promise.all([
+  const [p, sal] = await Promise.all([
     buscarSosc<Proc>(`/processos/${encodeURIComponent(cnj)}/salvo`),
     buscarSosc<{ saldo?: { total?: number | null; ilimitado?: boolean } }>(
       '/creditos/saldo',
@@ -96,8 +96,8 @@ export default async function Capa({ params }: { params: { cnj: string } }) {
   if (!p.ok || !p.data) notFound();
   const proc = p.data;
 
-  const ilimitado = s.data?.saldo?.ilimitado ?? false;
-  const saldo = ilimitado ? Infinity : (s.data?.saldo?.total ?? 0);
+  const ilimitado = sal.data?.saldo?.ilimitado ?? false;
+  const saldo = ilimitado ? Infinity : (sal.data?.saldo?.total ?? 0);
 
   /* ─── ATOS DECISÓRIOS: o que uma autoridade assinou ───
      É isto que separa ato de ruído cartorário. */
