@@ -104,7 +104,7 @@ export default function JurisCreator() {
           motivo="Você gera e POSTA no Instagram na hora — três toques. Aqui você teria que baixar, mandar pro celular e abrir o app."
         />
         <a
-          href="https://apps.apple.com/br/app/sosc-jus/id6739118571"
+          href="https://apps.apple.com/br/app/sosc-jus/id6770715490"
           target="_blank"
           rel="noopener noreferrer"
           className={s.abrirApp}
